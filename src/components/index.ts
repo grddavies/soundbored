@@ -1,0 +1,1 @@
+export { SoundControl } from './SoundControl';
