@@ -41,8 +41,8 @@ export const SoundControl: React.FunctionComponent<SoundControlProps> = ({
     el.currentTime = 0;
     progress
       ?.getAnimations({ subtree: true })
-      .find(({ id }) => id === 'progress-bar')
-      ?.cancel();
+      .filter(({ id }) => id === 'progress-bar').forEach(
+        (animation) => animation.cancel())
   };
 
   return (

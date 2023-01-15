@@ -1,11 +1,18 @@
 .soundControl {
-  padding: 0;
+  background-color: #da571a;
+  border: 1px solid #da571a;
+  padding: 0px;
   border-radius: 8px;
   position: relative;
   overflow: hidden;
 
+  &:hover {
+    filter: brightness(85%);
+  }
+
   &::before {
     content: '';
+    border-radius: 8px;
     pointer-events: none;
     position: absolute;
     left: 0;
@@ -27,6 +34,7 @@
       border-top-right-radius: 0px;
       border-top-left-radius: 0px;
       padding: 0.25em;
+      margin-top: 1px;
     }
   }
 }
