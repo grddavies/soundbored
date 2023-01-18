@@ -6,15 +6,15 @@ function App() {
   const soundURL = (name: string) =>
     `https://noproblo.dayjo.org/ZeldaSounds/MC/${name}.wav`;
   return (
-    <div className="App">
+    <div class="App">
       <h1>SoundBored</h1>
-      <div className="flex-grid">
-        <div className="col">
+      <div class="flex-grid">
+        <div class="col">
           <SoundControl src={soundURL('MC_Link_Sword1')} label="Link 1" />
           <SoundControl src={soundURL('MC_Link_Sword2')} label="Link 2" />
           <SoundControl src={soundURL('MC_Link_Sword3')} label="Link 3" />
         </div>
-        <div className="col">
+        <div class="col">
           <SoundControl
             src={soundURL('MC_Link_Sword_Charge')}
             label="Sword Charge"

@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import solidPlugin from 'vite-plugin-solid';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/react-soundboard/', // GH-pages location
-  plugins: [react()],
+  plugins: [solidPlugin()],
 });
