@@ -1,11 +1,11 @@
 import { createSignal } from 'solid-js';
-import { Dynamic, Index } from 'solid-js/web';
+import { Dynamic } from 'solid-js/web';
 import 'primeflex/primeflex.css';
 import './App.css';
-import { ControlPanel, SoundControl } from './components';
-import { SoundControlModel } from './components/SoundControlModel';
+import { ControlPanel, SoundControl } from 'src/components';
+import { SoundControlModel } from 'src/models';
 
-function App() {
+export function App() {
   /** Get some nice Zelda Samples from the net */
   const soundURL = (name: string) =>
     `https://noproblo.dayjo.org/ZeldaSounds/MC/${name}.wav`;
@@ -54,5 +54,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

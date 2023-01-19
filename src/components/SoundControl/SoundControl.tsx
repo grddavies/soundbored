@@ -1,7 +1,7 @@
 import './SoundControl.css';
 import { Component, createEffect } from 'solid-js';
-import { SoundControlModel } from './SoundControlModel';
-import { useObservable } from '../useObservable';
+import { SoundControlModel } from 'src/models';
+import { useObservable } from 'src/hooks';
 
 type SoundControlProps = {
   model: SoundControlModel;

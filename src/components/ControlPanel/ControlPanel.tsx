@@ -1,6 +1,6 @@
 import { Component } from 'solid-js';
-import { useObservable } from '../useObservable';
-import { SoundControlModel } from './SoundControlModel';
+import { useObservable } from 'src/hooks/useObservable';
+import { SoundControlModel } from 'src/models';
 
 import './ControlPanel.css';
 
