@@ -1,5 +1,6 @@
 import { createSignal } from 'solid-js';
 import { Dynamic, Index } from 'solid-js/web';
+import 'primeflex/primeflex.css';
 import './App.css';
 import { ControlPanel, SoundControl } from './components';
 import { SoundControlModel } from './components/SoundControlModel';
@@ -26,37 +27,25 @@ function App() {
 
   const [index, setIndex] = createSignal(0);
   return (
-    <div class="App">
-      <h1>SoundBored</h1>
-      <div class="flex-grid">
-        <div class="col">
+    <div class="App flex flex-column justify-content-center sm:w-full md:w-8">
+      <div class="grid">
+        <h1 class="col-12">SoundBored</h1>
+        <div class="col-12">
           <Dynamic component={controls[index()]} />
         </div>
-      </div>
-      <div class="flex-grid">
-        <div class="col">
-          <Index each={[0, 1, 2]}>
-            {(i) => (
-              <SoundControl
-                model={models[i()]}
-                onClick={() => {
-                  setIndex(i);
-                }}
-              />
-            )}
-          </Index>
-        </div>
-        <div class="col">
-          <Index each={[3, 4, 5]}>
-            {(i) => (
-              <SoundControl
-                model={models[i()]}
-                onClick={() => {
-                  setIndex(i);
-                }}
-              />
-            )}
-          </Index>
+        <div class="col-12">
+          <div class="grid grid-nogutter">
+            {models.map((x, i) => (
+              <div class="col-4">
+                <SoundControl
+                  model={x}
+                  onClick={() => {
+                    setIndex(i);
+                  }}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

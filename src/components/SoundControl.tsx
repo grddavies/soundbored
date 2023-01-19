@@ -70,7 +70,7 @@ export const SoundControl: Component<SoundControlProps> = ({
           animateButton(audioRef.currentTime);
         }}
       >
-        <div>{model.label}</div>
+        <div class="label">{model.label}</div>
         <div>&#9658;</div>
       </button>
       <button
