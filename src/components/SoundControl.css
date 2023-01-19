@@ -6,6 +6,9 @@
   position: relative;
   overflow: hidden;
 
+  margin: 1em;
+  min-width: 200px;
+
   &:hover {
     filter: brightness(85%);
   }

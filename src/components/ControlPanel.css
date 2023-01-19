@@ -1,0 +1,8 @@
+.controlPanel {
+  background-color: #242424;
+  margin: 0em 1em;
+  border: 1px solid #da571a;
+  padding: 8px;
+  height: 150px;
+  border-radius: 8px;
+}
