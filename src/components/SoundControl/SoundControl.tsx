@@ -18,9 +18,11 @@ export const SoundControl: Component<SoundControlProps> = ({
   const [playbackRate] = useObservable(model.playbackRate);
   const [preservePitch] = useObservable(model.preservePitch);
 
-  /** Create a new animation */
-  const animateButton = (startWidth: string) => {
-    container.animate([{ width: startWidth }, { width: '100%' }], {
+  /** Create a new animation
+   * @param startWidth percentage complete to start animation from
+   */
+  const animateButton = (startWidth: number = 0) => {
+    container.animate([{ width: `${startWidth}%` }, { width: '100%' }], {
       id: 'progress-bar',
       duration:
         ((audioRef.duration - audioRef.currentTime) / audioRef.playbackRate) *
@@ -40,18 +42,10 @@ export const SoundControl: Component<SoundControlProps> = ({
 
   // Set the audio playback rate from model
   createEffect(() => {
-    // if (!audioRef.paused) {
-    //   container
-    //     .getAnimations({ subtree: true })
-    //     .filter(({ id }) => id === 'progress-bar')
-    //     .forEach((animation) => {
-    //       animation;
-    //     });
-    // }
     audioRef.playbackRate = playbackRate();
     if (!audioRef.paused && audioRef.duration && audioRef.playbackRate) {
       clearAnimations();
-      animateButton(`${(audioRef.currentTime / audioRef.duration) * 100}%`);
+      animateButton((audioRef.currentTime / audioRef.duration) * 100);
     }
   });
 
@@ -67,7 +61,7 @@ export const SoundControl: Component<SoundControlProps> = ({
         onClick={() => {
           audioRef.currentTime = 0;
           audioRef.play();
-          animateButton(audioRef.currentTime);
+          animateButton();
         }}
       >
         <div class="label">{model.label}</div>
