@@ -3,6 +3,6 @@ import solidPlugin from 'vite-plugin-solid';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/solid-soundboard/', // GH-pages location
+  base: '/soundbored/', // GH-pages location
   plugins: [solidPlugin()],
 });

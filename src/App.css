@@ -3,13 +3,6 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-}
-
-.flex-grid {
   display: flex;
-}
-
-.col {
-  flex: 1 1 auto;
-  padding: 0.5em;
+  justify-content: center;
 }

@@ -7,7 +7,6 @@
   overflow: hidden;
 
   margin: 1em;
-  min-width: 200px;
 
   &:hover {
     filter: brightness(85%);
@@ -27,6 +26,12 @@
   & button {
     display: block;
     width: 100%;
+    padding: 0.6em 0;
+    overflow: hidden;
+
+    & .label {
+      height: 1.5em;
+    }
 
     &:first-of-type {
       border-bottom-right-radius: 0px;

@@ -14,7 +14,7 @@ export const ControlPanel: Component<ControlPanelProps> = (props) => {
   );
   return (
     <div class="controlPanel">
-      <div class="flex-grid">
+      <div class="grid">
         <div class="col">
           <h2>{props.model.label}</h2>
           <input
