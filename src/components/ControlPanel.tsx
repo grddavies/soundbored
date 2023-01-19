@@ -23,7 +23,7 @@ export const ControlPanel: Component<ControlPanelProps> = (props) => {
             step={0.05}
             max={2.0}
             value={playbackRate()}
-            onChange={(e) => setPlaybackRate(parseFloat(e.currentTarget.value))}
+            onInput={(e) => setPlaybackRate(parseFloat(e.currentTarget.value))}
             onClick={(e) => {
               if (e.detail > 1) {
                 setPlaybackRate(1.0);
