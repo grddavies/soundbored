@@ -1,6 +1,6 @@
 .soundControl {
-  background-color: #da571a;
-  border: 1px solid #da571a;
+  background-color: var(--orange);
+  border: 1px solid var(--orange);
   padding: 0px;
   border-radius: 8px;
   position: relative;

@@ -4,6 +4,7 @@ import 'primeflex/primeflex.css';
 import './App.css';
 import { ControlPanel, SoundControl } from 'src/components';
 import { SoundControlModel } from 'src/models';
+import { Modal } from '../Modal/Modal';
 
 export function App() {
   /** Get some nice Zelda Samples from the net */
@@ -29,28 +30,40 @@ export function App() {
   const controls = models.map((model) => () => <ControlPanel model={model} />);
 
   const [index, setIndex] = createSignal(0);
+  const [show, setShow] = createSignal(true);
   return (
-    <div class="App flex flex-column justify-content-center sm:w-full md:w-8">
-      <div class="grid">
-        <h1 class="col-12">SoundBored</h1>
-        <div class="col-12">
-          <Dynamic component={controls[index()]} />
-        </div>
-        <div class="col-12">
-          <div class="grid grid-nogutter">
-            {models.map((x, i) => (
-              <div class="col-4">
-                <SoundControl
-                  model={x}
-                  onClick={() => {
-                    setIndex(i);
-                  }}
-                />
-              </div>
-            ))}
+    <>
+      <Modal
+        show={show()}
+        onClose={() => {
+          setShow(false);
+        }}
+        buttonText="Ok"
+      >
+        <div>Play audio by hitting the buttons</div>
+      </Modal>
+      <div class="App flex flex-column justify-content-center sm:w-full md:w-8">
+        <div class="grid">
+          <h1 class="col-12">SoundBored</h1>
+          <div class="col-12">
+            <Dynamic component={controls[index()]} />
+          </div>
+          <div class="col-12">
+            <div class="grid grid-nogutter">
+              {models.map((x, i) => (
+                <div class="col-4">
+                  <SoundControl
+                    model={x}
+                    onClick={() => {
+                      setIndex(i);
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
