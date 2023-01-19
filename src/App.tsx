@@ -17,6 +17,9 @@ function App() {
     { file: 'MC_Link_Sword_Charge', label: 'Sword Charge' },
     { file: 'MC_Link_Sword_Beam', label: 'Sword Beam' },
     { file: 'MC_Crow', label: 'Crow' },
+    { file: 'MC_Ezlo1', label: 'Ezlo 1' },
+    { file: 'MC_Ezlo2', label: 'Ezlo 2' },
+    { file: 'MC_Ezlo3', label: 'Ezlo 3' },
   ];
 
   const models = sounds.map(
