@@ -6,4 +6,5 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig({
   base: '/soundbored/', // GH-pages location
   plugins: [solidPlugin(), tsconfigPaths()],
+  define: { 'process.env': {} },
 });
