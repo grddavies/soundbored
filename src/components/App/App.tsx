@@ -1,12 +1,38 @@
-import { createSignal } from 'solid-js';
-import { Dynamic } from 'solid-js/web';
 import 'primeflex/primeflex.css';
+import { createEffect, createSignal } from 'solid-js';
+import { Dynamic } from 'solid-js/web';
+
+import freeJazz from 'src/assets/sounds/freejazz.wav';
+
+import {
+  ControlPanel,
+  ControlPanelCtx,
+  Modal,
+  SoundControl,
+  SoundControlCtx,
+} from 'src/components';
+import { useAudioContext } from 'src/hooks';
+import { SoundControlModel, SoundControlModelCtx } from 'src/models';
+import { appInit } from 'src/utils/appInit';
+
 import './App.css';
-import { ControlPanel, SoundControl } from 'src/components';
-import { SoundControlModel } from 'src/models';
-import { Modal } from '../Modal/Modal';
 
 export function App() {
+  const audioContext = useAudioContext();
+
+  // load files on context load
+  createEffect(async () => {
+    const ctx = audioContext();
+    if (!ctx) {
+      return;
+    }
+    console.log('loadingData');
+    await newModels.forEach(async (model) => {
+      await model.loadBuffer();
+      await model.decodeBuffer(ctx);
+    });
+  });
+
   /** Get some nice Zelda Samples from the net */
   const soundURL = (name: string) =>
     `https://noproblo.dayjo.org/ZeldaSounds/MC/${name}.wav`;
@@ -29,14 +55,23 @@ export function App() {
 
   const controls = models.map((model) => () => <ControlPanel model={model} />);
 
+  // TEMP hack using web audio api - remove once file upload implemented
+  const newModels = [0, 0, 0].map(
+    () => new SoundControlModelCtx(freeJazz, 'freejazz.wav'),
+  );
+  newModels.forEach((x) => controls.push(() => <ControlPanelCtx model={x} />));
+
+  // Index of the selected
   const [index, setIndex] = createSignal(0);
-  const [show, setShow] = createSignal(true);
+  // Display help modal
+  const [showHelp, setShowHelp] = createSignal(true);
   return (
     <>
       <Modal
-        show={show()}
+        show={showHelp()}
         onClose={() => {
-          setShow(false);
+          appInit();
+          setShowHelp(false);
         }}
         buttonText="Ok"
       >
@@ -51,11 +86,21 @@ export function App() {
           <div class="col-12">
             <div class="grid grid-nogutter">
               {models.map((x, i) => (
-                <div class="col-4">
+                <div class="col-3">
                   <SoundControl
                     model={x}
                     onClick={() => {
                       setIndex(i);
+                    }}
+                  />
+                </div>
+              ))}
+              {newModels.map((x, i) => (
+                <div class="col-3">
+                  <SoundControlCtx
+                    model={x}
+                    onClick={() => {
+                      setIndex(9 + i);
                     }}
                   />
                 </div>
