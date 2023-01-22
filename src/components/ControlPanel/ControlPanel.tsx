@@ -1,6 +1,6 @@
 import { Component } from 'solid-js';
-import { useObservable } from '../useObservable';
-import { SoundControlModel } from './SoundControlModel';
+import { useObservable } from 'src/hooks/useObservable';
+import { SoundControlModel } from 'src/models';
 
 import './ControlPanel.css';
 
@@ -23,7 +23,7 @@ export const ControlPanel: Component<ControlPanelProps> = (props) => {
             step={0.05}
             max={2.0}
             value={playbackRate()}
-            onChange={(e) => setPlaybackRate(parseFloat(e.currentTarget.value))}
+            onInput={(e) => setPlaybackRate(parseFloat(e.currentTarget.value))}
             onClick={(e) => {
               if (e.detail > 1) {
                 setPlaybackRate(1.0);

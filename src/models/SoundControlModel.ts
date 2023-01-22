@@ -1,4 +1,4 @@
-import { Observable, ObservableReadonly } from '../Observable';
+import { Observable } from 'src/utils';
 
 export class SoundControlModel {
   public readonly src: string;

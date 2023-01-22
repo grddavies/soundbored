@@ -1,5 +1,5 @@
 import { onMount, createSignal, onCleanup, Accessor } from 'solid-js';
-import { Observable, ObservableReadonly } from './Observable';
+import { Observable, ObservableReadonly } from 'src/utils';
 
 export function useObservable<T>(
   observable: Observable<T>,
