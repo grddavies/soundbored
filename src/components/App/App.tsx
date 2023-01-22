@@ -1,19 +1,21 @@
+import 'primeflex/primeflex.css';
 import { createEffect, createSignal } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
-import 'primeflex/primeflex.css';
-import './App.css';
+
+import freeJazz from 'src/assets/sounds/freejazz.wav';
+
 import {
   ControlPanel,
   ControlPanelCtx,
+  Modal,
   SoundControl,
   SoundControlCtx,
 } from 'src/components';
+import { useAudioContext } from 'src/hooks';
 import { SoundControlModel, SoundControlModelCtx } from 'src/models';
-import { Modal } from '../Modal/Modal';
 import { appInit } from 'src/utils/appInit';
 
-import freeJazz from 'src/assets/sounds/freejazz.wav';
-import { useAudioContext } from 'src/hooks';
+import './App.css';
 
 export function App() {
   const audioContext = useAudioContext();
@@ -25,7 +27,7 @@ export function App() {
       return;
     }
     console.log('loadingData');
-    await otherModels.forEach(async (model) => {
+    await newModels.forEach(async (model) => {
       await model.loadBuffer();
       await model.decodeBuffer(ctx);
     });
@@ -51,25 +53,25 @@ export function App() {
     ({ file, label }) => new SoundControlModel(soundURL(file), label),
   );
 
-  const otherModels = [0, 0, 0].map(
-    (_, i) => new SoundControlModelCtx(freeJazz, i.toFixed()),
-  );
-
   const controls = models.map((model) => () => <ControlPanel model={model} />);
 
-  otherModels.forEach((x) =>
-    controls.push(() => <ControlPanelCtx model={x} />),
+  // TEMP hack using web audio api - remove once file upload implemented
+  const newModels = [0, 0, 0].map(
+    () => new SoundControlModelCtx(freeJazz, 'freejazz.wav'),
   );
+  newModels.forEach((x) => controls.push(() => <ControlPanelCtx model={x} />));
 
+  // Index of the selected
   const [index, setIndex] = createSignal(0);
-  const [show, setShow] = createSignal(true);
+  // Display help modal
+  const [showHelp, setShowHelp] = createSignal(true);
   return (
     <>
       <Modal
-        show={show()}
+        show={showHelp()}
         onClose={() => {
           appInit();
-          setShow(false);
+          setShowHelp(false);
         }}
         buttonText="Ok"
       >
@@ -93,7 +95,7 @@ export function App() {
                   />
                 </div>
               ))}
-              {otherModels.map((x, i) => (
+              {newModels.map((x, i) => (
                 <div class="col-3">
                   <SoundControlCtx
                     model={x}

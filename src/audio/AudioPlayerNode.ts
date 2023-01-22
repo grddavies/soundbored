@@ -3,23 +3,29 @@ import assert from 'assert';
 // https://github.com/WebAudio/web-audio-api/issues/2397#issuecomment-459514360
 
 /**
- * PlaybackPostitionNode
- *
+ * AudioPlayerNode
+ * Composite Web Audio API Node that tracks the playback position
+ * and playing state of the underlying AudioBufferSourceNode
  */
-export class PlaybackPositionNode {
+export class AudioPlayerNode {
   public readonly audio: AudioBufferSourceNode;
   private _splitter: ChannelSplitterNode;
-  private _out: ChannelMergerNode;
+  private _audioOut: ChannelMergerNode;
   private _sampleHolder: Float32Array;
   private _analyser: AnalyserNode;
+  private _playing = false;
 
   constructor(context: AudioContext, options?: AudioBufferSourceOptions) {
     // initialize component audio nodes
     this.audio = new AudioBufferSourceNode(context, options);
     this._splitter = new ChannelSplitterNode(context);
     this._analyser = new AnalyserNode(context);
-    this._out = new ChannelMergerNode(context);
+    this._audioOut = new ChannelMergerNode(context);
     this._sampleHolder = new Float32Array(1);
+
+    this.audio.addEventListener('ended', () => {
+      this._playing = false;
+    });
   }
 
   /**
@@ -28,6 +34,13 @@ export class PlaybackPositionNode {
   get playbackPosition() {
     this._analyser.getFloatTimeDomainData(this._sampleHolder);
     return this._sampleHolder[0];
+  }
+
+  /**
+   * true if buffer is currently playing
+   */
+  get playing() {
+    return this._playing;
   }
 
   /** Creates an AudioBuffer with an extra `position` track
@@ -58,7 +71,7 @@ export class PlaybackPositionNode {
 
     // Connect all the audio channels to the line out
     for (let index = 0; index < audioBuffer.numberOfChannels; index++) {
-      this._splitter.connect(this._out, index, index);
+      this._splitter.connect(this._audioOut, index, index);
     }
 
     // Connect the position channel to an analyzer so we can extract position data
@@ -70,6 +83,7 @@ export class PlaybackPositionNode {
   }
 
   start(...args: Parameters<AudioBufferSourceNode['start']>) {
+    this._playing = true;
     this.audio.start(...args);
   }
 
@@ -78,6 +92,6 @@ export class PlaybackPositionNode {
   }
 
   connect(destinationNode: AudioNode, output?: number | undefined): AudioNode {
-    return this._out.connect(destinationNode, output);
+    return this._audioOut.connect(destinationNode, output);
   }
 }
