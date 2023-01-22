@@ -1,3 +1,4 @@
+import { AppStore } from 'src/store';
 import { Observable } from 'src/utils';
 
 export class SoundControlModelCtx {
@@ -14,12 +15,14 @@ export class SoundControlModelCtx {
   private readonly _preservePitch = new Observable(false);
 
   public async loadBuffer() {
-    await fetch(this.src.value)
-      .then((data) => data.arrayBuffer())
-      .then((buf) => {
-        this._buffer = buf;
-      })
-      .catch((e) => console.log(e));
+    const blob = await AppStore.instance.sample.get({
+      filename: this.src.value,
+    });
+
+    if (!blob) {
+      throw new Error(`Sample '${this.src.value}'not found`);
+    }
+    this._buffer = await blob.data.arrayBuffer();
   }
 
   public async decodeBuffer(ctx: AudioContext) {

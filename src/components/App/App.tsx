@@ -1,8 +1,7 @@
 import 'primeflex/primeflex.css';
 import { createEffect, createSignal } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
-
-import freeJazz from 'src/assets/sounds/freejazz.wav';
+import { AudioContextManager } from 'src/audio';
 
 import {
   ControlPanel,
@@ -13,11 +12,12 @@ import {
 } from 'src/components';
 import { useAudioContext } from 'src/hooks';
 import { SoundControlModel, SoundControlModelCtx } from 'src/models';
-import { appInit } from 'src/utils/appInit';
+import { appInit } from 'src/utils';
 
 import './App.css';
 
 export function App() {
+  appInit(); // Asyncronously load default samples
   const audioContext = useAudioContext();
 
   // load files on context load
@@ -56,8 +56,8 @@ export function App() {
   const controls = models.map((model) => () => <ControlPanel model={model} />);
 
   // TEMP hack using web audio api - remove once file upload implemented
-  const newModels = [0, 0, 0].map(
-    () => new SoundControlModelCtx(freeJazz, 'freejazz.wav'),
+  const newModels = ['freejazz.wav', 'AUUGHHH.mp3', 'scratch.wav'].map(
+    (filename) => new SoundControlModelCtx(filename, filename.split('.').at(0)),
   );
   newModels.forEach((x) => controls.push(() => <ControlPanelCtx model={x} />));
 
@@ -70,7 +70,7 @@ export function App() {
       <Modal
         show={showHelp()}
         onClose={() => {
-          appInit();
+          AudioContextManager.init();
           setShowHelp(false);
         }}
         buttonText="Ok"
