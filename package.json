@@ -13,6 +13,7 @@
     "assert": "^2.0.0",
     "dexie": "^3.2.2",
     "primeflex": "^3.3.0",
+    "solid-dexie": "^0.0.5",
     "solid-js": "^1.6.9"
   },
   "devDependencies": {

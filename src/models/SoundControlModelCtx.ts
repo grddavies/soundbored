@@ -1,36 +1,39 @@
+import { Disposable } from 'src/interfaces';
 import { AppStore } from 'src/store';
 import { Observable } from 'src/utils';
+import { Action } from 'src/utils/Action';
 
-export class SoundControlModelCtx {
+export class SoundControlModelCtx implements Disposable {
   public readonly src = new Observable('');
 
   public readonly label?: string;
 
-  private _buffer: ArrayBuffer | null = null;
+  public readonly audioContext = new Observable<AudioContext | null>(null);
 
-  private _audioBuffer: AudioBuffer | null = null;
+  private _buffer = new Observable(new ArrayBuffer(0));
+
+  private _audioBuffer?: AudioBuffer;
 
   private readonly _playbackRate = new Observable(1);
 
   private readonly _preservePitch = new Observable(false);
 
-  public async loadBuffer() {
-    const blob = await AppStore.instance.sample.get({
+  private readonly onSrcUpdate = async (src: string) => {
+    const sample = await AppStore.instance.sample.get({
       filename: this.src.value,
     });
 
-    if (!blob) {
-      throw new Error(`Sample '${this.src.value}'not found`);
+    if (!sample) {
+      throw new Error(`Sample '${this.src.value}' not found`);
     }
-    this._buffer = await blob.data.arrayBuffer();
-  }
+    this._buffer.value = await sample.data.arrayBuffer();
+  };
 
-  public async decodeBuffer(ctx: AudioContext) {
-    if (!this._buffer) {
-      throw new Error('No buffer loaded');
-    }
-    this._audioBuffer = await ctx.decodeAudioData(this._buffer);
-  }
+  private readonly onBufferUpdate = async () => {
+    this._audioBuffer = await this.audioContext.value?.decodeAudioData(
+      this._buffer.value,
+    );
+  };
 
   public get audioBuffer(): AudioBuffer {
     if (!this._audioBuffer) {
@@ -42,6 +45,9 @@ export class SoundControlModelCtx {
   constructor(src = '', label?: string) {
     this.src.value = src;
     this.label = label;
+
+    this.src.attach(this.onSrcUpdate);
+    this._buffer.attach(this.onBufferUpdate);
   }
 
   public get playbackRate(): Observable<number> {
@@ -50,5 +56,13 @@ export class SoundControlModelCtx {
 
   public get preservePitch(): Observable<boolean> {
     return this._preservePitch;
+  }
+
+  public dispose() {
+    this.src.detach(this.onSrcUpdate);
+  }
+
+  public loadBuffer() {
+    this.src.fire(this.src.value);
   }
 }

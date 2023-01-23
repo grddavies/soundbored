@@ -17,6 +17,7 @@ export const SoundControlCtx: Component<SoundControlProps> = ({
   let canvas: HTMLCanvasElement;
   let node: AudioPlayerNode | undefined;
   const audioContext = useAudioContext();
+  model.audioContext.value = audioContext();
   const [playbackRate] = useObservable(model.playbackRate);
 
   // Set playback rate from model

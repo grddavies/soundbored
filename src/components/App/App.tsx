@@ -21,15 +21,15 @@ export function App() {
   const audioContext = useAudioContext();
 
   // load files on context load
-  createEffect(async () => {
+  createEffect(() => {
+    // Add our reactive AudioContext
     const ctx = audioContext();
     if (!ctx) {
       return;
     }
-    console.log('loadingData');
-    await newModels.forEach(async (model) => {
-      await model.loadBuffer();
-      await model.decodeBuffer(ctx);
+    newModels.forEach((model) => {
+      model.audioContext.value = ctx;
+      model.loadBuffer();
     });
   });
 
