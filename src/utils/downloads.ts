@@ -1,3 +1,5 @@
+import { Base64Binary } from './Base64Binary';
+
 export async function getGitHubFile(owner: string, repo: string, path: string) {
   const res = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
@@ -15,7 +17,6 @@ export async function getDirtSample(path: string) {
   const owner = 'tidalcycles';
   const repo = 'Dirt-Samples';
   const res = await getGitHubFile(owner, repo, path);
-  const b64_data = res.content;
-  const decoded = Uint16Array.from(atob(b64_data), (s) => s.charCodeAt(0));
-  return decoded;
+  const decoded = Base64Binary.decodeArrayBuffer(res.content);
+  return new Blob([decoded], { type: 'audio/wav' });
 }

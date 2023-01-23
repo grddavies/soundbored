@@ -30,9 +30,13 @@ export class SoundControlModelCtx implements Disposable {
   };
 
   private readonly onBufferUpdate = async () => {
-    this._audioBuffer = await this.audioContext.value?.decodeAudioData(
-      this._buffer.value,
-    );
+    try {
+      this._audioBuffer = await this.audioContext.value?.decodeAudioData(
+        this._buffer.value,
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   public get audioBuffer(): AudioBuffer {

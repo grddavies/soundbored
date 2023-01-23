@@ -16,24 +16,23 @@ async function fetchDefaultSamples() {
     let filename = url.split('/').at(-1)!;
     fetch(url)
       .then((data) => data.blob())
-      .then((blob) =>
+      .then(async (blob) => {
         AppStore.instance.sample.put({
           filename: filename,
           data: blob,
-        }),
-      );
+        });
+      });
   });
 }
 
 async function getDirtSamples() {
-  ['gabba/000_0.wav'].forEach(async (path, i) => {
-    let filename = path.split('/').at(-1)!;
-    getDirtSample(path).then((array) =>
+  ['gabba/000_0.wav', 'birds/001_10.wav'].forEach(async (path, i) => {
+    getDirtSample(path).then(async (blob) => {
       AppStore.instance.sample.put({
-        filename: filename,
-        data: new Blob([array]),
-      }),
-    );
+        filename: path,
+        data: blob,
+      });
+    });
   });
 }
 
