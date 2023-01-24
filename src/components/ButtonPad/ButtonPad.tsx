@@ -1,24 +1,22 @@
-import './SoundControl.css';
+import './ButtonPad.css';
 import { Component, createEffect } from 'solid-js';
-import { SoundControlModelCtx } from 'src/models';
+import { SamplerModel } from 'src/models';
 import { useAudioContext, useObservable } from 'src/hooks';
 import { AudioPlayerNode } from 'src/audio/AudioPlayerNode';
 
-type SoundControlProps = {
-  model: SoundControlModelCtx;
+type ButtonPadProps = {
+  model: SamplerModel;
   onClick?: () => void;
 };
 
-export const SoundControlCtx: Component<SoundControlProps> = ({
-  model,
-  onClick,
-}) => {
+export const ButtonPad: Component<ButtonPadProps> = ({ model, onClick }) => {
   let container: HTMLDivElement;
   let canvas: HTMLCanvasElement;
   let node: AudioPlayerNode | undefined;
   const audioContext = useAudioContext();
   model.audioContext.value = audioContext();
   const [playbackRate] = useObservable(model.playbackRate);
+  const [label] = useObservable(model.label);
 
   // Set playback rate from model
   createEffect(() => {
@@ -50,7 +48,7 @@ export const SoundControlCtx: Component<SoundControlProps> = ({
   }
 
   return (
-    <div ref={container!} class="soundControl" onClick={onClick}>
+    <div ref={container!} class="buttonPad" onClick={onClick}>
       <canvas ref={canvas!} />
       <button
         onClick={() => {
@@ -67,7 +65,7 @@ export const SoundControlCtx: Component<SoundControlProps> = ({
           animate();
         }}
       >
-        <div class="label">{model.label}</div>
+        <div class="label">{label()}</div>
         <div>&#9658;</div>
       </button>
       <button

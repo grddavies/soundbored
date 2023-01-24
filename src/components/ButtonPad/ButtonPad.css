@@ -1,4 +1,4 @@
-.soundControl {
+.buttonPad {
   background-color: var(--orange);
   border: 1px solid var(--orange);
   padding: 0px;
@@ -20,17 +20,6 @@
 
   &:hover {
     filter: brightness(85%);
-  }
-
-  &::before {
-    content: '';
-    border-radius: 8px;
-    pointer-events: none;
-    position: absolute;
-    left: 0;
-    width: 0; /* Animation */
-    height: 100%;
-    background: rgba(255, 255, 255, 0.25);
   }
 
   & button {

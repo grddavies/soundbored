@@ -1,12 +1,11 @@
 import { Disposable } from 'src/interfaces';
 import { AppStore } from 'src/store';
 import { Observable } from 'src/utils';
-import { Action } from 'src/utils/Action';
 
-export class SoundControlModelCtx implements Disposable {
-  public readonly src = new Observable('');
+export class SamplerModel implements Disposable {
+  public readonly src: Observable<string>;
 
-  public readonly label?: string;
+  public readonly label: Observable<string>;
 
   public readonly audioContext = new Observable<AudioContext | null>(null);
 
@@ -19,6 +18,9 @@ export class SoundControlModelCtx implements Disposable {
   private readonly _preservePitch = new Observable(false);
 
   private readonly onSrcUpdate = async (src: string) => {
+    if (!src) {
+      return;
+    }
     const sample = await AppStore.instance.sample.get({
       filename: this.src.value,
     });
@@ -46,9 +48,9 @@ export class SoundControlModelCtx implements Disposable {
     return this._audioBuffer;
   }
 
-  constructor(src = '', label?: string) {
-    this.src.value = src;
-    this.label = label;
+  constructor(src = '', label = '') {
+    this.src = new Observable(src);
+    this.label = new Observable(label);
 
     this.src.attach(this.onSrcUpdate);
     this._buffer.attach(this.onBufferUpdate);

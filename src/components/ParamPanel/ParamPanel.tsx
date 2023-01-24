@@ -2,16 +2,16 @@ import { Component, For } from 'solid-js';
 import { createDexieArrayQuery } from 'solid-dexie';
 
 import { useObservable } from 'src/hooks/useObservable';
-import { SoundControlModelCtx } from 'src/models';
+import { SamplerModel } from 'src/models';
 
-import './ControlPanel.css';
+import './ParamPanel.css';
 import { AppStore } from 'src/store';
 
-type ControlPanelProps = {
-  model: SoundControlModelCtx;
+type ParamPanelProps = {
+  model: SamplerModel;
 };
 
-export const ControlPanelCtx: Component<ControlPanelProps> = (props) => {
+export const ParamPanel: Component<ParamPanelProps> = (props) => {
   const samples = createDexieArrayQuery(() =>
     // Get all files in sample db
     AppStore.instance.sample.toCollection().keys(),
@@ -21,10 +21,10 @@ export const ControlPanelCtx: Component<ControlPanelProps> = (props) => {
   );
   const [src, setSrc] = useObservable(props.model.src);
   return (
-    <div class="controlPanel">
+    <div class="parameterPanel">
       <div class="grid">
         <div class="col">
-          <h2>{props.model.label}</h2>
+          <h2>{props.model.label.value}</h2>
           <select
             value={src()}
             autocomplete="false"
@@ -41,7 +41,7 @@ export const ControlPanelCtx: Component<ControlPanelProps> = (props) => {
               )}
             </For>
           </select>
-          <p>Label</p>
+          <p>Sample</p>
           <input
             type="range"
             min={0.2}

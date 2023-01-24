@@ -3,18 +3,15 @@ import { createEffect, createSignal } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import { AudioContextManager } from 'src/audio';
 
-import {
-  ControlPanel,
-  ControlPanelCtx,
-  Modal,
-  SoundControl,
-  SoundControlCtx,
-} from 'src/components';
+import { ButtonPad, Modal, ParamPanel } from 'src/components';
 import { useAudioContext } from 'src/hooks';
-import { SoundControlModel, SoundControlModelCtx } from 'src/models';
+import { SamplerModel } from 'src/models';
 import { appInit } from 'src/utils';
+import { Defaults } from 'src/utils/Defaults';
 
 import './App.css';
+
+const NUM_PADS = 12;
 
 export function App() {
   appInit(); // Asyncronously load default samples
@@ -27,44 +24,31 @@ export function App() {
     if (!ctx) {
       return;
     }
-    newModels.forEach((model) => {
+    samplers.forEach((model) => {
       model.audioContext.value = ctx;
       model.loadBuffer();
     });
   });
 
-  /** Get some nice Zelda Samples from the net */
-  const soundURL = (name: string) =>
-    `https://noproblo.dayjo.org/ZeldaSounds/MC/${name}.wav`;
+  // Initialise samplers
+  const samplers = Array(NUM_PADS)
+    .fill(null)
+    .map((_, i) => new SamplerModel());
 
-  const sounds = [
-    { file: 'MC_Link_Sword1', label: 'Link 1' },
-    { file: 'MC_Link_Sword2', label: 'Link 2' },
-    { file: 'MC_Link_Sword3', label: 'Link 3' },
-    { file: 'MC_Link_Sword_Charge', label: 'Sword Charge' },
-    { file: 'MC_Link_Sword_Beam', label: 'Sword Beam' },
-    { file: 'MC_Crow', label: 'Crow' },
-    { file: 'MC_Ezlo1', label: 'Ezlo 1' },
-    { file: 'MC_Ezlo2', label: 'Ezlo 2' },
-    { file: 'MC_Ezlo3', label: 'Ezlo 3' },
-  ];
+  Defaults.samples.forEach(({ filename, label }, i) => {
+    samplers[i].src.value = filename;
+    samplers[i].label.value = label;
+  });
 
-  const models = sounds.map(
-    ({ file, label }) => new SoundControlModel(soundURL(file), label),
-  );
+  const paramPanels = samplers.map((model) => () => (
+    <ParamPanel model={model} />
+  ));
 
-  const controls = models.map((model) => () => <ControlPanel model={model} />);
-
-  // TEMP hack using web audio api - remove once file upload implemented
-  const newModels = ['freejazz.wav', 'AUUGHHH.mp3', 'scratch.wav'].map(
-    (filename) => new SoundControlModelCtx(filename, filename.split('.').at(0)),
-  );
-  newModels.forEach((x) => controls.push(() => <ControlPanelCtx model={x} />));
-
-  // Index of the selected
-  const [index, setIndex] = createSignal(0);
+  // Index of the selected sampler
+  const [selectedIdx, setSelectedIndex] = createSignal(0);
   // Display help modal
   const [showHelp, setShowHelp] = createSignal(true);
+
   return (
     <>
       <Modal
@@ -81,26 +65,16 @@ export function App() {
         <div class="grid">
           <h1 class="col-12">SoundBored</h1>
           <div class="col-12">
-            <Dynamic component={controls[index()]} />
+            <Dynamic component={paramPanels[selectedIdx()]} />
           </div>
           <div class="col-12">
             <div class="grid grid-nogutter">
-              {models.map((x, i) => (
+              {samplers.map((x, i) => (
                 <div class="col-3">
-                  <SoundControl
+                  <ButtonPad
                     model={x}
                     onClick={() => {
-                      setIndex(i);
-                    }}
-                  />
-                </div>
-              ))}
-              {newModels.map((x, i) => (
-                <div class="col-3">
-                  <SoundControlCtx
-                    model={x}
-                    onClick={() => {
-                      setIndex(9 + i);
+                      setSelectedIndex(i);
                     }}
                   />
                 </div>
