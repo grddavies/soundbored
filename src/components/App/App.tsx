@@ -77,7 +77,7 @@ export function App() {
       >
         <div>Play audio by hitting the buttons</div>
       </Modal>
-      <div class="App flex flex-column justify-content-center sm:w-full md:w-8">
+      <div class="App flex flex-column justify-content-center">
         <div class="grid">
           <h1 class="col-12">SoundBored</h1>
           <div class="col-12">
