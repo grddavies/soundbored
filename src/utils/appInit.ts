@@ -26,7 +26,7 @@ async function fetchDefaultSamples() {
 }
 
 async function getDirtSamples() {
-  ['gabba/000_0.wav', 'birds/001_10.wav'].forEach(async (path, i) => {
+  ['gabba/000_0.wav', 'birds/001_10.wav'].forEach(async (path) => {
     getDirtSample(path).then(async (blob) => {
       AppStore.instance.sample.put({
         filename: path,

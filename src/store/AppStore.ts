@@ -1,7 +1,5 @@
 import Dexie from 'dexie';
 
-import freeJazz from 'src/assets/sounds/freejazz.wav';
-
 interface ISample {
   filename: string;
   data: Blob;

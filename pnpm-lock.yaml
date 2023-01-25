@@ -9,6 +9,7 @@ specifiers:
   prettier: ^2.8.2
   primeflex: ^3.3.0
   solid-dexie: ^0.0.5
+  solid-icons: ^1.0.4
   solid-js: ^1.6.9
   typescript: ^4.9.3
   vite: ^4.0.0
@@ -20,6 +21,7 @@ dependencies:
   dexie: 3.2.2
   primeflex: 3.3.0
   solid-dexie: 0.0.5_dexie@3.2.2+solid-js@1.6.9
+  solid-icons: 1.0.4_solid-js@1.6.9
   solid-js: 1.6.9
 
 devDependencies:
@@ -1034,6 +1036,15 @@ packages:
       solid-js: ^1.4.6
     dependencies:
       dexie: 3.2.2
+      solid-js: 1.6.9
+    dev: false
+
+  /solid-icons/1.0.4_solid-js@1.6.9:
+    resolution: {integrity: sha512-gJTp4in3+OYCs9WvDkSLt4Los2unR3Uoder8wjh15GsfP20xiNOLfPTJllXmn+fI8+k3x7bRYtLGIgWd9fUQug==}
+    engines: {node: '>= 16'}
+    peerDependencies:
+      solid-js: '*'
+    dependencies:
       solid-js: 1.6.9
     dev: false
 
