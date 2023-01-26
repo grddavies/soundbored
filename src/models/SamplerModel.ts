@@ -21,14 +21,11 @@ export class SamplerModel implements Disposable {
     if (!src) {
       return;
     }
-    const sample = await AppStore.instance.sample.get({
-      filename: this.src.value,
-    });
-
-    if (!sample) {
+    const data = await AppStore.instance.getSampleBlob(this.src.value);
+    if (!data) {
       throw new Error(`Sample '${this.src.value}' not found`);
     }
-    this._buffer.value = await sample.data.arrayBuffer();
+    this._buffer.value = await data.arrayBuffer();
   };
 
   private readonly onBufferUpdate = async () => {

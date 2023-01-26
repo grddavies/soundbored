@@ -8,9 +8,9 @@ import './SampleExplorer.css';
 type SampleExplorerProps = {};
 
 export const SampleExplorer: Component<SampleExplorerProps> = () => {
+  // Get all files in sample db
   const samples = createDexieArrayQuery(() =>
-    // Get all files in sample db
-    AppStore.instance.sample.toCollection().keys(),
+    AppStore.instance.getAllSampleFileNames(),
   );
   const [selectedIdx, setSelectedIdx] = createSignal<number | null>(null);
   return (
@@ -22,11 +22,8 @@ export const SampleExplorer: Component<SampleExplorerProps> = () => {
         multiple
         onChange={(e) => {
           if (e.currentTarget.files) {
-            for (const f of e.currentTarget.files ) {
-              AppStore.instance.sample.add({
-                filename: f.name,
-                data: f
-              })
+            for (const f of e.currentTarget.files) {
+              AppStore.instance.addSampleFromFile(f);
             }
           }
         }}
@@ -62,9 +59,7 @@ export const SampleExplorer: Component<SampleExplorerProps> = () => {
                   onClick={async () =>
                     // TODO: use non-blocking modal
                     confirm(`Delete '${sample}' from sample bank?`) &&
-                    AppStore.instance.sample
-                      .where({ filename: sample })
-                      .delete()
+                    AppStore.instance.deleteSampleByName(sample)
                   }
                 />
               )}

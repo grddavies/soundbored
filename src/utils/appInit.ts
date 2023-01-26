@@ -17,7 +17,7 @@ async function fetchDefaultSamples() {
     fetch(url)
       .then((data) => data.blob())
       .then(async (blob) => {
-        AppStore.instance.sample.put({
+        AppStore.instance.addSample({
           filename: filename,
           data: blob,
         });
@@ -28,7 +28,7 @@ async function fetchDefaultSamples() {
 async function getDirtSamples() {
   ['gabba/000_0.wav', 'birds/001_10.wav'].forEach(async (path) => {
     getDirtSample(path).then(async (blob) => {
-      AppStore.instance.sample.put({
+      AppStore.instance.addSample({
         filename: path,
         data: blob,
       });

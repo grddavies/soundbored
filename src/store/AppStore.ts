@@ -1,11 +1,13 @@
-import Dexie from 'dexie';
+import { IndexableTypePart } from 'dexie';
+import { Database } from 'src/store/Database';
+import { TSample } from './datatypes';
 
-interface ISample {
-  filename: string;
-  data: Blob;
-}
-
-export class AppStore extends Dexie {
+/**
+ * AppStore
+ *
+ * Singleton class to manage storage of app data
+ */
+export class AppStore {
   private static _instance: AppStore;
 
   public static get instance(): AppStore {
@@ -19,14 +21,54 @@ export class AppStore extends Dexie {
     this._instance = new AppStore();
   }
 
-  // Tables - declared in constructor
-  sample!: Dexie.Table<ISample, number>;
+  private readonly _database: Database;
 
   constructor() {
-    super('SoundBoardDB');
-    this.version(1).stores({
-      // NB: we don't declare blob attribute since we do not index it
-      sample: 'filename',
+    this._database = new Database();
+  }
+
+  public async getSampleBlob(filename: string): Promise<Blob | undefined> {
+    return (
+      (await this._database.sample
+        .get({ filename })
+        .then((sample) => sample?.data)) ?? undefined
+    );
+  }
+
+  /**
+   * Create a live-query of the available sample filenames
+   *
+   * @returns an live-query array of sample filenames
+   */
+  public async getAllSampleFileNames(): Promise<string[]> {
+    return (await this._database.sample.toCollection().keys()) as string[];
+  }
+
+  /**
+   * Add or updates a sample in the database from a file
+   * @returns The ID of the upserted object
+   */
+  public async addSampleFromFile(file: File): Promise<number> {
+    return await this._database.sample.put({
+      filename: file.name,
+      data: file,
     });
+  }
+
+  /**
+   * Add or updates a sample in the database
+   * @returns The ID of the upserted object
+   */
+  public async addSample(sample: TSample): Promise<number> {
+    return await this._database.sample.put(sample);
+  }
+
+  /**
+   * Adds a new sample to the database
+   *
+   * @returns The number of deleted files
+   */
+  public async deleteSampleByName(filename: string): Promise<number> {
+    return await this._database.sample.where({ filename }).delete();
   }
 }
