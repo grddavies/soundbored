@@ -53,10 +53,23 @@ export class SamplerModel implements Disposable {
     this._buffer.attach(this.onBufferUpdate);
   }
 
+  /**
+   * Has the sampler loaded an audio buffer
+   */
+  public get loaded(): boolean {
+    return !!this._audioBuffer;
+  }
+
+  /**
+   * Sampler layback rate parameter
+   */
   public get playbackRate(): Observable<number> {
     return this._playbackRate;
   }
 
+  /**
+   * Sampler layback rate parameter
+   */
   public get preservePitch(): Observable<boolean> {
     return this._preservePitch;
   }

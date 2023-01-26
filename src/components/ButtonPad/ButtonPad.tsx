@@ -52,7 +52,7 @@ export const ButtonPad: Component<ButtonPadProps> = ({ model, onClick }) => {
       <canvas ref={canvas!} />
       <button
         onClick={() => {
-          if (!audioContext()) {
+          if (!audioContext() || !model.loaded) {
             return;
           }
           node?.stop();
@@ -70,7 +70,9 @@ export const ButtonPad: Component<ButtonPadProps> = ({ model, onClick }) => {
       </button>
       <button
         onClick={() => {
-          node?.stop();
+          if (node && model.loaded) {
+            node.stop();
+          }
         }}
       >
         &#9632;
