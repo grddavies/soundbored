@@ -33,7 +33,7 @@ export function App() {
   // Initialise samplers
   const samplers = Array(NUM_PADS)
     .fill(null)
-    .map(() => new SamplerModel());
+    .map((_, i) => new SamplerModel('', `Sample ${i + 1}`));
 
   Defaults.samples.forEach(({ filename, label }, i) => {
     samplers[i].src.value = filename;
