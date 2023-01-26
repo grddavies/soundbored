@@ -5,9 +5,11 @@
   border-radius: 8px;
 
   & .label {
+    height: 1.5em;
     padding-left: 0.5em;
     text-align: left;
     width: 6em;
+    border: none;
   }
 
   & label {
@@ -23,4 +25,3 @@
     opacity: 0.6;
   }
 }
-
