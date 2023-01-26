@@ -1,4 +1,4 @@
-import { Component, createSignal, For } from 'solid-js';
+import { Component, createSignal } from 'solid-js';
 
 import { useObservable } from 'src/hooks/useObservable';
 import { SamplerModel } from 'src/models';
@@ -26,7 +26,7 @@ export const ParamPanel: Component<ParamPanelProps> = (props) => {
             maxlength="12"
             class="label"
             onInput={(e) =>
-              // TODO: strip whitespace
+              // TODO: prevent users emptying this div!
               e.currentTarget.value && setLabel(e.currentTarget.value)
             }
             onMouseLeave={() => setEditingLabel(false)}

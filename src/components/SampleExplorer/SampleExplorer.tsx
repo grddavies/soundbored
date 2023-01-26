@@ -15,10 +15,28 @@ export const SampleExplorer: Component<SampleExplorerProps> = () => {
   const [selectedIdx, setSelectedIdx] = createSignal<number | null>(null);
   return (
     <div class="sampleExplorer col-3" onMouseLeave={() => setSelectedIdx(null)}>
-      <input id="fileExplorer" type="file" hidden />
+      <input
+        id="fileExplorer"
+        type="file"
+        hidden
+        multiple
+        onChange={(e) => {
+          if (e.currentTarget.files) {
+            for (const f of e.currentTarget.files ) {
+              AppStore.instance.sample.add({
+                filename: f.name,
+                data: f
+              })
+            }
+          }
+        }}
+      />
       <div class="sampleExplorer-header relative">
         <span>Samples</span>
-        <BiSolidFolderPlus class="icon" />
+        <BiSolidFolderPlus
+          class="icon"
+          onClick={() => document.getElementById('fileExplorer')?.click()}
+        />
       </div>
       <div class="sampleExplorer-list">
         <For each={samples}>
