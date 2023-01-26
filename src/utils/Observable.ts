@@ -1,31 +1,14 @@
-import { EqualityPredicate } from './Equality';
+import { Action } from 'src/utils/Action';
+import { EqualityPredicate } from 'src/utils/Equality';
 
-export type UpdateCallback<T> = (value: T, old?: T) => void;
-
-export class Observable<T> {
+export class Observable<T> extends Action<T> {
   private _value: T;
   private readonly _eq: EqualityPredicate<T>;
 
-  /** Bound callbacks to fire on update change */
-  private _bindings: UpdateCallback<T>[] = [];
-
   constructor(init: T, eq: EqualityPredicate<T> = Object.is) {
+    super();
     this._value = init;
     this._eq = eq;
-  }
-
-  public attach(...callbacks: UpdateCallback<T>[]) {
-    this._bindings.push(...callbacks);
-  }
-
-  public detach(...callbacks: UpdateCallback<T>[]) {
-    this._bindings = this._bindings.filter((fn) => !callbacks.includes(fn));
-  }
-
-  public fire(current: T, old?: T) {
-    this._bindings.forEach((fn) => {
-      fn(current, old);
-    });
   }
 
   public get value(): T {

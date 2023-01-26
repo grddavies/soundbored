@@ -37,11 +37,6 @@ body {
   background-color: var(--bg-color);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
 button {
   border-radius: 8px;
   border: 2px solid transparent;
@@ -54,18 +49,5 @@ button {
   transition: border-color 0.25s;
   &:hover {
     border-color: #646cff;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
   }
 }

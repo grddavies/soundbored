@@ -1,0 +1,47 @@
+.sampleExplorer {
+  font-size: small;
+  border-radius: 8px 0 0 8px;
+  border-right: 1px solid var(--orange);
+  text-align: left;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  overflow: hidden;
+
+  & .sampleExplorer-header {
+    border-bottom: 1px solid var(--orange);
+    flex: 0 1 auto;
+    padding-left: 0.5em;
+  }
+
+  & .icon {
+    top: 25%;
+    right: 0.5em;
+    cursor: pointer;
+    position: absolute;
+  }
+
+  & .sampleExplorer-list {
+    height: 100%;
+    overflow-y: scroll;
+    flex: 1 1 auto;
+  }
+
+  & .sampleExplorer-item {
+    padding-left: 0.5em;
+    border-top: 1px solid var(--orange);
+    overflow-x: scroll;
+
+    &:last-child {
+      border-bottom: 1px solid var(--orange);
+    }
+
+    &.selected {
+      color: var(--orange);
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}

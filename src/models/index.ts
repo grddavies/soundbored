@@ -1,2 +1,1 @@
-export { SoundControlModel } from './SoundControlModel';
-export { SoundControlModelCtx } from './SoundControlModelCtx';
+export { SamplerModel } from './SamplerModel';

@@ -1,106 +1,83 @@
 import 'primeflex/primeflex.css';
 import { createEffect, createSignal } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
+import { AudioContextManager } from 'src/audio';
 
-import freeJazz from 'src/assets/sounds/freejazz.wav';
-
-import {
-  ControlPanel,
-  ControlPanelCtx,
-  Modal,
-  SoundControl,
-  SoundControlCtx,
-} from 'src/components';
+import { ButtonPad, Modal, ParamPanel, SampleExplorer } from 'src/components';
 import { useAudioContext } from 'src/hooks';
-import { SoundControlModel, SoundControlModelCtx } from 'src/models';
-import { appInit } from 'src/utils/appInit';
+import { SamplerModel } from 'src/models';
+import { appInit } from 'src/utils';
+import { Defaults } from 'src/utils/Defaults';
 
 import './App.css';
 
+const NUM_PADS = 12;
+
 export function App() {
+  appInit(); // Asyncronously load default samples
   const audioContext = useAudioContext();
 
   // load files on context load
-  createEffect(async () => {
+  createEffect(() => {
+    // Add our reactive AudioContext
     const ctx = audioContext();
     if (!ctx) {
       return;
     }
-    console.log('loadingData');
-    await newModels.forEach(async (model) => {
-      await model.loadBuffer();
-      await model.decodeBuffer(ctx);
+    samplers.forEach((model) => {
+      model.audioContext.value = ctx;
+      model.loadBuffer();
     });
   });
 
-  /** Get some nice Zelda Samples from the net */
-  const soundURL = (name: string) =>
-    `https://noproblo.dayjo.org/ZeldaSounds/MC/${name}.wav`;
+  // Initialise samplers
+  const samplers = Array(NUM_PADS)
+    .fill(null)
+    .map((_, i) => new SamplerModel('', `Sample ${i + 1}`));
 
-  const sounds = [
-    { file: 'MC_Link_Sword1', label: 'Link 1' },
-    { file: 'MC_Link_Sword2', label: 'Link 2' },
-    { file: 'MC_Link_Sword3', label: 'Link 3' },
-    { file: 'MC_Link_Sword_Charge', label: 'Sword Charge' },
-    { file: 'MC_Link_Sword_Beam', label: 'Sword Beam' },
-    { file: 'MC_Crow', label: 'Crow' },
-    { file: 'MC_Ezlo1', label: 'Ezlo 1' },
-    { file: 'MC_Ezlo2', label: 'Ezlo 2' },
-    { file: 'MC_Ezlo3', label: 'Ezlo 3' },
-  ];
+  Defaults.samples.forEach(({ filename, label }, i) => {
+    samplers[i].src.value = filename;
+    samplers[i].label.value = label;
+  });
 
-  const models = sounds.map(
-    ({ file, label }) => new SoundControlModel(soundURL(file), label),
-  );
+  const paramPanels = samplers.map((model) => () => (
+    <ParamPanel model={model} />
+  ));
 
-  const controls = models.map((model) => () => <ControlPanel model={model} />);
-
-  // TEMP hack using web audio api - remove once file upload implemented
-  const newModels = [0, 0, 0].map(
-    () => new SoundControlModelCtx(freeJazz, 'freejazz.wav'),
-  );
-  newModels.forEach((x) => controls.push(() => <ControlPanelCtx model={x} />));
-
-  // Index of the selected
-  const [index, setIndex] = createSignal(0);
+  // Index of the selected sampler
+  const [selectedIdx, setSelectedIndex] = createSignal(0);
   // Display help modal
   const [showHelp, setShowHelp] = createSignal(true);
+
   return (
     <>
       <Modal
         show={showHelp()}
         onClose={() => {
-          appInit();
+          AudioContextManager.init();
           setShowHelp(false);
         }}
         buttonText="Ok"
       >
         <div>Play audio by hitting the buttons</div>
       </Modal>
-      <div class="App flex flex-column justify-content-center sm:w-full md:w-8">
+      <div class="App flex flex-column justify-content-center">
         <div class="grid">
           <h1 class="col-12">SoundBored</h1>
           <div class="col-12">
-            <Dynamic component={controls[index()]} />
+            <div class="parameterPanel grid grid-nogutter">
+              <SampleExplorer />
+              <Dynamic component={paramPanels[selectedIdx()]} />
+            </div>
           </div>
           <div class="col-12">
             <div class="grid grid-nogutter">
-              {models.map((x, i) => (
+              {samplers.map((x, i) => (
                 <div class="col-3">
-                  <SoundControl
+                  <ButtonPad
                     model={x}
                     onClick={() => {
-                      setIndex(i);
-                    }}
-                  />
-                </div>
-              ))}
-              {newModels.map((x, i) => (
-                <div class="col-3">
-                  <SoundControlCtx
-                    model={x}
-                    onClick={() => {
-                      setIndex(9 + i);
+                      setSelectedIndex(i);
                     }}
                   />
                 </div>
