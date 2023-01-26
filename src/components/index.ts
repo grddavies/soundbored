@@ -1,3 +1,5 @@
 export { App } from './App/App';
-export { SoundControl } from './SoundControl/SoundControl';
-export { ControlPanel } from './ControlPanel/ControlPanel';
+export { ButtonPad } from './ButtonPad/ButtonPad';
+export { Modal } from './Modal/Modal';
+export { ParamPanel } from './ParamPanel/ParamPanel';
+export { SampleExplorer } from './SampleExplorer/SampleExplorer';

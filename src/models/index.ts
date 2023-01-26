@@ -1,1 +1,1 @@
-export { SoundControlModel } from './SoundControlModel';
+export { SamplerModel } from './SamplerModel';

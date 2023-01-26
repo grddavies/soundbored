@@ -6,3 +6,7 @@
   display: flex;
   justify-content: center;
 }
+
+.App {
+  max-width: 600px;
+}
