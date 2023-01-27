@@ -4,17 +4,16 @@ import { Dynamic } from 'solid-js/web';
 import { AudioContextManager } from 'src/audio';
 
 import { ButtonPad, Modal, ParamPanel, SampleExplorer } from 'src/components';
+import { NUM_PADS } from 'src/defaults/constants';
 import { useAudioContext } from 'src/hooks';
 import { SamplerModel } from 'src/models';
 import { appInit } from 'src/utils';
-import { Defaults } from 'src/utils/Defaults';
+import { Defaults } from 'src/defaults/Defaults';
 
 import './App.css';
 
-const NUM_PADS = 12;
-
 export function App() {
-  appInit(); // Asyncronously load default samples
+  const appInitialized = appInit(); // Asyncronously load default samples
   const audioContext = useAudioContext();
 
   // load files on context load
@@ -24,21 +23,17 @@ export function App() {
     if (!ctx) {
       return;
     }
-    samplers.forEach((model) => {
+    samplers.forEach(async (model) => {
       model.audioContext.value = ctx;
+      await appInitialized;
       model.loadBuffer();
     });
   });
 
   // Initialise samplers
-  const samplers = Array(NUM_PADS)
-    .fill(null)
-    .map((_, i) => new SamplerModel('', `Sample ${i + 1}`));
-
-  Defaults.samples.forEach(({ filename, label }, i) => {
-    samplers[i].src.value = filename;
-    samplers[i].label.value = label;
-  });
+  const samplers = Defaults.samples
+    .slice(0, NUM_PADS)
+    .map(({ filename, label }) => new SamplerModel(filename, label));
 
   const paramPanels = samplers.map((model) => () => (
     <ParamPanel model={model} />

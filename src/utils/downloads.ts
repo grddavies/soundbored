@@ -1,22 +1,26 @@
-import { Base64Binary } from './Base64Binary';
-
-export async function getGitHubFile(owner: string, repo: string, path: string) {
+/**
+ * Gets a base64 encoded file from a GitHub Repo
+ * @param owner Repo owner name
+ * @param repo Repo name
+ * @param path path to file
+ * @returns b64 encoded string
+ */
+export async function getGitHubFile(
+  owner: string,
+  repo: string,
+  path: string,
+): Promise<string> {
   const res = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
-  )
-    .then((d) => d.json())
-    .then((d) =>
-      fetch(`https://api.github.com/repos/${owner}/${repo}/git/blobs/${d.sha}`),
-    )
-    .then((d) => d.json())
-    .catch((e) => console.error(e));
-  return res;
-}
-
-export async function getDirtSample(path: string) {
-  const owner = 'tidalcycles';
-  const repo = 'Dirt-Samples';
-  const res = await getGitHubFile(owner, repo, path);
-  const decoded = Base64Binary.decodeArrayBuffer(res.content);
-  return new Blob([decoded], { type: 'audio/wav' });
+    {
+      headers: {
+        'Content-Type': 'application/vnd.github.raw',
+      },
+    },
+  );
+  if (!res.ok) {
+    throw new Error(`Error fetching file:'${path}'\n${await res.text()}`);
+  }
+  const resJson = await res.json();
+  return resJson.content;
 }
