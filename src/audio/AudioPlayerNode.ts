@@ -1,4 +1,3 @@
-import assert from 'assert';
 // playback position hack:
 // https://github.com/WebAudio/web-audio-api/issues/2397#issuecomment-459514360
 
@@ -16,7 +15,7 @@ export class AudioPlayerNode {
   private _playing = false;
 
   constructor(context: AudioContext, options?: AudioBufferSourceOptions) {
-    // initialize component audio nodes
+    // Initialize component audio nodes
     this.audio = new AudioBufferSourceNode(context, options);
     this._splitter = new ChannelSplitterNode(context);
     this._analyser = new AnalyserNode(context);
@@ -47,35 +46,43 @@ export class AudioPlayerNode {
    * @param buffer AudioBuffer to load into node
    * */
   public loadBuffer(audioBuffer: AudioBuffer) {
-    // create a new AudioBuffer of the same length as param with one extra channel
+    // Create a new AudioBuffer of the same length as param with one extra channel
     // load it into the AudioBufferSourceNode
+    const n_channels = Math.max(audioBuffer.numberOfChannels, 3);
+    const p_channel = n_channels - 1;
     this.audio.buffer = new AudioBuffer({
       length: audioBuffer.length,
       sampleRate: audioBuffer.sampleRate,
-      numberOfChannels: audioBuffer.numberOfChannels + 1,
+      numberOfChannels: n_channels,
     });
 
     // Copy data from the audioBuffer arg to our new AudioBuffer
-    for (let index = 0; index < audioBuffer.numberOfChannels; index++) {
-      this.audio.buffer.copyToChannel(audioBuffer.getChannelData(index), index);
+    if (audioBuffer.numberOfChannels == 1) {
+      // We upmix mono audio to L and R channels
+      this.audio.buffer.copyToChannel(audioBuffer.getChannelData(0), 0);
+      this.audio.buffer.copyToChannel(audioBuffer.getChannelData(0), 1);
+    } else {
+      for (let ch = 0; ch < audioBuffer.numberOfChannels; ch++) {
+        this.audio.buffer.copyToChannel(audioBuffer.getChannelData(ch), ch);
+      }
     }
 
     // Fill up the position channel with numbers from 0 to 1
-    for (let index = 0; index < audioBuffer.length; index++) {
-      this.audio.buffer.getChannelData(audioBuffer.numberOfChannels)[index] =
-        index / audioBuffer.length;
+    const posBuffer = this.audio.buffer.getChannelData(p_channel);
+    for (let i = 0; i < audioBuffer.length; i++) {
+      posBuffer[i] = i / audioBuffer.length;
     }
 
     // Split the channels
     this.audio.connect(this._splitter);
 
     // Connect all the audio channels to the line out
-    for (let index = 0; index < audioBuffer.numberOfChannels; index++) {
-      this._splitter.connect(this._audioOut, index, index);
+    for (let ch = 0; ch < p_channel; ch++) {
+      this._splitter.connect(this._audioOut, ch, ch);
     }
 
     // Connect the position channel to an analyzer so we can extract position data
-    this._splitter.connect(this._analyser, audioBuffer.numberOfChannels);
+    this._splitter.connect(this._analyser, p_channel);
   }
 
   get playbackRate() {
