@@ -6,8 +6,6 @@
   position: relative;
   overflow: hidden;
 
-  margin: 1em;
-
   & canvas {
     position: absolute;
     top: 0;

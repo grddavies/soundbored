@@ -1,12 +1,35 @@
 #root {
-  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
-  display: flex;
-  justify-content: center;
+
+  width: 66vw;
+  max-width: 800px;
+
+  @media (max-width: 768px) {
+    width: 80vw;
+  }
+
+  @media (max-width: 480px) {
+    width: 90vw;
+  }
+
+  @media (max-width: 320px) {
+    width: 98vw;
+  }
+
 }
 
-.App {
-  max-width: 600px;
+.buttonGrid {
+  width: 100%;
+  display: grid;
+
+  margin-top: calc(3 * 0.65vh);
+
+  grid-template-columns: repeat(4, 1fr);
+  gap: calc(3 * 0.65vh) calc(3 * 0.65vw);
+
+  /* 3 column grid on small screens */
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

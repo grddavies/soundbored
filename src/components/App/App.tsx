@@ -56,29 +56,21 @@ export function App() {
       >
         <div>Play audio by hitting the buttons</div>
       </Modal>
-      <div class="App flex flex-column justify-content-center">
-        <div class="grid">
-          <h1 class="col-12">SoundBored</h1>
-          <div class="col-12">
-            <div class="parameterPanel grid grid-nogutter">
-              <SampleExplorer />
-              <Dynamic component={paramPanels[selectedIdx()]} />
-            </div>
-          </div>
-          <div class="col-12">
-            <div class="grid grid-nogutter">
-              {samplers.map((x, i) => (
-                <div class="col-3">
-                  <ButtonPad
-                    model={x}
-                    onClick={() => {
-                      setSelectedIndex(i);
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+      <div class="App">
+        <h1>SoundBored</h1>
+        <div class="parameterPanel grid grid-nogutter">
+          <SampleExplorer />
+          <Dynamic component={paramPanels[selectedIdx()]} />
+        </div>
+        <div class="buttonGrid">
+          {samplers.map((x, i) => (
+            <ButtonPad
+              model={x}
+              onClick={() => {
+                setSelectedIndex(i);
+              }}
+            />
+          ))}
         </div>
       </div>
     </>
