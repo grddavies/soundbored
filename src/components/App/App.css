@@ -3,7 +3,11 @@
   text-align: center;
 
   width: 66vw;
-  max-width: 800px;
+  max-width: 660px;
+
+  @media (max-width: 900px) {
+    width: 75vw;
+  }
 
   @media (max-width: 768px) {
     width: 80vw;
@@ -16,18 +20,21 @@
   @media (max-width: 320px) {
     width: 98vw;
   }
+}
 
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .buttonGrid {
   width: 100%;
   display: grid;
-
-  margin-top: calc(3 * 0.65vh);
+  margin-top: clamp(0.125em, 2vh, 3em);
+  gap: clamp(0.125em, 2vh, 3em) clamp(0.125em, 2vw, 3em);
 
   grid-template-columns: repeat(4, 1fr);
-  gap: calc(3 * 0.65vh) calc(3 * 0.65vw);
-
   /* 3 column grid on small screens */
   @media (max-width: 480px) {
     grid-template-columns: repeat(3, 1fr);

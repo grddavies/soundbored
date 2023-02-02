@@ -21,6 +21,8 @@
     width: 100%;
     height: 100%;
     background-color: tan;
-    opacity: 0.6;
+    font-size: small;
+    text-align: left;
+    word-break: break-all;
   }
 }

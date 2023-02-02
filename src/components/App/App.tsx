@@ -59,7 +59,7 @@ export function App() {
       <div class="App">
         <h1>SoundBored</h1>
         <div class="parameterPanel grid grid-nogutter">
-          <SampleExplorer />
+          <SampleExplorer selectedSampler={samplers[selectedIdx()]} />
           <Dynamic component={paramPanels[selectedIdx()]} />
         </div>
         <div class="buttonGrid">
