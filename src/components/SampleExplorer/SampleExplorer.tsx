@@ -36,7 +36,7 @@ export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
       />
       <div class="sampleExplorer-header grid grid-nogutter">
         <div class="col-9">Samples</div>
-        <div class="col-3 flex align-items-center">
+        <div class="col-3 flex align-items-center justify-content-center">
           <BiSolidFolderPlus
             class="icon"
             onClick={() => document.getElementById('fileExplorer')?.click()}
@@ -73,7 +73,7 @@ export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
                   {sample as string}
                 </div>
                 {i() === selectedIdx() && (
-                  <div class="col-3 flex align-items-center">
+                  <div class="col-3 flex align-items-center justify-content-center">
                     <BiSolidTrash
                       class="icon"
                       onClick={async () =>

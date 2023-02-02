@@ -3,8 +3,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.4rem;
   width: 50vw;
+  max-width: calc(0.75 * var(--max-width));
   padding: 1.3rem;
   min-height: 250px;
   position: absolute;
@@ -19,6 +19,14 @@
     position: absolute;
     top: 1em;
     right: 1em;
+  }
+
+  & .modal-content {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
   }
 
   & p {

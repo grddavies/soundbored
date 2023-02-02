@@ -49,12 +49,25 @@ export function App() {
       <Modal
         show={showHelp()}
         onClose={() => {
-          AudioContextManager.init();
+          if (!AudioContextManager.initialized.value) {
+            AudioContextManager.init();
+          }
           setShowHelp(false);
         }}
         buttonText="Ok"
       >
-        <div>Play audio by hitting the buttons</div>
+        <div class="grid">
+          <div class="col">
+            <h1>Help</h1>
+            <ul class="text-left">
+              <li>Play sounds by hitting the pads</li>
+              <li>Edit sounds in the control panel</li>
+              <li>Load new sounds from the sample explorer</li>
+              <li>Upload your own sounds</li>
+              <li>Rename pads via the control panel</li>
+            </ul>
+          </div>
+        </div>
       </Modal>
       <div class="App">
         <h1>SoundBored</h1>

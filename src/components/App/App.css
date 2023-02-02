@@ -1,9 +1,10 @@
 #root {
+  --max-width: 660px;
   margin: 0 auto;
   text-align: center;
 
   width: 66vw;
-  max-width: 660px;
+  max-width: var(--max-width);
 
   @media (max-width: 900px) {
     width: 75vw;
