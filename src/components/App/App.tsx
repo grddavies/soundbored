@@ -49,36 +49,41 @@ export function App() {
       <Modal
         show={showHelp()}
         onClose={() => {
-          AudioContextManager.init();
+          if (!AudioContextManager.initialized.value) {
+            AudioContextManager.init();
+          }
           setShowHelp(false);
         }}
         buttonText="Ok"
       >
-        <div>Play audio by hitting the buttons</div>
-      </Modal>
-      <div class="App flex flex-column justify-content-center">
         <div class="grid">
-          <h1 class="col-12">SoundBored</h1>
-          <div class="col-12">
-            <div class="parameterPanel grid grid-nogutter">
-              <SampleExplorer />
-              <Dynamic component={paramPanels[selectedIdx()]} />
-            </div>
+          <div class="col">
+            <h1>Help</h1>
+            <ul class="text-left">
+              <li>Play sounds by hitting the pads</li>
+              <li>Edit sounds in the control panel</li>
+              <li>Load new sounds from the sample explorer</li>
+              <li>Upload your own sounds</li>
+              <li>Rename pads via the control panel</li>
+            </ul>
           </div>
-          <div class="col-12">
-            <div class="grid grid-nogutter">
-              {samplers.map((x, i) => (
-                <div class="col-3">
-                  <ButtonPad
-                    model={x}
-                    onClick={() => {
-                      setSelectedIndex(i);
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+        </div>
+      </Modal>
+      <div class="App">
+        <h1>SoundBored</h1>
+        <div class="parameterPanel grid grid-nogutter">
+          <SampleExplorer selectedSampler={samplers[selectedIdx()]} />
+          <Dynamic component={paramPanels[selectedIdx()]} />
+        </div>
+        <div class="buttonGrid">
+          {samplers.map((x, i) => (
+            <ButtonPad
+              model={x}
+              onClick={() => {
+                setSelectedIndex(i);
+              }}
+            />
+          ))}
         </div>
       </div>
     </>

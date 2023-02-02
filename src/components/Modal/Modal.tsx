@@ -16,7 +16,7 @@ export const Modal: ParentComponent<ModalProps> = (props) => {
         <div class="topbar flex flex-row-reverse">
           <button onClick={props.onClose}>⨉</button>
         </div>
-        <div>{props.children}</div>
+        <div class="modal-content p-2">{props.children}</div>
         {props.buttonText && (
           <button onClick={props.onClose}>{props.buttonText}</button>
         )}

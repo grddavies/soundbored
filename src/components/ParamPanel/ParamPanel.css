@@ -1,5 +1,4 @@
 .parameterPanel {
-  margin: 0em 1em;
   border: 1px solid var(--orange);
   height: 150px;
   border-radius: 8px;
@@ -22,6 +21,8 @@
     width: 100%;
     height: 100%;
     background-color: tan;
-    opacity: 0.6;
+    font-size: small;
+    text-align: left;
+    word-break: break-all;
   }
 }

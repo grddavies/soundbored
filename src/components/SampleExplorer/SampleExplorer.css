@@ -12,13 +12,12 @@
     border-bottom: 1px solid var(--orange);
     flex: 0 1 auto;
     padding-left: 0.5em;
+    align-items: center;
   }
 
   & .icon {
-    top: 25%;
-    right: 0.5em;
     cursor: pointer;
-    position: absolute;
+    background-color: var(--bg-colour);
   }
 
   & .sampleExplorer-list {
@@ -30,7 +29,13 @@
   & .sampleExplorer-item {
     padding-left: 0.5em;
     border-top: 1px solid var(--orange);
-    overflow-x: scroll;
+    display: flex;
+    align-items: center;
+
+    & div {
+      overflow-x: scroll;
+      white-space: nowrap;
+    }
 
     &:last-child {
       border-bottom: 1px solid var(--orange);

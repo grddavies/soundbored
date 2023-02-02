@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@solid-primitives/pointer': ^0.2.5
   '@types/assert': ^1.5.6
   assert: ^2.0.0
   dexie: ^3.2.2
@@ -18,6 +19,7 @@ specifiers:
   vite-tsconfig-paths: ^4.0.5
 
 dependencies:
+  '@solid-primitives/pointer': 0.2.5_solid-js@1.6.9
   assert: 2.0.0
   dexie: 3.2.2
   primeflex: 3.3.0
@@ -621,6 +623,53 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
     dev: true
+
+  /@solid-primitives/event-listener/2.2.6_solid-js@1.6.9:
+    resolution: {integrity: sha512-Lb2q888Apv8wqgZ3WvPlt8ic2rEmHx6QT8d3pgi+JRSIRNwAysE6PZDmbwT6/hzzP1TIQG0IRZwh5tomfuqlaQ==}
+    peerDependencies:
+      solid-js: ^1.6.0
+    dependencies:
+      '@solid-primitives/utils': 5.0.0_solid-js@1.6.9
+      solid-js: 1.6.9
+    dev: false
+
+  /@solid-primitives/immutable/0.1.6_solid-js@1.6.9:
+    resolution: {integrity: sha512-P4wbDogtytijTV5En+bm6jfFbf4ZOMnfmttUJ8642MQ0tJ2VS2z8iJplg9YFJIltXz7W/+2mdfw2XczlkTxeGg==}
+    peerDependencies:
+      solid-js: ^1.6.0
+    dependencies:
+      '@solid-primitives/utils': 5.0.0_solid-js@1.6.9
+      solid-js: 1.6.9
+    dev: false
+
+  /@solid-primitives/pointer/0.2.5_solid-js@1.6.9:
+    resolution: {integrity: sha512-5zXx4ZlY2FdYX2eZ/y16DbIOiGblfpPOx1XZqNyD/FA4pryZhJJP3ECT9aTKzvYMwbI1k7gD4ClyQ71p6tjjvA==}
+    peerDependencies:
+      solid-js: ^1.6.0
+    dependencies:
+      '@solid-primitives/event-listener': 2.2.6_solid-js@1.6.9
+      '@solid-primitives/immutable': 0.1.6_solid-js@1.6.9
+      '@solid-primitives/rootless': 1.2.3_solid-js@1.6.9
+      '@solid-primitives/utils': 5.0.0_solid-js@1.6.9
+      solid-js: 1.6.9
+    dev: false
+
+  /@solid-primitives/rootless/1.2.3_solid-js@1.6.9:
+    resolution: {integrity: sha512-g6sKTQt8onmyWAh92q/+7ZwAZwVQx5qCDBEo7c0+yWZbFK81t6jWCPIYDWXpI1QJ/xxLg41iuN6Eb3fJL5IDHA==}
+    peerDependencies:
+      solid-js: ^1.6.0
+    dependencies:
+      '@solid-primitives/utils': 5.0.0_solid-js@1.6.9
+      solid-js: 1.6.9
+    dev: false
+
+  /@solid-primitives/utils/5.0.0_solid-js@1.6.9:
+    resolution: {integrity: sha512-VTvsVYFuZlglLqaEnsY/QIjKAdWs8YKn3+bhiOHkogaE8CSosu2Sg7jybnCfcuw7fePVG75MkoGbQylyo+yovg==}
+    peerDependencies:
+      solid-js: ^1.6.0
+    dependencies:
+      solid-js: 1.6.9
+    dev: false
 
   /@types/assert/1.5.6:
     resolution: {integrity: sha512-Y7gDJiIqb9qKUHfBQYOWGngUpLORtirAVPuj/CWJrU2C6ZM4/y3XLwuwfGMF8s7QzW746LQZx23m0+1FSgjfug==}

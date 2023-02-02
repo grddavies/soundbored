@@ -1,8 +1,11 @@
-import './ButtonPad.css';
+import { createPointerListeners } from '@solid-primitives/pointer';
 import { Component, createEffect } from 'solid-js';
-import { SamplerModel } from 'src/models';
-import { useAudioContext, useObservable } from 'src/hooks';
+
 import { AudioPlayerNode } from 'src/audio/AudioPlayerNode';
+import { useAudioContext, useObservable } from 'src/hooks';
+import { SamplerModel } from 'src/models';
+
+import './ButtonPad.css';
 
 type ButtonPadProps = {
   model: SamplerModel;
@@ -13,8 +16,12 @@ export const ButtonPad: Component<ButtonPadProps> = ({ model, onClick }) => {
   let container: HTMLDivElement;
   let canvas: HTMLCanvasElement;
   let node: AudioPlayerNode | undefined;
+  let playButton: HTMLButtonElement;
+  let stopButton: HTMLButtonElement;
+
   const audioContext = useAudioContext();
   model.audioContext.value = audioContext();
+
   const [playbackRate] = useObservable(model.playbackRate);
   const [label] = useObservable(model.label);
 
@@ -47,36 +54,46 @@ export const ButtonPad: Component<ButtonPadProps> = ({ model, onClick }) => {
     }
   }
 
+  const handlePlay = () => {
+    if (!audioContext() || !model.loaded) {
+      return;
+    }
+    node?.stop();
+    node = new AudioPlayerNode(audioContext()!, {
+      playbackRate: playbackRate(),
+    });
+    node.loadBuffer(model.audioBuffer);
+    node.connect(audioContext()!.destination);
+    node.start();
+    animate();
+  };
+
+  const handleStop = () => {
+    if (node && model.loaded) {
+      node.stop();
+    }
+  };
+
+  createPointerListeners({
+    target: () => playButton,
+    pointerTypes: ['touch', 'pen', 'mouse'],
+    onDown: handlePlay,
+  });
+
+  createPointerListeners({
+    target: () => stopButton!,
+    pointerTypes: ['touch', 'pen', 'mouse'],
+    onDown: handleStop,
+  });
+
   return (
     <div ref={container!} class="buttonPad" onClick={onClick}>
       <canvas ref={canvas!} />
-      <button
-        onClick={() => {
-          if (!audioContext() || !model.loaded) {
-            return;
-          }
-          node?.stop();
-          node = new AudioPlayerNode(audioContext()!, {
-            playbackRate: playbackRate(),
-          });
-          node.loadBuffer(model.audioBuffer);
-          node.connect(audioContext()!.destination);
-          node.start();
-          animate();
-        }}
-      >
+      <button ref={playButton!}>
         <div class="label">{label()}</div>
         <div>&#9658;</div>
       </button>
-      <button
-        onClick={() => {
-          if (node && model.loaded) {
-            node.stop();
-          }
-        }}
-      >
-        &#9632;
-      </button>
+      <button ref={stopButton!}>&#9632;</button>
     </div>
   );
 };

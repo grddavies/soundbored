@@ -1,5 +1,6 @@
 import { Component, createSignal } from 'solid-js';
 
+import { useDoubleTap } from 'src/hooks/useDoubleTap';
 import { useObservable } from 'src/hooks/useObservable';
 import { SamplerModel } from 'src/models';
 
@@ -10,12 +11,20 @@ type ParamPanelProps = {
 };
 
 export const ParamPanel: Component<ParamPanelProps> = (props) => {
+  let playbackRateControl: HTMLInputElement;
   const [label, setLabel] = useObservable(props.model.label);
   const [playbackRate, setPlaybackRate] = useObservable(
     props.model.playbackRate,
   );
   const [src, setSrc] = useObservable(props.model.src);
   const [editingLabel, setEditingLabel] = createSignal(false);
+
+  useDoubleTap(
+    () => playbackRateControl!,
+    () => {
+      setPlaybackRate(1.0);
+    },
+  );
   return (
     <div class="col grid grid-nogutter">
       <div class="col-3">
@@ -25,10 +34,7 @@ export const ParamPanel: Component<ParamPanelProps> = (props) => {
             value={label()}
             maxlength="12"
             class="label"
-            onInput={(e) =>
-              // TODO: prevent users emptying this div!
-              e.currentTarget.value && setLabel(e.currentTarget.value)
-            }
+            onInput={(e) => setLabel(e.currentTarget.value)}
             onMouseLeave={() => setEditingLabel(false)}
           />
         ) : (
@@ -38,20 +44,15 @@ export const ParamPanel: Component<ParamPanelProps> = (props) => {
         )}
         <label for="playbackRateControl">Playback speed</label>
         <input
+          ref={playbackRateControl!}
           id="playbackRateControl"
           type="range"
           min={0.01}
           step={0.01}
           max={2.0}
-          style={{ width: '75%' }}
+          style={{ width: '85%' }}
           value={playbackRate()}
           onInput={(e) => setPlaybackRate(e.currentTarget.valueAsNumber)}
-          onClick={(e) => {
-            // Revert playbackRate to default on double click
-            if (e.detail > 1) {
-              setPlaybackRate(1.0);
-            }
-          }}
         />
       </div>
       <div class="col p-4">
