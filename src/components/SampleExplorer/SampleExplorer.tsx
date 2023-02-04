@@ -1,5 +1,5 @@
 import { createDexieArrayQuery } from 'solid-dexie';
-import { BiSolidFolderPlus, BiSolidTrash } from 'solid-icons/bi';
+import { BiRegularCloudUpload, BiSolidTrash } from 'solid-icons/bi';
 import { Component, createSignal, For } from 'solid-js';
 
 import { useDoubleTap } from 'src/hooks/useDoubleTap';
@@ -39,11 +39,13 @@ export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
       />
       <div class="sampleExplorer-header grid grid-nogutter">
         <div class="col-9">Samples</div>
-        <div class="col-3 flex align-items-center justify-content-center">
-          <BiSolidFolderPlus
-            class="icon"
+        <div class="col-3">
+          <button
+            class="upload"
             onClick={() => document.getElementById('fileExplorer')?.click()}
-          />
+          >
+            <BiRegularCloudUpload size={18} />
+          </button>
         </div>
       </div>
       <div class="sampleExplorer-list">
@@ -76,15 +78,17 @@ export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
                   {sample as string}
                 </div>
                 {i() === selectedIdx() && (
-                  <div class="col-3 flex align-items-center justify-content-center">
-                    <BiSolidTrash
-                      class="icon"
-                      onClick={async () =>
-                        // TODO: use non-blocking modal
-                        confirm(`Delete '${sample}' from sample bank?`) &&
-                        AppStore.instance.deleteSampleByName(sample)
-                      }
-                    />
+                  <div class="col-3">
+                    <button>
+                      <BiSolidTrash
+                        class="icon"
+                        onClick={async () =>
+                          // TODO: use non-blocking modal
+                          confirm(`Delete '${sample}' from sample bank?`) &&
+                          AppStore.instance.deleteSampleByName(sample)
+                        }
+                      />
+                    </button>
                   </div>
                 )}
               </div>
