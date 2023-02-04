@@ -39,6 +39,9 @@ export const SampleControls: Component<SampleControlsProps> = (props) => {
               maxlength="12"
               class="sampleLabel"
               onInput={(e) => setLabel(e.currentTarget.value)}
+              onKeyUp={(e) => {
+                if (e.key === 'Enter') setEditingLabel(false);
+              }}
               onMouseLeave={() => setEditingLabel(false)}
             />
           ) : (
