@@ -15,13 +15,10 @@ export function App() {
   const appInitialized = appInit(); // Asyncronously load default samples
   const audioContext = useAudioContext();
 
-  // load files on context load
+  // Load files on context load
   createEffect(() => {
-    // Add our reactive AudioContext
-    const ctx = audioContext();
-    if (!ctx) {
-      return;
-    }
+    const ctx = audioContext(); // Reactive audio context
+    if (!ctx) return;
     samplers.forEach(async (model) => {
       model.audioContext.value = ctx;
       await appInitialized;
@@ -53,7 +50,7 @@ export function App() {
       >
         <div class="grid">
           <div class="col">
-            <h1>Help</h1>
+            <h1>SoundBored</h1>
             <div class="text-left">
               <div class="py-2">Trigger samples by hitting the pads</div>
               <div class="py-2">Load new sounds from the sample explorer</div>
@@ -63,7 +60,6 @@ export function App() {
         </div>
       </Modal>
       <div class="App">
-        <h1>SoundBored</h1>
         <SampleEditor samplers={samplers} selectedSamplerIdx={selectedIdx()} />
         <div class="buttonGrid">
           {samplers.map((x, i) => (
