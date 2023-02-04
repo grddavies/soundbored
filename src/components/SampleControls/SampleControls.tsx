@@ -29,7 +29,7 @@ export const SampleControls: Component<SampleControlsProps> = (props) => {
   );
 
   return (
-    <div class="sampleControls col h-full px-2">
+    <div class="sampleControls col px-2">
       <div class="flex">
         <div class="sampleLabel">
           {editingLabel() ? (
