@@ -27,6 +27,8 @@
     align-items: center;
 
     & .upload {
+      transition: color 0.25s;
+
       &:hover,
       &:focus {
         color: var(--orange);
@@ -50,6 +52,7 @@
     border-top: 1px solid var(--fg-dark);
     display: flex;
     align-items: stretch;
+    transition: background-color 0.15s;
 
     & div {
       overflow-x: scroll;

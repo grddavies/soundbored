@@ -1,4 +1,5 @@
 import { createPointerListeners } from '@solid-primitives/pointer';
+import { BiRegularPlay, BiRegularStop } from 'solid-icons/bi';
 import { Component, createEffect } from 'solid-js';
 
 import { AudioPlayerNode } from 'src/audio/AudioPlayerNode';
@@ -91,9 +92,11 @@ export const ButtonPad: Component<ButtonPadProps> = ({ model, onClick }) => {
       <canvas ref={canvas!} />
       <button ref={playButton!}>
         <div class="label">{label()}</div>
-        <div>&#9658;</div>
+        <BiRegularPlay size={24} />
       </button>
-      <button ref={stopButton!}>&#9632;</button>
+      <button ref={stopButton!}>
+        <BiRegularStop size={24} />
+      </button>
     </div>
   );
 };

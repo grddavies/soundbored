@@ -12,7 +12,7 @@ export const Modal: ParentComponent<ModalProps> = (props) => {
   let overlay: HTMLDivElement;
   return (
     <>
-      <section ref={modal!} classList={{ modal: true, hidden: !props.show }}>
+      <div ref={modal!} classList={{ modal: true, hidden: !props.show }}>
         <div class="topbar flex flex-row-reverse">
           <button onClick={props.onClose}>⨉</button>
         </div>
@@ -20,7 +20,7 @@ export const Modal: ParentComponent<ModalProps> = (props) => {
         {props.buttonText && (
           <button onClick={props.onClose}>{props.buttonText}</button>
         )}
-      </section>
+      </div>
       <div
         ref={overlay!}
         classList={{ 'modal-overlay': true, hidden: !props.show }}
