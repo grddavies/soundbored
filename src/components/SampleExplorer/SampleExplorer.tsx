@@ -19,11 +19,14 @@ export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
   );
   const [selectedIdx, setSelectedIdx] = createSignal<number | null>(null);
   return (
-    <div class="sampleExplorer col-3" onMouseLeave={() => setSelectedIdx(null)}>
+    <div
+      class={`sampleExplorer col-3`}
+      onMouseLeave={() => setSelectedIdx(null)}
+    >
       <input
         id="fileExplorer"
         type="file"
-        accept=".wav,.mp3,.aac,.ogg"
+        accept="audio/*"
         hidden
         multiple
         onChange={(e) => {

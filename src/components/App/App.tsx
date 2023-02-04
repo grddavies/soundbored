@@ -3,7 +3,7 @@ import { createEffect, createSignal } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import { AudioContextManager } from 'src/audio';
 
-import { ButtonPad, Modal, ParamPanel, SampleExplorer } from 'src/components';
+import { ButtonPad, Modal, SampleEditor, SampleExplorer } from 'src/components';
 import { NUM_PADS } from 'src/defaults/constants';
 import { useAudioContext } from 'src/hooks';
 import { SamplerModel } from 'src/models';
@@ -34,10 +34,6 @@ export function App() {
   const samplers = Defaults.samples
     .slice(0, NUM_PADS)
     .map(({ filename, label }) => new SamplerModel(filename, label));
-
-  const paramPanels = samplers.map((model) => () => (
-    <ParamPanel model={model} />
-  ));
 
   // Index of the selected sampler
   const [selectedIdx, setSelectedIndex] = createSignal(0);
@@ -71,10 +67,7 @@ export function App() {
       </Modal>
       <div class="App">
         <h1>SoundBored</h1>
-        <div class="parameterPanel grid grid-nogutter">
-          <SampleExplorer selectedSampler={samplers[selectedIdx()]} />
-          <Dynamic component={paramPanels[selectedIdx()]} />
-        </div>
+        <SampleEditor samplers={samplers} selectedSamplerIdx={selectedIdx()} />
         <div class="buttonGrid">
           {samplers.map((x, i) => (
             <ButtonPad

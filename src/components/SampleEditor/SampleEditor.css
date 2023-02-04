@@ -1,0 +1,7 @@
+.sampleEditor {
+  border: 1px solid var(--orange);
+  box-sizing: border-box;
+  background-color: var(--fg-light);
+  height: 150px;
+  border-radius: 8px;
+}

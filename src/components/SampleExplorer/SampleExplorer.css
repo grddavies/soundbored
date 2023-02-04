@@ -1,7 +1,7 @@
 .sampleExplorer {
   font-size: small;
   border-radius: 8px 0 0 8px;
-  border-right: 1px solid var(--orange);
+  border-right: 1px solid var(--fg-dark);
   text-align: left;
   height: 100%;
   display: flex;
@@ -9,7 +9,7 @@
   overflow: hidden;
 
   & .sampleExplorer-header {
-    border-bottom: 1px solid var(--orange);
+    border-bottom: 1px solid var(--fg-dark);
     flex: 0 1 auto;
     padding-left: 0.5em;
     align-items: center;
@@ -28,7 +28,7 @@
 
   & .sampleExplorer-item {
     padding-left: 0.5em;
-    border-top: 1px solid var(--orange);
+    border-top: 1px solid var(--fg-dark);
     display: flex;
     align-items: center;
 
@@ -38,11 +38,11 @@
     }
 
     &:last-child {
-      border-bottom: 1px solid var(--orange);
+      border-bottom: 1px solid var(--fg-dark);
     }
 
     &.selected {
-      color: var(--orange);
+      background-color: var(--orange);
     }
 
     &::-webkit-scrollbar {
