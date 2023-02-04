@@ -1,0 +1,22 @@
+.sampleView {
+  @media (max-width: 279px) {
+    display: none;
+  }
+
+  border-radius: 8px;
+  box-sizing: border-box;
+  border: 1px solid var(--orange);
+  position: relative;
+  width: 100%;
+  height: 50%;
+  /* background-color: var(--fg-dark); */
+  background-color: var(--bg-color-2);
+  font-size: small;
+  text-align: left;
+  word-break: break-all;
+
+  & canvas {
+    width: 100%;
+    height: 100%;
+  }
+}

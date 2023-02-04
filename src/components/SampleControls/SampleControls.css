@@ -1,0 +1,32 @@
+.sampleControls {
+  text-align: left;
+  padding: 0.25rem;
+  font-size: small;
+  box-sizing: border-box;
+
+  & .sampleLabel {
+    height: 1.25em;
+    width: 6.5em;
+    border-radius: 3px;
+    margin-bottom: 0.25em;
+    padding-left: 0.1em;
+
+    & input {
+      border: none;
+      padding: 0;
+    }
+  }
+
+  & input[type='text'] {
+    font-family: inherit;
+    width: 6.5em;
+  }
+
+  & input[type='range'] {
+    width: 100%;
+  }
+
+  & label {
+    font-size: small;
+  }
+}
