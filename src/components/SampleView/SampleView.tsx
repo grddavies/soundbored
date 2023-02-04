@@ -93,7 +93,6 @@ export const SampleView: Component<SampleViewProps> = (props) => {
 
   createEffect(async () => {
     const audioCtx = getAudioCtx();
-    // TODO: Cache processed audiodata in db
     if (!audioCtx) return;
     const waveform =
       (await AppStore.instance.getSampleWaveform(src())) ??

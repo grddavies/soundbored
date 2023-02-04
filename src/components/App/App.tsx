@@ -1,6 +1,5 @@
 import 'primeflex/primeflex.css';
 import { createEffect, createSignal } from 'solid-js';
-import { Dynamic } from 'solid-js/web';
 import { AudioContextManager } from 'src/audio';
 
 import { ButtonPad, Modal, SampleEditor, SampleExplorer } from 'src/components';
@@ -55,13 +54,11 @@ export function App() {
         <div class="grid">
           <div class="col">
             <h1>Help</h1>
-            <ul class="text-left">
-              <li>Play sounds by hitting the pads</li>
-              <li>Edit sounds in the control panel</li>
-              <li>Load new sounds from the sample explorer</li>
-              <li>Upload your own sounds</li>
-              <li>Rename pads via the control panel</li>
-            </ul>
+            <div class="text-left">
+              <div class="py-2">Trigger samples by hitting the pads</div>
+              <div class="py-2">Load new sounds from the sample explorer</div>
+              <div class="py-2">Record and upload your own samples</div>
+            </div>
           </div>
         </div>
       </Modal>
