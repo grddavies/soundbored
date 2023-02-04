@@ -1,13 +1,12 @@
 import 'primeflex/primeflex.css';
 import { createEffect, createSignal } from 'solid-js';
-import { AudioContextManager } from 'src/audio';
 
-import { ButtonPad, Modal, SampleEditor, SampleExplorer } from 'src/components';
+import { ButtonPad, HelpModal, SampleEditor } from 'src/components';
 import { NUM_PADS } from 'src/defaults/constants';
+import { Defaults } from 'src/defaults/Defaults';
 import { useAudioContext } from 'src/hooks';
 import { SamplerModel } from 'src/models';
 import { appInit } from 'src/utils';
-import { Defaults } from 'src/defaults/Defaults';
 
 import './App.css';
 
@@ -38,27 +37,7 @@ export function App() {
 
   return (
     <>
-      <Modal
-        show={showHelp()}
-        onClose={() => {
-          if (!AudioContextManager.initialized.value) {
-            AudioContextManager.init();
-          }
-          setShowHelp(false);
-        }}
-        buttonText="Ok"
-      >
-        <div class="grid">
-          <div class="col">
-            <h1>SoundBored</h1>
-            <div class="text-left">
-              <div class="py-2">Trigger samples by hitting the pads</div>
-              <div class="py-2">Load new sounds from the sample explorer</div>
-              <div class="py-2">Record and upload your own samples</div>
-            </div>
-          </div>
-        </div>
-      </Modal>
+      <HelpModal show={showHelp()} setShow={setShowHelp} />
       <div class="App">
         <SampleEditor samplers={samplers} selectedSamplerIdx={selectedIdx()} />
         <div class="buttonGrid">
