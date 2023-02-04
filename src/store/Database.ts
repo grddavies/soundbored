@@ -14,7 +14,7 @@ export class Database extends Dexie {
   constructor() {
     super('SoundBoardDB');
     this.version(1).stores({
-      // NB: we don't declare blob attribute since we do not index it
+      // Only declare attributes that we index on
       sample: 'filename',
     });
   }
