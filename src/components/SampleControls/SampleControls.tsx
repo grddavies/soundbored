@@ -59,7 +59,6 @@ export const SampleControls: Component<SampleControlsProps> = (props) => {
         min={0.01}
         step={0.01}
         max={2.0}
-        style={{ width: '85%' }}
         value={playbackRate()}
         onInput={(e) => setPlaybackRate(e.currentTarget.valueAsNumber)}
       />

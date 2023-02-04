@@ -1,4 +1,3 @@
-import { IndexableTypePart } from 'dexie';
 import { Database } from 'src/store/Database';
 import { TSample } from './datatypes';
 
@@ -28,11 +27,17 @@ export class AppStore {
   }
 
   public async getSampleBlob(filename: string): Promise<Blob | undefined> {
-    return (
-      (await this._database.sample
-        .get({ filename })
-        .then((sample) => sample?.data)) ?? undefined
-    );
+    return await this._database.sample
+      .get({ filename })
+      .then((sample) => sample?.data);
+  }
+
+  public async getSampleWaveform(
+    filename: string,
+  ): Promise<Float32Array | undefined> {
+    return await this._database.sample
+      .get({ filename })
+      .then((sample) => sample?.waveform);
   }
 
   /**

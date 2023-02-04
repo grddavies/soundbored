@@ -1,8 +1,7 @@
-import { Disposable } from 'src/interfaces';
 import { AppStore } from 'src/store';
 import { Observable } from 'src/utils';
 
-export class SamplerModel implements Disposable {
+export class SamplerModel {
   public readonly src: Observable<string>;
 
   public readonly label: Observable<string>;
