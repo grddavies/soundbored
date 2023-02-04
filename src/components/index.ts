@@ -1,5 +1,6 @@
 export { App } from './App/App';
 export { ButtonPad } from './ButtonPad/ButtonPad';
+export { Knob } from './Knob/Knob';
 export { HelpModal } from './Modal/HelpModal';
 export { Modal } from './Modal/Modal';
 export { SampleControls } from './SampleControls/SampleControls';

@@ -4,6 +4,7 @@ import { style } from 'solid-js/web';
 import { useDoubleTap } from 'src/hooks/useDoubleTap';
 import { useObservable } from 'src/hooks/useObservable';
 import { SamplerModel } from 'src/models';
+// import { Knob } from '../Knob/Knob';
 import { SampleView } from '../SampleView/SampleView';
 
 import './SampleControls.css';
@@ -62,6 +63,7 @@ export const SampleControls: Component<SampleControlsProps> = (props) => {
         value={playbackRate()}
         onInput={(e) => setPlaybackRate(e.currentTarget.valueAsNumber)}
       />
+      {/* <Knob value={playbackRate()} min={0.01} max={2.0} size={56} /> */}
     </div>
   );
 };

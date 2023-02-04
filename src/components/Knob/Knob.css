@@ -1,0 +1,19 @@
+.knob {
+  stroke: var(--fg-dark);
+  stroke-width: 5px;
+  fill: none;
+
+  & .value {
+    stroke: none;
+    font-size: 24px;
+    fill: var(--text-white);
+  }
+
+  & .arc {
+    stroke: var(--orange);
+  }
+
+  & .dial {
+    stroke-width: 6px;
+  }
+}
