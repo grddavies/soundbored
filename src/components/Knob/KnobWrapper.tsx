@@ -21,12 +21,12 @@ export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
   const [value, setValue] = useObservable(props.value);
 
   const [initialVal, setInitialVal] = createSignal(props.value.value);
-  const [dragging, setDragging] = createSignal(false);
+  const [currentPointer, setCurrentPointer] = createSignal<number | null>(null);
   const [dragStartY, setDragStartY] = createSignal(0);
 
-  const handleMove = (e: MouseEvent) => {
+  const handleMove = (e: PointerEvent) => {
     console.log('MovePos ' + e.clientY);
-    if (dragging()) {
+    if (e.pointerId === currentPointer()) {
       // Prevent scroll
       e.preventDefault();
       e.stopImmediatePropagation();
@@ -42,11 +42,12 @@ export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
       );
     }
   };
-  const clearMoveHandler = () => {
-    console.log('clearH');
-    setDragging(false);
-    window.removeEventListener('pointermove', handleMove);
-    window.removeEventListener('pointerup', clearMoveHandler);
+  const clearMoveHandler = (e: PointerEvent) => {
+    if (e.pointerId === currentPointer()) {
+      setCurrentPointer(null);
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerup', clearMoveHandler);
+    }
   };
 
   createPointerListeners({
@@ -55,7 +56,7 @@ export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
       console.log('dragStart ' + e.clientY);
       setDragStartY(e.clientY);
       setInitialVal(value());
-      setDragging(true);
+      setCurrentPointer(e.pointerId);
       window.addEventListener('pointerup', clearMoveHandler, {
         passive: false,
       });
