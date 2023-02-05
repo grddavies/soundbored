@@ -1,4 +1,4 @@
-import { Component } from 'solid-js';
+import { Component, Ref } from 'solid-js';
 
 import './Knob.css';
 
@@ -12,6 +12,7 @@ type KnobProps = {
   max: number;
   min?: number;
   size?: number;
+  ref?: Ref<SVGSVGElement>;
 };
 
 export const Knob: Component<KnobProps> = (props) => {
@@ -32,44 +33,44 @@ export const Knob: Component<KnobProps> = (props) => {
   const trackFill = () => frac() * trackLength;
   const strokeDashArray = () => `${trackFill()} ${circumference - trackFill()}`;
   return (
-    <div class="knob">
-      <svg
-        viewBox="0 0 160 120"
-        xmlns="http://www.w3.org/2000/svg"
-        width={props.size ?? 48}
-        height={props.size ?? 48}
-      >
-        <circle
-          class="track"
-          cx={c.x}
-          cy={c.y}
-          r={r}
-          stroke-dasharray={`${trackLength} ${circumference - trackLength}`}
-          stroke-dashoffset={circleOffset * circumference}
-          fill="none"
-          stroke-linecap="round"
-        />
-        <circle
-          class="arc"
-          cx={c.x}
-          cy={c.y}
-          r={r}
-          stroke-dasharray={strokeDashArray()}
-          stroke-dashoffset={circleOffset * circumference}
-          stroke-linecap="round"
-          fill="none"
-        />
-        <path
-          class="dial"
-          d={`M ${c.x},${c.y} L ${c.x + relativeDialPos().x} ${
-            c.y + relativeDialPos().y
-          }`}
-          stroke-linecap="round"
-        />
-        <text class="value" x="70" y="100">
-          {props.value}
-        </text>
-      </svg>
-    </div>
+    <svg
+      ref={props.ref}
+      class="knob"
+      viewBox="0 0 120 120"
+      xmlns="http://www.w3.org/2000/svg"
+      width={props.size ?? 48}
+      height={props.size ?? 48}
+    >
+      <circle
+        class="track"
+        cx={c.x}
+        cy={c.y}
+        r={r}
+        stroke-dasharray={`${trackLength} ${circumference - trackLength}`}
+        stroke-dashoffset={circleOffset * circumference}
+        fill="none"
+        stroke-linecap="round"
+      />
+      <circle
+        class="arc"
+        cx={c.x}
+        cy={c.y}
+        r={r}
+        stroke-dasharray={strokeDashArray()}
+        stroke-dashoffset={circleOffset * circumference}
+        stroke-linecap="round"
+        fill="none"
+      />
+      <path
+        class="dial"
+        d={`M ${c.x},${c.y} L ${c.x + relativeDialPos().x} ${
+          c.y + relativeDialPos().y
+        }`}
+        stroke-linecap="round"
+      />
+      <text class="value" x="70" y="100">
+        {props.value.toFixed(1)}
+      </text>
+    </svg>
   );
 };

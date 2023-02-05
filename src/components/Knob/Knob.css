@@ -1,4 +1,5 @@
 .knob {
+  touch-action: none;
   stroke: var(--fg-dark);
   stroke-width: 5px;
   fill: none;
@@ -7,6 +8,7 @@
     stroke: none;
     font-size: 24px;
     fill: var(--text-white);
+    user-select: none;
   }
 
   & .arc {
