@@ -3,8 +3,7 @@ import { Component, Ref } from 'solid-js';
 import './Knob.css';
 
 function polarToCartesian(r: number, theta: number) {
-  const angle = (Math.PI * theta) / 180;
-  return { x: r * Math.cos(angle), y: r * Math.sin(angle) };
+  return { x: r * Math.cos(theta), y: r * Math.sin(theta) };
 }
 
 type KnobProps = {
@@ -19,17 +18,17 @@ export const Knob: Component<KnobProps> = (props) => {
   // Fraction the knob is turned
   const frac = () =>
     (props.value - (props.min ?? 0)) / (props.max - (props.min ?? 0));
-  // Full range of knob rotation
-  const fullTurn = 270;
+  // Range of knob rotation as fraction of 2Pi
+  const range = 3 / 4;
   // Graphic parameters
+  const pad = 10;
   const r = 50;
   const circumference = 2 * Math.PI * r;
-  // Total length of the track
-  const trackLength = (fullTurn / 360) * circumference;
-  const c = { x: 60, y: 60 }; // Circle Centre
-  const circleOffset = 0.75;
-  const thetaDeg = () => frac() * fullTurn + (1 - circleOffset) * 360;
-  const relativeDialPos = () => polarToCartesian(r, thetaDeg());
+  const trackLength = range * circumference;
+  const c = { x: r + pad, y: r + pad }; // Circle Centre
+  const circleOffset = 3 / 4;
+  const theta = () => 2 * Math.PI * (frac() * range + (1 - circleOffset));
+  const relativeDialPos = () => polarToCartesian(r, theta());
   const trackFill = () => frac() * trackLength;
   const strokeDashArray = () => `${trackFill()} ${circumference - trackFill()}`;
   return (
