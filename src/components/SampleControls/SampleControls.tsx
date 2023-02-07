@@ -51,7 +51,7 @@ export const SampleControls: Component<SampleControlsProps> = (props) => {
         <div>/{src()}</div>
       </div>
       <SampleView model={props.model} />
-      <div>
+      <div class="grid grid-nogutter pt-2">
         <KnobWrapper
           value={props.model.playbackRate}
           defaultValue={1}

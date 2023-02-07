@@ -22,7 +22,6 @@ export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
   const [initialVal, setInitialVal] = createSignal(props.value.value);
   const [currentPointer, setCurrentPointer] = createSignal<number | null>(null);
   const [dragStartY, setDragStartY] = createSignal(0);
-  const [dragStartTime, setDragStartTime] = createSignal(Infinity);
   const [precisionMode, setPrecisionMode] = createSignal(false);
 
   const handleMove = (e: PointerEvent) => {
@@ -33,12 +32,6 @@ export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
 
       // Precision adjustments
       if (e.pointerType === 'Mouse' && e.shiftKey) {
-        setPrecisionMode(true);
-      } else if (
-        !precisionMode() &&
-        performance.now() - dragStartTime() > 2000
-      ) {
-        setInitialVal(value());
         setPrecisionMode(true);
       }
 
@@ -69,7 +62,6 @@ export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
     target: () => svg,
     onDown: (e) => {
       setDragStartY(e.clientY);
-      setDragStartTime(performance.now());
       setInitialVal(value());
       setCurrentPointer(e.pointerId);
       window.addEventListener('pointerup', clearMoveHandler, {
@@ -87,8 +79,8 @@ export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
   );
 
   return (
-    <div>
-      <div class="text-xs">{props.label}</div>
+    <div class="col">
+      <div class="knob-label">{props.label}</div>
       <Knob
         ref={svg!}
         value={value()}

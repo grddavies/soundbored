@@ -20,3 +20,9 @@
     stroke-width: 6px;
   }
 }
+
+.knob-label {
+  font-size: small;
+  line-height: 0.9em;
+  width: 60px;
+}
