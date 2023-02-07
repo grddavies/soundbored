@@ -1,4 +1,5 @@
 import { Component, Ref } from 'solid-js';
+import { Vec2Add } from 'src/math';
 
 import './Knob.css';
 
@@ -23,14 +24,20 @@ export const Knob: Component<KnobProps> = (props) => {
   // Graphic parameters
   const pad = 10;
   const r = 50;
-  const circumference = 2 * Math.PI * r;
-  const trackLength = range * circumference;
   const c = { x: r + pad, y: r + pad }; // Circle Centre
   const circleOffset = 3 / 4;
   const theta = () => 2 * Math.PI * (frac() * range + (1 - circleOffset));
-  const relativeDialPos = () => polarToCartesian(r, theta());
-  const trackFill = () => frac() * trackLength;
-  const strokeDashArray = () => `${trackFill()} ${circumference - trackFill()}`;
+
+  // Offset for track beginning
+  const gap = Math.PI / 15;
+  const trackAngle = () => theta() + gap;
+
+  // Get the absolute coordinates given an angle
+  const pos = (angle: number) => {
+    const rel = polarToCartesian(r, angle);
+    return Vec2Add(rel, c);
+  };
+  const largeArc = () => (theta() > (3 * Math.PI) / 2 === true ? 1 : 0);
   return (
     <svg
       ref={props.ref}
@@ -40,32 +47,23 @@ export const Knob: Component<KnobProps> = (props) => {
       width={props.size ?? 48}
       height={props.size ?? 48}
     >
-      <circle
-        class="track"
-        cx={c.x}
-        cy={c.y}
-        r={r}
-        stroke-dasharray={`${trackLength} ${circumference - trackLength}`}
-        stroke-dashoffset={circleOffset * circumference}
-        fill="none"
-        stroke-linecap="round"
-      />
-      <circle
+      {theta() + gap < 2 * Math.PI && (
+        <path
+          class="track"
+          d={`M ${c.x + r},${c.y} A ${r} ${r} 0 ${
+            trackAngle() > Math.PI ? 0 : 1
+          } 0 ${pos(trackAngle()).x} ${pos(trackAngle()).y}`}
+        />
+      )}
+      <path
         class="arc"
-        cx={c.x}
-        cy={c.y}
-        r={r}
-        stroke-dasharray={strokeDashArray()}
-        stroke-dashoffset={circleOffset * circumference}
-        stroke-linecap="round"
-        fill="none"
+        d={`M ${c.x},${c.y + r} A ${r} ${r} 0 ${largeArc()} 1 ${
+          pos(theta()).x
+        } ${pos(theta()).y}`}
       />
       <path
         class="dial"
-        d={`M ${c.x},${c.y} L ${c.x + relativeDialPos().x} ${
-          c.y + relativeDialPos().y
-        }`}
-        stroke-linecap="round"
+        d={`M ${c.x},${c.y} L ${pos(theta()).x} ${pos(theta()).y}`}
       />
       <text class="value" x="70" y="100">
         {props.value.toFixed(1)}

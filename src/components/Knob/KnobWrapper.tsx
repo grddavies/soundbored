@@ -17,34 +17,49 @@ type KnobWrapperProps = {
 
 export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
   let svg: SVGSVGElement;
-  const SCALE = 4;
   const [value, setValue] = useObservable(props.value);
 
   const [initialVal, setInitialVal] = createSignal(props.value.value);
   const [currentPointer, setCurrentPointer] = createSignal<number | null>(null);
   const [dragStartY, setDragStartY] = createSignal(0);
+  const [dragStartTime, setDragStartTime] = createSignal(Infinity);
+  const [precisionMode, setPrecisionMode] = createSignal(false);
 
   const handleMove = (e: PointerEvent) => {
-    console.log('MovePos ' + e.clientY);
     if (e.pointerId === currentPointer()) {
       // Prevent scroll
       e.preventDefault();
       e.stopImmediatePropagation();
+
+      // Precision adjustments
+      if (e.pointerType === 'Mouse' && e.shiftKey) {
+        setPrecisionMode(true);
+      } else if (
+        !precisionMode() &&
+        performance.now() - dragStartTime() > 2000
+      ) {
+        setInitialVal(value());
+        setPrecisionMode(true);
+      }
+
       setValue(
         Math.min(
           props.max,
           Math.max(
             props.min ?? 0,
             initialVal() +
-              ((dragStartY() - e.clientY) / screen.availHeight) * SCALE,
+              ((dragStartY() - e.clientY) / screen.availHeight) *
+                (precisionMode() ? 1 : 4),
           ),
         ),
       );
     }
   };
+
   const clearMoveHandler = (e: PointerEvent) => {
     if (e.pointerId === currentPointer()) {
       setCurrentPointer(null);
+      setPrecisionMode(false);
       window.removeEventListener('pointermove', handleMove);
       window.removeEventListener('pointerup', clearMoveHandler);
     }
@@ -53,8 +68,8 @@ export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
   createPointerListeners({
     target: () => svg,
     onDown: (e) => {
-      console.log('dragStart ' + e.clientY);
       setDragStartY(e.clientY);
+      setDragStartTime(performance.now());
       setInitialVal(value());
       setCurrentPointer(e.pointerId);
       window.addEventListener('pointerup', clearMoveHandler, {

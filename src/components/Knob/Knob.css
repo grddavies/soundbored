@@ -1,7 +1,8 @@
 .knob {
   touch-action: none;
   stroke: var(--fg-dark);
-  stroke-width: 5px;
+  stroke-width: 6px;
+  stroke-linecap: round;
   fill: none;
 
   & .value {
