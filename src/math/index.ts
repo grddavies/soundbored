@@ -1,2 +1,1 @@
-export type { Vec2 } from './vec';
-export { Vec2Add } from './vec';
+export { type Vec2, Vec2Add } from './Vec';

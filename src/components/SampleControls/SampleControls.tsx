@@ -1,6 +1,5 @@
 import { Component, createSignal } from 'solid-js';
 
-import { useDoubleTap } from 'src/hooks/useDoubleTap';
 import { useObservable } from 'src/hooks/useObservable';
 import { SamplerModel } from 'src/models';
 import { KnobWrapper } from '../Knob/KnobWrapper';
@@ -13,21 +12,9 @@ type SampleControlsProps = {
 };
 
 export const SampleControls: Component<SampleControlsProps> = (props) => {
-  let playbackRateControl: HTMLInputElement;
   const [label, setLabel] = useObservable(props.model.label);
   const [src] = useObservable(props.model.src);
-  const [playbackRate, setPlaybackRate] = useObservable(
-    props.model.playbackRate,
-  );
   const [editingLabel, setEditingLabel] = createSignal(false);
-
-  useDoubleTap(
-    () => playbackRateControl!,
-    () => {
-      setPlaybackRate(1.0);
-    },
-  );
-
   return (
     <div class="sampleControls col px-2">
       <div class="flex">

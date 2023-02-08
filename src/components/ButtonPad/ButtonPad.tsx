@@ -56,15 +56,16 @@ export const ButtonPad: Component<ButtonPadProps> = ({ model, onClick }) => {
   }
 
   const handlePlay = () => {
-    if (!audioContext() || !model.loaded) {
+    const audioCtx = audioContext();
+    if (!audioCtx || !model.loaded) {
       return;
     }
     node?.stop();
-    node = new AudioPlayerNode(audioContext()!, {
+    node = new AudioPlayerNode(audioCtx, {
       playbackRate: playbackRate(),
     });
     node.loadBuffer(model.audioBuffer);
-    node.connect(audioContext()!.destination);
+    node.connect(audioCtx.destination);
     node.start();
     animate();
   };

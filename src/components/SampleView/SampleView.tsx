@@ -39,7 +39,6 @@ async function createWaveform(
  */
 function downsample(data: Float32Array, nChunks: number): Float32Array {
   const chunkSize = Math.floor(data.length / nChunks);
-  console.log(chunkSize);
   const filtered = new Float32Array(nChunks);
   for (let i = 0; i < nChunks; i++) {
     const chunk = data.subarray(i * chunkSize, (i + 1) * chunkSize);
