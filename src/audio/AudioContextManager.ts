@@ -13,7 +13,7 @@ export class AudioContextManager {
   public static initialized = new Observable(false);
 
   public static init(options?: AudioContextOptions) {
-    this._instance = new AudioContext();
+    this._instance = new AudioContext(options);
     this.initialized.value = true;
   }
 }

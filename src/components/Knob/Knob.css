@@ -1,0 +1,28 @@
+.knob {
+  touch-action: none;
+  stroke: var(--fg-dark);
+  stroke-width: 6px;
+  stroke-linecap: round;
+  fill: none;
+
+  & .value {
+    stroke: none;
+    font-size: 24px;
+    fill: var(--text-white);
+    user-select: none;
+  }
+
+  & .arc {
+    stroke: var(--orange);
+  }
+
+  & .dial {
+    stroke-width: 6px;
+  }
+}
+
+.knob-label {
+  font-size: small;
+  line-height: 0.9em;
+  width: 60px;
+}

@@ -43,8 +43,8 @@ export class Base64Binary {
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=' as const;
 
   static decodeArrayBuffer(input: string): ArrayBuffer {
-    var bytes = (input.length / 4) * 3;
-    var ab = new ArrayBuffer(bytes);
+    const bytes = (input.length / 4) * 3;
+    const ab = new ArrayBuffer(bytes);
     this.decode(input, ab);
 
     return ab;
@@ -62,16 +62,17 @@ export class Base64Binary {
     //get last chars to see if are valid
     input = this.removePaddingChars(input);
     input = this.removePaddingChars(input);
-    var bytes = Math.floor((input.length / 4) * 3);
+    const bytes = Math.floor((input.length / 4) * 3);
 
-    var uarray;
-    var chr1, chr2, chr3;
-    var enc1, enc2, enc3, enc4;
-    var i = 0;
-    var j = 0;
+    let chr1, chr2, chr3;
+    let enc1, enc2, enc3, enc4;
+    let i = 0;
+    let j = 0;
 
-    uarray = arrayBuffer ? new Uint8Array(arrayBuffer) : new Uint8Array(bytes);
-    input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '');
+    const uarray = arrayBuffer
+      ? new Uint8Array(arrayBuffer)
+      : new Uint8Array(bytes);
+    input = input.replace(/[^A-Za-z0-9+/=]/g, '');
 
     for (i = 0; i < bytes; i += 3) {
       //get the 3 octects in 4 ascii chars
