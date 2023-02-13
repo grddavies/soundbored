@@ -1,5 +1,6 @@
 import { Component, createSignal } from 'solid-js';
 
+import { LABEL_CHAR_LIMIT } from 'src/defaults/constants';
 import { useObservable } from 'src/hooks/useObservable';
 import { SamplerModel } from 'src/models';
 import { KnobWrapper } from '../Knob/KnobWrapper';
@@ -23,7 +24,7 @@ export const SampleControls: Component<SampleControlsProps> = (props) => {
             <input
               type="text"
               value={label()}
-              maxlength="12"
+              maxlength={LABEL_CHAR_LIMIT}
               class="sampleLabel"
               onInput={(e) => setLabel(e.currentTarget.value)}
               onKeyUp={(e) => {

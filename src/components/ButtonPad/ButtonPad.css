@@ -5,6 +5,7 @@
   border-radius: 8px;
   position: relative;
   overflow: hidden;
+  touch-action: manipulation;
 
   & canvas {
     position: absolute;
