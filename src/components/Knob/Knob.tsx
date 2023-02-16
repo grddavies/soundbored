@@ -66,7 +66,7 @@ export const Knob: Component<KnobProps> = (props) => {
         d={`M ${c.x},${c.y} L ${pos(theta()).x} ${pos(theta()).y}`}
       />
       <text class="value" x="70" y="100">
-        {props.value.toFixed(1)}
+        {props.value.toFixed(2)}
       </text>
     </svg>
   );

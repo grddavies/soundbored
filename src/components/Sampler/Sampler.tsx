@@ -35,7 +35,7 @@ export const Sampler: Component<SamplerProps> = (props) => {
   const [selectedIdx, setSelectedIndex] = createSignal(0);
   return (
     <div class="Sampler">
-      <SampleEditor samplers={samplers} selectedSamplerIdx={selectedIdx()} />
+      <SampleEditor selectedSampler={samplers[selectedIdx()]} />
       <div class="buttonGrid">
         {samplers.map((x, i) => (
           <ButtonPad

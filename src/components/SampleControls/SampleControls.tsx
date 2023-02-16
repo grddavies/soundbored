@@ -1,4 +1,4 @@
-import { Component, createSignal } from 'solid-js';
+import { Component, createMemo, createSignal } from 'solid-js';
 
 import { LABEL_CHAR_LIMIT } from 'src/defaults/constants';
 import { useObservable } from 'src/hooks/useObservable';
@@ -13,9 +13,22 @@ type SampleControlsProps = {
 };
 
 export const SampleControls: Component<SampleControlsProps> = (props) => {
-  const [label, setLabel] = useObservable(props.model.label);
-  const [src] = useObservable(props.model.src);
   const [editingLabel, setEditingLabel] = createSignal(false);
+  const viewModel = createMemo(() => {
+    const [label, setLabel] = useObservable(props.model.label);
+    const [src] = useObservable(props.model.src);
+    return {
+      get src() {
+        return src();
+      },
+      get label() {
+        return label();
+      },
+      set label(v: string) {
+        setLabel(v);
+      },
+    };
+  });
   return (
     <div class="sampleControls col px-2">
       <div class="flex">
@@ -23,20 +36,22 @@ export const SampleControls: Component<SampleControlsProps> = (props) => {
           {editingLabel() ? (
             <input
               type="text"
-              value={label()}
+              value={viewModel().label}
               maxlength={LABEL_CHAR_LIMIT}
               class="sampleLabel"
-              onInput={(e) => setLabel(e.currentTarget.value)}
+              onInput={(e) => {
+                viewModel().label = e.currentTarget.value;
+              }}
               onKeyUp={(e) => {
                 if (e.key === 'Enter') setEditingLabel(false);
               }}
               onMouseLeave={() => setEditingLabel(false)}
             />
           ) : (
-            <div onClick={() => setEditingLabel(true)}>{label()}</div>
+            <div onClick={() => setEditingLabel(true)}>{viewModel().label}</div>
           )}
         </div>
-        <div>/{src()}</div>
+        <div>/{viewModel().src}</div>
       </div>
       <SampleView model={props.model} />
       <div class="grid grid-nogutter pt-2">

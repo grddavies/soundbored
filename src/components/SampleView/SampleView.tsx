@@ -1,4 +1,4 @@
-import { Component, createEffect } from 'solid-js';
+import { Component, createEffect, createMemo } from 'solid-js';
 
 import { WAVEFORM_SIZE } from 'src/defaults/constants';
 import { useAudioContext, useObservable } from 'src/hooks';
@@ -88,14 +88,24 @@ const PAD_Y = 10;
 export const SampleView: Component<SampleViewProps> = (props) => {
   let canvas: HTMLCanvasElement;
   const getAudioCtx = useAudioContext();
-  const [src, setSrc] = useObservable(props.model.src);
+  const viewModel = createMemo(() => {
+    const [src, setSrc] = useObservable(props.model.src);
+    return {
+      get src() {
+        return src();
+      },
+      set src(v: string) {
+        setSrc(v);
+      },
+    };
+  });
 
   createEffect(async () => {
     const audioCtx = getAudioCtx();
     if (!audioCtx) return;
     const waveform =
-      (await AppStore.instance.getSampleWaveform(src())) ??
-      (await createWaveform(src(), audioCtx));
+      (await AppStore.instance.getSampleWaveform(viewModel().src)) ??
+      (await createWaveform(viewModel().src, audioCtx));
     plotWaveform(waveform, canvas);
   });
 
@@ -111,7 +121,7 @@ export const SampleView: Component<SampleViewProps> = (props) => {
       onDrop={(e) => {
         e.preventDefault();
         if (e.dataTransfer) {
-          setSrc(e.dataTransfer.getData('text/plain'));
+          viewModel().src = e.dataTransfer.getData('text/plain');
         }
       }}
     >

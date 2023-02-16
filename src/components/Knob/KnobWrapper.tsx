@@ -1,5 +1,5 @@
 import { createPointerListeners } from '@solid-primitives/pointer';
-import { Component, createSignal } from 'solid-js';
+import { Component, createMemo, createSignal } from 'solid-js';
 
 import { useObservable } from 'src/hooks';
 import { useDoubleTap } from 'src/hooks/useDoubleTap';
@@ -17,7 +17,18 @@ type KnobWrapperProps = {
 
 export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
   let svg: SVGSVGElement;
-  const [value, setValue] = useObservable(props.value);
+
+  const viewModel = createMemo(() => {
+    const [value, setValue] = useObservable(props.value);
+    return {
+      set value(v: number) {
+        setValue(v);
+      },
+      get value() {
+        return value();
+      },
+    };
+  });
 
   const [initialVal, setInitialVal] = createSignal(props.value.value);
   const [currentPointer, setCurrentPointer] = createSignal<number | null>(null);
@@ -35,15 +46,13 @@ export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
         setPrecisionMode(true);
       }
 
-      setValue(
-        Math.min(
-          props.max,
-          Math.max(
-            props.min ?? 0,
-            initialVal() +
-              ((dragStartY() - e.clientY) / screen.availHeight) *
-                (precisionMode() ? 1 : 4),
-          ),
+      viewModel().value = Math.min(
+        props.max,
+        Math.max(
+          props.min ?? 0,
+          initialVal() +
+            ((dragStartY() - e.clientY) / screen.availHeight) *
+              (precisionMode() ? 1 : 4),
         ),
       );
     }
@@ -62,7 +71,7 @@ export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
     target: () => svg,
     onDown: (e) => {
       setDragStartY(e.clientY);
-      setInitialVal(value());
+      setInitialVal(viewModel().value);
       setCurrentPointer(e.pointerId);
       window.addEventListener('pointerup', clearMoveHandler, {
         passive: false,
@@ -74,7 +83,7 @@ export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
   useDoubleTap(
     () => svg,
     () => {
-      setValue(props.defaultValue);
+      viewModel().value = props.defaultValue;
     },
   );
 
@@ -83,7 +92,7 @@ export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
       <div class="knob-label">{props.label}</div>
       <Knob
         ref={svg!}
-        value={value()}
+        value={viewModel().value}
         min={props.min}
         max={props.max}
         size={props.size}
