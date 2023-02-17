@@ -3,6 +3,11 @@ export type Vec2 = {
   y: number;
 };
 
-export function Vec2Add(...xs: Vec2[]) {
+/**
+ * Add multiple vectors
+ * @param xs vectors to add
+ * @returns
+ */
+export function Vec2Add(...xs: Vec2[]): Vec2 {
   return xs.reduce((a, b) => ({ x: a.x + b.x, y: a.y + b.y }));
 }

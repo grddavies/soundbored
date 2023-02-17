@@ -1,4 +1,5 @@
 import { Database } from 'src/store/Database';
+
 import { TSample } from './datatypes';
 
 /**
@@ -22,7 +23,7 @@ export class AppStore {
   /**
    * Globally initialise the AppStore
    */
-  public static init() {
+  public static init(): void {
     this._instance = new AppStore();
   }
 

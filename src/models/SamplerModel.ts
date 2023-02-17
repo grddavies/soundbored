@@ -26,7 +26,7 @@ export class SamplerModel {
     this._buffer.value = await data.arrayBuffer();
   }
 
-  private readonly onSrcUpdate = async (src: string) => {
+  private readonly onSrcUpdate = async (src: string): Promise<void> => {
     this.label.value = getFilename(src).substring(0, LABEL_CHAR_LIMIT);
     if (!src) {
       return;
@@ -34,7 +34,7 @@ export class SamplerModel {
     await this.updateBuffer();
   };
 
-  private readonly onBufferUpdate = async () => {
+  private readonly onBufferUpdate = async (): Promise<void> => {
     try {
       this._audioBuffer = await this.audioContext.value?.decodeAudioData(
         this._buffer.value,
@@ -80,11 +80,11 @@ export class SamplerModel {
     return this._preservePitch;
   }
 
-  public dispose() {
+  public dispose(): void {
     this.src.detach(this.onSrcUpdate);
   }
 
-  public loadBuffer() {
+  public loadBuffer(): void {
     this.src.fire(this.src.value);
   }
 }

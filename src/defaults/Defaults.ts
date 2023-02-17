@@ -1,5 +1,4 @@
 import assert from 'assert';
-
 import { NUM_PADS } from 'src/defaults/constants';
 import { DirtSample, WebSample } from 'src/defaults/DefaultSample';
 

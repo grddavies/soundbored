@@ -1,4 +1,4 @@
-import { onMount, createSignal, onCleanup, Accessor, Setter } from 'solid-js';
+import { Accessor, createSignal, onCleanup, onMount, Setter } from 'solid-js';
 import { Observable, ObservableReadonly } from 'src/utils';
 
 export function useObservable<T>(
@@ -11,7 +11,7 @@ export function useObservable<T>(
   observable: Observable<T> | ObservableReadonly<T>,
 ): [Accessor<T>, (v: T) => void] | [Accessor<T>] {
   const [signal, setSignal] = createSignal(observable.value);
-  const updateFunc = (v: T) => {
+  const updateFunc = (v: T): void => {
     setSignal(() => v);
   };
 
@@ -23,7 +23,7 @@ export function useObservable<T>(
     observable.detach(updateFunc);
   });
 
-  const setValue = (value: T) => {
+  const setValue = (value: T): void => {
     observable.value = value;
   };
 

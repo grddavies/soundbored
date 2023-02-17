@@ -1,5 +1,4 @@
 import Dexie from 'dexie';
-
 import { TSample } from 'src/store/datatypes';
 
 /**

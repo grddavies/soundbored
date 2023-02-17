@@ -1,12 +1,12 @@
-import { Component, createMemo, createSignal } from 'solid-js';
+import './SampleControls.css';
 
+import { Component, createMemo, createSignal } from 'solid-js';
 import { LABEL_CHAR_LIMIT } from 'src/defaults/constants';
 import { useObservable } from 'src/hooks/useObservable';
 import { SamplerModel } from 'src/models';
+
 import { KnobWrapper } from '../Knob/KnobWrapper';
 import { SampleView } from '../SampleView/SampleView';
-
-import './SampleControls.css';
 
 type SampleControlsProps = {
   model: SamplerModel;
@@ -18,10 +18,10 @@ export const SampleControls: Component<SampleControlsProps> = (props) => {
     const [label, setLabel] = useObservable(props.model.label);
     const [src] = useObservable(props.model.src);
     return {
-      get src() {
+      get src(): string {
         return src();
       },
-      get label() {
+      get label(): string {
         return label();
       },
       set label(v: string) {
@@ -45,10 +45,18 @@ export const SampleControls: Component<SampleControlsProps> = (props) => {
               onKeyUp={(e) => {
                 if (e.key === 'Enter') setEditingLabel(false);
               }}
-              onMouseLeave={() => setEditingLabel(false)}
+              onMouseLeave={() => {
+                setEditingLabel(false);
+              }}
             />
           ) : (
-            <div onClick={() => setEditingLabel(true)}>{viewModel().label}</div>
+            <div
+              onClick={() => {
+                setEditingLabel(true);
+              }}
+            >
+              {viewModel().label}
+            </div>
           )}
         </div>
         <div>/{viewModel().src}</div>

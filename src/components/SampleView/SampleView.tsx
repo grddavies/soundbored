@@ -1,11 +1,10 @@
-import { Component, createEffect, createMemo } from 'solid-js';
+import './SampleView.css';
 
+import { Component, createEffect, createMemo } from 'solid-js';
 import { WAVEFORM_SIZE } from 'src/defaults/constants';
 import { useAudioContext, useObservable } from 'src/hooks';
 import { SamplerModel } from 'src/models';
 import { AppStore } from 'src/store';
-
-import './SampleView.css';
 
 /**
  * Create Waveform Data
@@ -57,7 +56,7 @@ function normalize(data: Float32Array): Float32Array {
   return data.map((x) => x * scale);
 }
 
-function plotWaveform(data: Float32Array, canvas: HTMLCanvasElement) {
+function plotWaveform(data: Float32Array, canvas: HTMLCanvasElement): void {
   const totalWidth = canvas.width - 2 * PAD_X;
   const canvasCtx = canvas.getContext('2d');
   if (!canvasCtx) return;
@@ -91,7 +90,7 @@ export const SampleView: Component<SampleViewProps> = (props) => {
   const viewModel = createMemo(() => {
     const [src, setSrc] = useObservable(props.model.src);
     return {
-      get src() {
+      get src(): string {
         return src();
       },
       set src(v: string) {

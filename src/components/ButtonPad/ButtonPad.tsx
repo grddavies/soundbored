@@ -1,12 +1,11 @@
+import './ButtonPad.css';
+
 import { createPointerListeners } from '@solid-primitives/pointer';
 import { BiRegularPlay, BiRegularStop } from 'solid-icons/bi';
 import { Component, createEffect, createMemo, JSX } from 'solid-js';
-
 import { AudioPlayerNode } from 'src/audio/AudioPlayerNode';
 import { useObservable } from 'src/hooks';
 import { SamplerModel } from 'src/models';
-
-import './ButtonPad.css';
 
 type ButtonPadProps = {
   model: SamplerModel;
@@ -24,11 +23,11 @@ export const ButtonPad: Component<ButtonPadProps> = (props) => {
     const [playbackRate] = useObservable(props.model.playbackRate);
     const [label] = useObservable(props.model.label);
     return {
-      get playbackRate() {
+      get playbackRate(): number {
         return playbackRate();
       },
 
-      get label() {
+      get label(): string {
         return label();
       },
     };
@@ -44,7 +43,7 @@ export const ButtonPad: Component<ButtonPadProps> = (props) => {
   });
 
   /** Animate the canvas overlaying the button */
-  function animate() {
+  function animate(): void {
     const ctx = canvas.getContext('2d');
     const pos = node!.playbackPosition;
     if (!ctx) {
@@ -63,7 +62,7 @@ export const ButtonPad: Component<ButtonPadProps> = (props) => {
     }
   }
 
-  const handlePlay = () => {
+  const handlePlay = (): void => {
     if (!props.model.audioContext.value || !props.model.loaded) {
       return;
     }
@@ -77,7 +76,7 @@ export const ButtonPad: Component<ButtonPadProps> = (props) => {
     animate();
   };
 
-  const handleStop = () => {
+  const handleStop = (): void => {
     if (node && props.model.loaded) {
       node.stop();
     }

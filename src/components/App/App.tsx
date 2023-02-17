@@ -1,13 +1,12 @@
 import 'primeflex/primeflex.css';
-import { BiLogosGithub, BiRegularHelpCircle } from 'solid-icons/bi';
-import { createSignal } from 'solid-js';
+import './App.css';
 
+import { BiLogosGithub, BiRegularHelpCircle } from 'solid-icons/bi';
+import { createSignal, JSX } from 'solid-js';
 import { HelpModal, Sampler } from 'src/components';
 import { appInit } from 'src/utils';
 
-import './App.css';
-
-export function App() {
+export function App(): JSX.Element {
   const appInitialized = appInit(); // Asyncronously load default samples
   // Display help modal
   const [showHelp, setShowHelp] = createSignal(true);
@@ -23,7 +22,11 @@ export function App() {
             </a>
           </li>
           <li class="icon">
-            <a onClick={() => setShowHelp(true)}>
+            <a
+              onClick={() => {
+                setShowHelp(true);
+              }}
+            >
               <BiRegularHelpCircle size={36} />
             </a>
           </li>

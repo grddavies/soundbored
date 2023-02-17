@@ -16,7 +16,7 @@ export abstract class DefaultSample {
    */
   abstract readonly location: string;
 
-  public get filename() {
+  public get filename(): string {
     const fname = this.location.split('/').at(-1);
     if (!fname) {
       throw new Error(`Unexpected sample location '${this.location}'`);
@@ -46,7 +46,7 @@ export class DirtSample extends DefaultSample {
     this.label = label;
   }
 
-  async ensureCached() {
+  async ensureCached(): Promise<void> {
     let data: Blob | undefined;
     data = await AppStore.instance.getSampleBlob(this.filename);
     if (!data) {
@@ -70,7 +70,7 @@ export class WebSample extends DefaultSample {
     this.label = label;
   }
 
-  public async ensureCached() {
+  public async ensureCached(): Promise<void> {
     let data: Blob | undefined;
     data = await AppStore.instance.getSampleBlob(this.filename);
     if (!data) {

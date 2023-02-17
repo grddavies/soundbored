@@ -1,9 +1,9 @@
 import { createPointerListeners } from '@solid-primitives/pointer';
 import { Component, createMemo, createSignal } from 'solid-js';
-
 import { useObservable } from 'src/hooks';
 import { useDoubleTap } from 'src/hooks/useDoubleTap';
 import { Observable } from 'src/utils';
+
 import { Knob } from './Knob';
 
 type KnobWrapperProps = {
@@ -24,7 +24,7 @@ export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
       set value(v: number) {
         setValue(v);
       },
-      get value() {
+      get value(): number {
         return value();
       },
     };
@@ -35,7 +35,7 @@ export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
   const [dragStartY, setDragStartY] = createSignal(0);
   const [precisionMode, setPrecisionMode] = createSignal(false);
 
-  const handleMove = (e: PointerEvent) => {
+  const handleMove = (e: PointerEvent): void => {
     if (e.pointerId === currentPointer()) {
       // Prevent scroll
       e.preventDefault();
@@ -58,7 +58,7 @@ export const KnobWrapper: Component<KnobWrapperProps> = (props) => {
     }
   };
 
-  const clearMoveHandler = (e: PointerEvent) => {
+  const clearMoveHandler = (e: PointerEvent): void => {
     if (e.pointerId === currentPointer()) {
       setCurrentPointer(null);
       setPrecisionMode(false);

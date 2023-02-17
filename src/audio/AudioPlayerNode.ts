@@ -30,7 +30,7 @@ export class AudioPlayerNode {
   /**
    * Gets the current playback position [0, 1]
    */
-  get playbackPosition() {
+  get playbackPosition(): number {
     this._analyser.getFloatTimeDomainData(this._sampleHolder);
     return this._sampleHolder[0];
   }
@@ -38,14 +38,14 @@ export class AudioPlayerNode {
   /**
    * true if buffer is currently playing
    */
-  get playing() {
+  get playing(): boolean {
     return this._playing;
   }
 
   /** Creates an AudioBuffer with an extra `position` track
    * @param buffer AudioBuffer to load into node
    * */
-  public loadBuffer(audioBuffer: AudioBuffer) {
+  public loadBuffer(audioBuffer: AudioBuffer): void {
     // Create a new AudioBuffer of the same length as param with one extra channel
     // load it into the AudioBufferSourceNode
     const n_channels = Math.max(audioBuffer.numberOfChannels, 3);
@@ -85,11 +85,11 @@ export class AudioPlayerNode {
     this._splitter.connect(this._analyser, p_channel);
   }
 
-  get playbackRate() {
+  get playbackRate(): AudioParam {
     return this.audio.playbackRate;
   }
 
-  start(...args: Parameters<AudioBufferSourceNode['start']>) {
+  start(...args: Parameters<AudioBufferSourceNode['start']>): void {
     this._playing = true;
     this.audio.start(...args);
   }

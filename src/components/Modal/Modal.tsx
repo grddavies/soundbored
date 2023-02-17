@@ -1,5 +1,6 @@
-import { ParentComponent } from 'solid-js';
 import './Modal.css';
+
+import { ParentComponent } from 'solid-js';
 
 type ModalProps = {
   show: boolean;

@@ -1,4 +1,5 @@
 import { AudioContextManager } from 'src/audio';
+
 import { useObservable } from './useObservable';
 
 export function useAudioContext(): () => AudioContext | null {

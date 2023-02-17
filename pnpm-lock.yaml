@@ -8,6 +8,7 @@ specifiers:
   assert: ^2.0.0
   dexie: ^3.2.2
   eslint: ^8.33.0
+  eslint-plugin-simple-import-sort: ^10.0.0
   eslint-plugin-solid: ^0.9.4
   postcss: ^8.4.21
   postcss-nesting: ^10.2.0
@@ -37,6 +38,7 @@ devDependencies:
   '@typescript-eslint/eslint-plugin': 5.51.0_o6ewljbj247dtzzkns6ax7wsu4
   '@typescript-eslint/parser': 5.51.0_zkdaqh7it7uc4cvz2haft7rc6u
   eslint: 8.33.0
+  eslint-plugin-simple-import-sort: 10.0.0_eslint@8.33.0
   eslint-plugin-solid: 0.9.4_zkdaqh7it7uc4cvz2haft7rc6u
   postcss: 8.4.21
   postcss-nesting: 10.2.0_postcss@8.4.21
@@ -1274,6 +1276,14 @@ packages:
   /escape-string-regexp/4.0.0:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
+    dev: true
+
+  /eslint-plugin-simple-import-sort/10.0.0_eslint@8.33.0:
+    resolution: {integrity: sha512-AeTvO9UCMSNzIHRkg8S6c3RPy5YEwKWSQPx3DYghLedo2ZQxowPFLGDN1AZ2evfg6r6mjBSZSLxLFsWSu3acsw==}
+    peerDependencies:
+      eslint: '>=5.0.0'
+    dependencies:
+      eslint: 8.33.0
     dev: true
 
   /eslint-plugin-solid/0.9.4_zkdaqh7it7uc4cvz2haft7rc6u:

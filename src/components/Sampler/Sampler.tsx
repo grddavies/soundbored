@@ -1,12 +1,11 @@
-import { Component, createEffect, createSignal } from 'solid-js';
-import { NUM_PADS } from 'src/defaults/constants';
+import './Sampler.css';
 
+import { Component, createEffect, createSignal } from 'solid-js';
+import { ButtonPad, SampleEditor } from 'src/components';
+import { NUM_PADS } from 'src/defaults/constants';
 import { Defaults } from 'src/defaults/Defaults';
-import { SampleEditor, ButtonPad } from 'src/components';
 import { useAudioContext } from 'src/hooks';
 import { SamplerModel } from 'src/models';
-
-import './Sampler.css';
 
 type SamplerProps = {
   appInitialized: Promise<void>;

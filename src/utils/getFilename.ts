@@ -4,6 +4,6 @@
  * @returns
  */
 export function getFilename(path: string): string {
-  const fileWithExt = path.split(/.*[\/|\\]/).at(-1) ?? '';
+  const fileWithExt = path.split(/.*[/|\\]/).at(-1) ?? '';
   return fileWithExt.replace(/\..*$/, '');
 }

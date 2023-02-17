@@ -1,10 +1,10 @@
-import { Component } from 'solid-js';
+import './SampleEditor.css';
 
+import { Component } from 'solid-js';
 import { SamplerModel } from 'src/models';
+
 import { SampleControls } from '../SampleControls/SampleControls';
 import { SampleExplorer } from '../SampleExplorer/SampleExplorer';
-
-import './SampleEditor.css';
 
 type SampleEditorProps = {
   selectedSampler: SamplerModel;

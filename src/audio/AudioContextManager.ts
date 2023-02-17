@@ -13,7 +13,7 @@ export class AudioContextManager {
 
   public static initialized = new Observable(false);
 
-  public static init(options?: AudioContextOptions) {
+  public static init(options?: AudioContextOptions): void {
     this._instance = new AudioContext(options);
     unmute(this._instance);
     this.initialized.value = true;

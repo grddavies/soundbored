@@ -1,12 +1,11 @@
+import './SampleExplorer.css';
+
 import { createDexieArrayQuery } from 'solid-dexie';
 import { BiRegularCloudUpload, BiSolidTrash } from 'solid-icons/bi';
-import { Component, createSignal, For } from 'solid-js';
-
+import { Component, createSignal, For, JSX } from 'solid-js';
 import { useDoubleTap } from 'src/hooks/useDoubleTap';
 import { SamplerModel } from 'src/models';
 import { AppStore } from 'src/store';
-
-import './SampleExplorer.css';
 
 type SampleExplorerProps = {
   selectedSampler: SamplerModel;
@@ -21,7 +20,9 @@ export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
   return (
     <div
       class={`sampleExplorer col-3`}
-      onMouseLeave={() => setSelectedIdx(null)}
+      onMouseLeave={() => {
+        setSelectedIdx(null);
+      }}
     >
       <input
         id="fileExplorer"
@@ -66,13 +67,15 @@ export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
                   selected: i() === selectedIdx(),
                 }}
                 draggable={true}
-                onDragStart={(e) =>
+                onDragStart={(e) => {
                   e.dataTransfer?.setData(
                     'text/plain',
                     e.target.textContent ?? '',
-                  )
-                }
-                onMouseOver={() => setSelectedIdx(i)}
+                  );
+                }}
+                onMouseOver={() => {
+                  setSelectedIdx(i);
+                }}
               >
                 <div class={i() === selectedIdx() ? 'col-9' : 'col'}>
                   {sample as string}
@@ -82,11 +85,11 @@ export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
                     <button>
                       <BiSolidTrash
                         class="icon"
-                        onClick={async () =>
+                        onClick={async () => {
                           // TODO: use non-blocking modal
                           confirm(`Delete '${sample}' from sample bank?`) &&
-                          AppStore.instance.deleteSampleByName(sample)
-                        }
+                            AppStore.instance.deleteSampleByName(sample);
+                        }}
                       />
                     </button>
                   </div>
