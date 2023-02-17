@@ -1,3 +1,4 @@
+import { unmute } from 'src/audio/unmute';
 import { Observable } from 'src/utils';
 
 export class AudioContextManager {
@@ -14,6 +15,11 @@ export class AudioContextManager {
 
   public static init(options?: AudioContextOptions) {
     this._instance = new AudioContext(options);
+    unmute(this._instance);
     this.initialized.value = true;
+  }
+
+  private constructor() {
+    // Singleton
   }
 }
