@@ -1,9 +1,9 @@
 import { createPointerListeners } from '@solid-primitives/pointer';
 import { BiRegularPlay, BiRegularStop } from 'solid-icons/bi';
-import { Component, createEffect, JSX } from 'solid-js';
+import { Component, createEffect, createMemo, JSX } from 'solid-js';
 
 import { AudioPlayerNode } from 'src/audio/AudioPlayerNode';
-import { useAudioContext, useObservable } from 'src/hooks';
+import { useObservable } from 'src/hooks';
 import { SamplerModel } from 'src/models';
 
 import './ButtonPad.css';
@@ -20,16 +20,24 @@ export const ButtonPad: Component<ButtonPadProps> = (props) => {
   let playButton: HTMLButtonElement;
   let stopButton: HTMLButtonElement;
 
-  const audioContext = useAudioContext();
-  props.model.audioContext.value = audioContext();
+  const viewModel = createMemo(() => {
+    const [playbackRate] = useObservable(props.model.playbackRate);
+    const [label] = useObservable(props.model.label);
+    return {
+      get playbackRate() {
+        return playbackRate();
+      },
 
-  const [playbackRate] = useObservable(props.model.playbackRate);
-  const [label] = useObservable(props.model.label);
+      get label() {
+        return label();
+      },
+    };
+  });
 
   // Set playback rate from model
   createEffect(() => {
     // Call playbackRate signal outside of branch to capture reactivity
-    const x = playbackRate();
+    const x = viewModel().playbackRate;
     if (node) {
       node.audio.playbackRate.value = x;
     }
@@ -56,16 +64,15 @@ export const ButtonPad: Component<ButtonPadProps> = (props) => {
   }
 
   const handlePlay = () => {
-    const audioCtx = audioContext();
-    if (!audioCtx || !props.model.loaded) {
+    if (!props.model.audioContext.value || !props.model.loaded) {
       return;
     }
     node?.stop();
-    node = new AudioPlayerNode(audioCtx, {
-      playbackRate: playbackRate(),
+    node = new AudioPlayerNode(props.model.audioContext.value, {
+      playbackRate: viewModel().playbackRate,
     });
     node.loadBuffer(props.model.audioBuffer);
-    node.connect(audioCtx.destination);
+    node.connect(props.model.audioContext.value.destination);
     node.start();
     animate();
   };
@@ -97,7 +104,7 @@ export const ButtonPad: Component<ButtonPadProps> = (props) => {
     >
       <canvas ref={canvas!} />
       <button ref={playButton!}>
-        <div class="label">{label()}</div>
+        <div class="label">{viewModel().label}</div>
         <BiRegularPlay size={24} />
       </button>
       <button ref={stopButton!}>
