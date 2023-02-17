@@ -1,6 +1,6 @@
 import { createPointerListeners } from '@solid-primitives/pointer';
 import { BiRegularPlay, BiRegularStop } from 'solid-icons/bi';
-import { Component, createEffect } from 'solid-js';
+import { Component, createEffect, JSX } from 'solid-js';
 
 import { AudioPlayerNode } from 'src/audio/AudioPlayerNode';
 import { useAudioContext, useObservable } from 'src/hooks';
@@ -11,9 +11,9 @@ import './ButtonPad.css';
 type ButtonPadProps = {
   model: SamplerModel;
   onClick?: () => void;
-};
+} & JSX.CustomAttributes<HTMLDivElement>;
 
-export const ButtonPad: Component<ButtonPadProps> = ({ model, onClick }) => {
+export const ButtonPad: Component<ButtonPadProps> = (props) => {
   let container: HTMLDivElement;
   let canvas: HTMLCanvasElement;
   let node: AudioPlayerNode | undefined;
@@ -21,10 +21,10 @@ export const ButtonPad: Component<ButtonPadProps> = ({ model, onClick }) => {
   let stopButton: HTMLButtonElement;
 
   const audioContext = useAudioContext();
-  model.audioContext.value = audioContext();
+  props.model.audioContext.value = audioContext();
 
-  const [playbackRate] = useObservable(model.playbackRate);
-  const [label] = useObservable(model.label);
+  const [playbackRate] = useObservable(props.model.playbackRate);
+  const [label] = useObservable(props.model.label);
 
   // Set playback rate from model
   createEffect(() => {
@@ -57,21 +57,21 @@ export const ButtonPad: Component<ButtonPadProps> = ({ model, onClick }) => {
 
   const handlePlay = () => {
     const audioCtx = audioContext();
-    if (!audioCtx || !model.loaded) {
+    if (!audioCtx || !props.model.loaded) {
       return;
     }
     node?.stop();
     node = new AudioPlayerNode(audioCtx, {
       playbackRate: playbackRate(),
     });
-    node.loadBuffer(model.audioBuffer);
+    node.loadBuffer(props.model.audioBuffer);
     node.connect(audioCtx.destination);
     node.start();
     animate();
   };
 
   const handleStop = () => {
-    if (node && model.loaded) {
+    if (node && props.model.loaded) {
       node.stop();
     }
   };
@@ -89,7 +89,12 @@ export const ButtonPad: Component<ButtonPadProps> = ({ model, onClick }) => {
   });
 
   return (
-    <div ref={container!} class="buttonPad" onClick={onClick}>
+    <div
+      ref={container!}
+      class="buttonPad"
+      onClick={props.onClick}
+      classList={props.classList}
+    >
       <canvas ref={canvas!} />
       <button ref={playButton!}>
         <div class="label">{label()}</div>

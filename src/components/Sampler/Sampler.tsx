@@ -39,6 +39,8 @@ export const Sampler: Component<SamplerProps> = (props) => {
       <div class="buttonGrid">
         {samplers.map((x, i) => (
           <ButtonPad
+            // Hide pads on smaller screens
+            classList={{ 'hide-md': i > 8 }}
             model={x}
             onClick={() => {
               setSelectedIndex(i);

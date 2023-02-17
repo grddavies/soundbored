@@ -7,6 +7,12 @@
   overflow: hidden;
   touch-action: manipulation;
 
+  &.hide-md {
+    @media (max-width: 480px) {
+      display: none;
+    }
+  }
+
   & canvas {
     position: absolute;
     top: 0;
