@@ -1,4 +1,4 @@
-#root {
+.root {
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -52,7 +52,7 @@
   margin: 0;
 }
 
-footer {
+.footer {
   background-color: var(--bg-color-2);
   text-align: left;
   height: 50px;

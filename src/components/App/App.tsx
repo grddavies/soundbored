@@ -1,27 +1,28 @@
 import 'primeflex/primeflex.css';
-import './App.css';
 
 import { BiLogosGithub, BiRegularHelpCircle } from 'solid-icons/bi';
 import { createSignal, JSX } from 'solid-js';
 import { HelpModal, Sampler } from 'src/components';
 import { appInit } from 'src/utils';
 
+import CSS from './App.module.css';
+
 export function App(): JSX.Element {
   const appInitialized = appInit(); // Asyncronously load default samples
   // Display help modal
   const [showHelp, setShowHelp] = createSignal(true);
   return (
-    <>
+    <div class={CSS.root}>
       <HelpModal show={showHelp()} setShow={setShowHelp} />
-      <header class="navbar">
-        <h1 class="header-title">SoundBored</h1>
+      <header class={CSS.navbar}>
+        <h1 class={CSS['header-title']}>SoundBored</h1>
         <ul>
-          <li class="icon">
+          <li class={CSS.icon}>
             <a href="https://github.com/grddavies/soundbored">
               <BiLogosGithub size={36} />
             </a>
           </li>
-          <li class="icon">
+          <li class={CSS.icon}>
             <a
               onClick={() => {
                 setShowHelp(true);
@@ -32,10 +33,10 @@ export function App(): JSX.Element {
           </li>
         </ul>
       </header>
-      <main role="main" class="content">
+      <main role="main" class={CSS.content}>
         <Sampler appInitialized={appInitialized} />
       </main>
-      <footer />
-    </>
+      <footer class={CSS.footer} />
+    </div>
   );
 }
