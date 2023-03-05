@@ -1,6 +1,6 @@
 /**
  * Get the filename without extension from a full path
- * @param path full file path
+ * @param path - Full file path
  * @returns
  */
 export function getFilename(path: string): string {

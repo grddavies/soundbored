@@ -1,9 +1,8 @@
-import { AppStore } from 'src/store';
-
-import { Defaults } from '../defaults/Defaults';
+import { Defaults } from 'src/defaults/Defaults';
+import { SampleStore } from 'src/store';
 
 export async function appInit(): Promise<void> {
-  AppStore.init();
+  SampleStore.init();
   await Promise.all(
     Defaults.samples.map(async (x) => {
       try {

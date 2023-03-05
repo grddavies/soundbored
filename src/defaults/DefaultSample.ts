@@ -1,4 +1,4 @@
-import { AppStore } from 'src/store';
+import { SampleStore } from 'src/store';
 import { Base64Binary } from 'src/utils/Base64Binary';
 import { getGitHubFile } from 'src/utils/downloads';
 
@@ -48,10 +48,10 @@ export class DirtSample extends DefaultSample {
 
   async ensureCached(): Promise<void> {
     let data: Blob | undefined;
-    data = await AppStore.instance.getSampleBlob(this.filename);
+    data = await SampleStore.instance.getSampleBlob(this.filename);
     if (!data) {
       data = await this.downloadDirtSample();
-      AppStore.instance.addSample({
+      SampleStore.instance.addSample({
         filename: this.filename,
         data,
       });
@@ -72,7 +72,7 @@ export class WebSample extends DefaultSample {
 
   public async ensureCached(): Promise<void> {
     let data: Blob | undefined;
-    data = await AppStore.instance.getSampleBlob(this.filename);
+    data = await SampleStore.instance.getSampleBlob(this.filename);
     if (!data) {
       const res = await fetch(this.location);
       if (!res.ok) {
@@ -81,7 +81,7 @@ export class WebSample extends DefaultSample {
         );
       }
       data = await res.blob();
-      AppStore.instance.addSample({
+      SampleStore.instance.addSample({
         filename: this.filename,
         data,
       });

@@ -1,5 +1,5 @@
 import { Component, Setter } from 'solid-js';
-import { AudioContextManager } from 'src/audio';
+import { activateAudioCtx } from 'src/audio';
 
 import { Modal } from './Modal';
 
@@ -9,17 +9,13 @@ type HelpModalProps = {
 };
 
 /**
- * Toggleable help modal dialogue
- * @param props
- * @returns
+ * Renders a toggleable help modal dialogue
  */
 export const HelpModal: Component<HelpModalProps> = (props) => (
   <Modal
     show={props.show}
     onClose={() => {
-      if (!AudioContextManager.initialized.value) {
-        AudioContextManager.init();
-      }
+      activateAudioCtx();
       props.setShow(false);
     }}
     buttonText="Ok"

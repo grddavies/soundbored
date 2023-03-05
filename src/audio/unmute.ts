@@ -1,6 +1,5 @@
 /**
- * @file unmute.ts
- * @author Spencer Evans evans.spencer@gmail.com
+ * Original Author: Spencer Evans evans.spencer\@gmail.com
  *
  * unmute is a disgusting hack that helps..
  * 	1) automatically resume web audio contexts on user interaction
@@ -21,17 +20,23 @@
  *
  * iOS detection is done by looking at the user agent for iPhone, iPod, iPad. This detects the phones fine, but
  * apple likes to pretend their new iPads are computers (lol right..). Newer iPads are detected by finding
- * mac osx in the user agent and then checking for touch support by testing navigator.maxTouchPoints > 0.
+ * mac osx in the user agent and then checking for touch support by testing navigator.maxTouchPoints \> 0.
  *
  * This is all really gross and apple should really fix their janky browser.
  * This code isn't optimized in any fashion, it is just whipped up to help someone out on stack overflow, its just meant as an example.
  */
 
+/**
+ * EventHandlerNonNull
+ * Type alias for an event handler with definite non-null input value
+ */
 type EventHandlerNonNull = (e: Event) => void;
 
+/**
+ * Extension of the Event Type for use with unmute
+ */
 type UnmuteEvent = Event & { unmuteHandled?: boolean };
 
-// Helpers to add/remove a bunch of event listeners
 function addEventListeners(
   target: EventTarget,
   events: string[],
@@ -64,9 +69,9 @@ function removeEventListeners(
 
 /**
  * Enables unmute.
- * @param context A reference to the web audio context to "unmute".
- * @param allowBackgroundPlayback Optional. Default false. Allows audio to continue to play in the background. This is not recommended because it will burn battery and display playback controls on the iOS lockscreen.
- * @param forceIOSBehavior Optional. Default false. Forces behavior to that which is on iOS. This *could* be used in the event the iOS detection fails (which it shouldn't). It is strongly recommended NOT to use this.
+ * @param context - A reference to the web audio context to "unmute".
+ * @param allowBackgroundPlayback - Optional. Default false. Allows audio to continue to play in the background. This is not recommended because it will burn battery and display playback controls on the iOS lockscreen.
+ * @param forceIOSBehavior - Optional. Default false. Forces behavior to that which is on iOS. This *could* be used in the event the iOS detection fails (which it shouldn't). It is strongly recommended NOT to use this.
  * @returns An object containing a dispose function which can be used to dispose of the unmute controller.
  */
 export function unmute(
@@ -127,7 +132,7 @@ export function unmute(
     addEventListeners(document, ['visibilitychange'], onVisChange, true, true);
   }
 
-  /**{ target: events: handler:  capture:passive:  }
+  /**
    * Handles blur events (only used on iOS because it doesn't dispatch vis change events properly).
    */
   function win_focusChange(evt?: Event): void {
@@ -165,7 +170,7 @@ export function unmute(
 
   /**
    * Handles context statechange events.
-   * @param evt The event.
+   * @param evt -  The event.
    */
   const context_statechange = (evt: UnmuteEvent): void => {
     if (!evt || !evt.unmuteHandled) {
@@ -209,7 +214,7 @@ export function unmute(
 
   /**
    * Updates the html audio channel control.
-   * @param isMediaPlaybackEvent Indicates if being called from within a media playback event handler.
+   * @param isMediaPlaybackEvent - Indicates if being called from within a media playback event handler.
    */
   function updateChannelState(isMediaPlaybackEvent: boolean): void {
     // Totally unnecessary outside of iOS

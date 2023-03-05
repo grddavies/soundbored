@@ -2,10 +2,10 @@ import './SampleExplorer.css';
 
 import { createDexieArrayQuery } from 'solid-dexie';
 import { BiRegularCloudUpload, BiSolidTrash } from 'solid-icons/bi';
-import { Component, createSignal, For, JSX } from 'solid-js';
+import { Component, createSignal, For } from 'solid-js';
 import { useDoubleTap } from 'src/hooks/useDoubleTap';
 import { SamplerModel } from 'src/models';
-import { AppStore } from 'src/store';
+import { SampleStore } from 'src/store';
 
 type SampleExplorerProps = {
   selectedSampler: SamplerModel;
@@ -14,7 +14,7 @@ type SampleExplorerProps = {
 export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
   // Get all files in sample db
   const samples = createDexieArrayQuery(() =>
-    AppStore.instance.getAllSampleFileNames(),
+    SampleStore.instance.getAllSampleFileNames(),
   );
   const [selectedIdx, setSelectedIdx] = createSignal<number | null>(null);
   return (
@@ -33,7 +33,7 @@ export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
         onChange={(e) => {
           if (e.currentTarget.files) {
             for (const f of e.currentTarget.files) {
-              AppStore.instance.addSampleFromFile(f);
+              SampleStore.instance.addSampleFromFile(f);
             }
           }
         }}
@@ -88,7 +88,7 @@ export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
                         onClick={async () => {
                           // TODO: use non-blocking modal
                           confirm(`Delete '${sample}' from sample bank?`) &&
-                            AppStore.instance.deleteSampleByName(sample);
+                            SampleStore.instance.deleteSampleByName(sample);
                         }}
                       />
                     </button>

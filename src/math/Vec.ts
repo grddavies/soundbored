@@ -5,7 +5,7 @@ export type Vec2 = {
 
 /**
  * Add multiple vectors
- * @param xs vectors to add
+ * @param xs - Vectors to add
  * @returns
  */
 export function Vec2Add(...xs: Vec2[]): Vec2 {

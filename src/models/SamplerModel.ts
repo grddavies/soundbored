@@ -1,5 +1,5 @@
 import { LABEL_CHAR_LIMIT } from 'src/defaults/constants';
-import { AppStore } from 'src/store';
+import { SampleStore } from 'src/store';
 import { Observable } from 'src/utils';
 import { getFilename } from 'src/utils/getFilename';
 
@@ -19,7 +19,7 @@ export class SamplerModel {
   private readonly _preservePitch = new Observable(false);
 
   private async updateBuffer(): Promise<void> {
-    const data = await AppStore.instance.getSampleBlob(this.src.value);
+    const data = await SampleStore.instance.getSampleBlob(this.src.value);
     if (!data) {
       throw new Error(`Sample '${this.src.value}' not found`);
     }

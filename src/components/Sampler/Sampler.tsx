@@ -1,10 +1,10 @@
 import './Sampler.css';
 
 import { Component, createEffect, createSignal } from 'solid-js';
+import { AudioCtx } from 'src/audio';
 import { ButtonPad, SampleEditor } from 'src/components';
 import { NUM_PADS } from 'src/defaults/constants';
 import { Defaults } from 'src/defaults/Defaults';
-import { useAudioContext } from 'src/hooks';
 import { SamplerModel } from 'src/models';
 
 type SamplerProps = {
@@ -12,11 +12,9 @@ type SamplerProps = {
 };
 
 export const Sampler: Component<SamplerProps> = (props) => {
-  const audioContext = useAudioContext();
-
   // Load files on context load
   createEffect(() => {
-    const ctx = audioContext(); // Reactive audio context
+    const ctx = AudioCtx(); // Reactive audio context
     if (!ctx) return;
     samplers.forEach(async (model) => {
       model.audioContext.value = ctx;
