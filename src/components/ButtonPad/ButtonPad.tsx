@@ -1,17 +1,23 @@
-import './ButtonPad.css';
-
 import { createPointerListeners } from '@solid-primitives/pointer';
 import { BiRegularPlay, BiRegularStop } from 'solid-icons/bi';
-import { Component, createEffect, createMemo, JSX } from 'solid-js';
+import { Component, createEffect, createResource, JSX } from 'solid-js';
+import { AudioCtx } from 'src/audio';
 import { AudioPlayerNode } from 'src/audio/AudioPlayerNode';
-import { useObservable } from 'src/hooks';
-import { SamplerModel } from 'src/models';
+import { SamplePlayer } from 'src/models';
+import { SampleStore } from 'src/samples';
+
+import CSS from './ButtonPad.module.css';
 
 type ButtonPadProps = {
-  model: SamplerModel;
+  model: SamplePlayer;
   onClick?: () => void;
 } & JSX.CustomAttributes<HTMLDivElement>;
 
+/**
+ * Renders a sampler control pad with play and stop buttons
+ * @param props
+ * @returns
+ */
 export const ButtonPad: Component<ButtonPadProps> = (props) => {
   let container: HTMLDivElement;
   let canvas: HTMLCanvasElement;
@@ -19,24 +25,24 @@ export const ButtonPad: Component<ButtonPadProps> = (props) => {
   let playButton: HTMLButtonElement;
   let stopButton: HTMLButtonElement;
 
-  const viewModel = createMemo(() => {
-    const [playbackRate] = useObservable(props.model.playbackRate);
-    const [label] = useObservable(props.model.label);
-    return {
-      get playbackRate(): number {
-        return playbackRate();
-      },
+  // Combine AudioCtx and model.src signals
+  const srcSignal = (): string | null => AudioCtx() && props.model.src;
 
-      get label(): string {
-        return label();
-      },
-    };
-  });
+  const [audioBuffer] = createResource(
+    srcSignal,
+    async (src: string): Promise<AudioBuffer | undefined> => {
+      const data = await SampleStore.instance.getSampleBlob(src);
+      if (!data) {
+        return undefined;
+      }
+      return await AudioCtx()?.decodeAudioData(await data.arrayBuffer());
+    },
+  );
 
   // Set playback rate from model
   createEffect(() => {
     // Call playbackRate signal outside of branch to capture reactivity
-    const x = viewModel().playbackRate;
+    const x = props.model.playbackRate;
     if (node) {
       node.audio.playbackRate.value = x;
     }
@@ -45,15 +51,13 @@ export const ButtonPad: Component<ButtonPadProps> = (props) => {
   /** Animate the canvas overlaying the button */
   function animate(): void {
     const ctx = canvas.getContext('2d');
-    const pos = node!.playbackPosition;
-    if (!ctx) {
+    if (!ctx || !node) {
       return;
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Animation program - growing rectangle
     ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width * pos, canvas.height);
-
+    ctx.fillRect(0, 0, canvas.width * node.playbackPosition, canvas.height);
     if (node?.playing) {
       requestAnimationFrame(animate);
     } else {
@@ -63,21 +67,27 @@ export const ButtonPad: Component<ButtonPadProps> = (props) => {
   }
 
   const handlePlay = (): void => {
-    if (!props.model.audioContext.value || !props.model.loaded) {
+    const ctx = AudioCtx();
+    if (!ctx) {
       return;
     }
-    node?.stop();
-    node = new AudioPlayerNode(props.model.audioContext.value, {
-      playbackRate: viewModel().playbackRate,
+    if (node && node.playing) {
+      node.stop();
+    }
+    node = new AudioPlayerNode(ctx, {
+      playbackRate: props.model.playbackRate,
     });
-    node.loadBuffer(props.model.audioBuffer);
-    node.connect(props.model.audioContext.value.destination);
-    node.start();
-    animate();
+    const buf = audioBuffer();
+    if (buf) {
+      node.loadBuffer(buf);
+      node.connect(ctx.destination);
+      node.start();
+      animate();
+    }
   };
 
   const handleStop = (): void => {
-    if (node && props.model.loaded) {
+    if (node && node.playing) {
       node.stop();
     }
   };
@@ -97,16 +107,16 @@ export const ButtonPad: Component<ButtonPadProps> = (props) => {
   return (
     <div
       ref={container!}
-      class="buttonPad"
+      class={CSS.buttonPad}
       onClick={props.onClick}
       classList={props.classList}
     >
       <canvas ref={canvas!} />
-      <button ref={playButton!}>
-        <div class="label">{viewModel().label}</div>
+      <button ref={playButton!} disabled={audioBuffer.loading}>
+        <div class={CSS.label}>{props.model.label}</div>
         <BiRegularPlay size={24} />
       </button>
-      <button ref={stopButton!}>
+      <button ref={stopButton!} disabled={audioBuffer.loading}>
         <BiRegularStop size={24} />
       </button>
     </div>

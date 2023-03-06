@@ -1,6 +1,6 @@
-import { Database } from 'src/store/Database';
+import { Database } from 'src/samples/Database';
 
-import { TSample } from './datatypes';
+import { Sample } from '../models/Sample';
 
 /**
  * # SampleStore
@@ -88,7 +88,7 @@ export class SampleStore {
    * @param sample - Sample object to add
    * @returns The ID of the upserted object
    */
-  public async addSample(sample: TSample): Promise<number> {
+  public async addSample(sample: Sample): Promise<number> {
     return await this._db.sample.put(sample);
   }
 

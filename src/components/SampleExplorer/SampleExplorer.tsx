@@ -3,20 +3,19 @@ import './SampleExplorer.css';
 import { createDexieArrayQuery } from 'solid-dexie';
 import { BiRegularCloudUpload, BiSolidTrash } from 'solid-icons/bi';
 import { Component, createSignal, For } from 'solid-js';
-import { useDoubleTap } from 'src/hooks/useDoubleTap';
-import { SamplerModel } from 'src/models';
-import { SampleStore } from 'src/store';
+import { useDoubleTap, useSelectedSampler } from 'src/hooks';
+import { updateSampleSrc } from 'src/models';
+import { SampleStore } from 'src/samples';
 
-type SampleExplorerProps = {
-  selectedSampler: SamplerModel;
-};
-
-export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
-  // Get all files in sample db
+/**
+ * Renders list of available sample files
+ */
+export const SampleExplorer: Component = () => {
   const samples = createDexieArrayQuery(() =>
     SampleStore.instance.getAllSampleFileNames(),
   );
   const [selectedIdx, setSelectedIdx] = createSignal<number | null>(null);
+  const { mutateSelected } = useSelectedSampler();
   return (
     <div
       class={`sampleExplorer col-3`}
@@ -51,13 +50,14 @@ export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
       </div>
       <div class="sampleExplorer-list">
         <For each={samples}>
-          {(sample, i) => {
+          {(samplePath, i) => {
             let fileRef: HTMLDivElement;
             useDoubleTap(
               () => fileRef!,
-              () => {
-                props.selectedSampler.src.value = sample;
-              },
+              () =>
+                mutateSelected((sampler) => {
+                  updateSampleSrc(sampler, samplePath);
+                }),
             );
             return (
               <div
@@ -78,7 +78,7 @@ export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
                 }}
               >
                 <div class={i() === selectedIdx() ? 'col-9' : 'col'}>
-                  {sample as string}
+                  {samplePath as string}
                 </div>
                 {i() === selectedIdx() && (
                   <div class="col-3">
@@ -87,8 +87,8 @@ export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
                         class="icon"
                         onClick={async () => {
                           // TODO: use non-blocking modal
-                          confirm(`Delete '${sample}' from sample bank?`) &&
-                            SampleStore.instance.deleteSampleByName(sample);
+                          confirm(`Delete '${samplePath}' from sample bank?`) &&
+                            SampleStore.instance.deleteSampleByName(samplePath);
                         }}
                       />
                     </button>

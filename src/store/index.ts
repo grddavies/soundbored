@@ -1,1 +1,1 @@
-export { SampleStore } from './SampleStore';
+export { type AppState, AppStore } from './AppState';

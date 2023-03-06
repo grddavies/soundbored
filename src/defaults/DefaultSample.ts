@@ -1,6 +1,6 @@
-import { SampleStore } from 'src/store';
+import { getGitHubFile } from 'src/samples';
+import { SampleStore } from 'src/samples';
 import { Base64Binary } from 'src/utils/Base64Binary';
-import { getGitHubFile } from 'src/utils/downloads';
 
 /**
  * Base class for cachable samples pulled from web sources on app init

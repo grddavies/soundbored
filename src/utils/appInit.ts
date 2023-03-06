@@ -1,5 +1,5 @@
 import { Defaults } from 'src/defaults/Defaults';
-import { SampleStore } from 'src/store';
+import { SampleStore } from 'src/samples';
 
 export async function appInit(): Promise<void> {
   SampleStore.init();

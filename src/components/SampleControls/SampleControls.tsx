@@ -1,34 +1,15 @@
 import './SampleControls.css';
 
-import { Component, createMemo, createSignal } from 'solid-js';
+import { Component, createSignal } from 'solid-js';
+import { Knob } from 'src/components';
+import { SampleView } from 'src/components';
 import { LABEL_CHAR_LIMIT } from 'src/defaults/constants';
-import { useObservable } from 'src/hooks/useObservable';
-import { SamplerModel } from 'src/models';
+import { useSelectedSampler } from 'src/hooks';
+import { SamplePlayer } from 'src/models/SamplePlayer';
 
-import { KnobWrapper } from '../Knob/KnobWrapper';
-import { SampleView } from '../SampleView/SampleView';
-
-type SampleControlsProps = {
-  model: SamplerModel;
-};
-
-export const SampleControls: Component<SampleControlsProps> = (props) => {
+export const SampleControls: Component = () => {
   const [editingLabel, setEditingLabel] = createSignal(false);
-  const viewModel = createMemo(() => {
-    const [label, setLabel] = useObservable(props.model.label);
-    const [src] = useObservable(props.model.src);
-    return {
-      get src(): string {
-        return src();
-      },
-      get label(): string {
-        return label();
-      },
-      set label(v: string) {
-        setLabel(v);
-      },
-    };
-  });
+  const { selected, mutateSelected } = useSelectedSampler();
   return (
     <div class="sampleControls col px-2">
       <div class="flex">
@@ -36,11 +17,13 @@ export const SampleControls: Component<SampleControlsProps> = (props) => {
           {editingLabel() ? (
             <input
               type="text"
-              value={viewModel().label}
+              value={selected().label}
               maxlength={LABEL_CHAR_LIMIT}
               class="sampleLabel"
               onInput={(e) => {
-                viewModel().label = e.currentTarget.value;
+                mutateSelected((sampler: SamplePlayer) => {
+                  sampler.label = e.currentTarget.value;
+                });
               }}
               onKeyUp={(e) => {
                 if (e.key === 'Enter') setEditingLabel(false);
@@ -55,16 +38,21 @@ export const SampleControls: Component<SampleControlsProps> = (props) => {
                 setEditingLabel(true);
               }}
             >
-              {viewModel().label}
+              {selected().label}
             </div>
           )}
         </div>
-        <div>/{viewModel().src}</div>
+        <div>/{selected().src}</div>
       </div>
-      <SampleView model={props.model} />
+      <SampleView model={selected()} />
       <div class="grid grid-nogutter pt-2">
-        <KnobWrapper
-          value={props.model.playbackRate}
+        <Knob
+          value={selected().playbackRate}
+          updateFunc={(value: number) =>
+            mutateSelected((sampler) => {
+              sampler.playbackRate = value;
+            })
+          }
           defaultValue={1}
           min={0.01}
           max={2.0}

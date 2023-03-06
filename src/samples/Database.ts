@@ -1,5 +1,5 @@
 import Dexie from 'dexie';
-import { TSample } from 'src/store/datatypes';
+import { Sample } from 'src/models/Sample';
 
 /**
  * Database
@@ -8,7 +8,7 @@ import { TSample } from 'src/store/datatypes';
  */
 export class Database extends Dexie {
   // Tables - declared in constructor
-  sample!: Dexie.Table<TSample, number>;
+  sample!: Dexie.Table<Sample, number>;
 
   constructor() {
     super('SoundBoardDB');

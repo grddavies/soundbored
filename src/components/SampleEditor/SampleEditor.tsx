@@ -1,18 +1,18 @@
 import './SampleEditor.css';
 
 import { Component } from 'solid-js';
-import { SamplerModel } from 'src/models';
+import { SampleControls } from 'src/components/SampleControls/SampleControls';
+import { SampleExplorer } from 'src/components/SampleExplorer/SampleExplorer';
 
-import { SampleControls } from '../SampleControls/SampleControls';
-import { SampleExplorer } from '../SampleExplorer/SampleExplorer';
-
-type SampleEditorProps = {
-  selectedSampler: SamplerModel;
-};
-
-export const SampleEditor: Component<SampleEditorProps> = (props) => (
+/**
+ * Renders an editor for the selected SamplePlayer
+ *
+ * NOTE: Requires SelectedSamplerProvider
+ */
+export const SampleEditor: Component = () => (
   <div class="sampleEditor grid grid-nogutter">
-    <SampleExplorer selectedSampler={props.selectedSampler} />
-    <SampleControls model={props.selectedSampler} />
+    <SampleExplorer />
+    <SampleControls />
   </div>
 );
+

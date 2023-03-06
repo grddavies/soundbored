@@ -1,11 +1,11 @@
 import './SampleView.css';
 
-import { Component, createEffect, createMemo } from 'solid-js';
+import { Component, createEffect } from 'solid-js';
 import { AudioCtx } from 'src/audio';
 import { WAVEFORM_SIZE } from 'src/defaults/constants';
-import { useObservable } from 'src/hooks';
-import { SamplerModel } from 'src/models';
-import { SampleStore } from 'src/store';
+import { useSelectedSampler } from 'src/hooks/useSelectedSampler';
+import { SamplePlayer, updateSampleSrc } from 'src/models/SamplePlayer';
+import { SampleStore } from 'src/samples';
 
 /**
  * Create Waveform Data
@@ -78,7 +78,7 @@ function plotWaveform(data: Float32Array, canvas: HTMLCanvasElement): void {
 }
 
 type SampleViewProps = {
-  model: SamplerModel;
+  model: SamplePlayer;
 };
 
 // Padding in canvas pixels
@@ -87,27 +87,15 @@ const PAD_Y = 10;
 
 export const SampleView: Component<SampleViewProps> = (props) => {
   let canvas: HTMLCanvasElement;
-  const viewModel = createMemo(() => {
-    const [src, setSrc] = useObservable(props.model.src);
-    return {
-      get src(): string {
-        return src();
-      },
-      set src(v: string) {
-        setSrc(v);
-      },
-    };
-  });
-
   createEffect(async () => {
     const audioCtx = AudioCtx();
     if (!audioCtx) return;
     const waveform =
-      (await SampleStore.instance.getSampleWaveform(viewModel().src)) ??
-      (await createWaveform(viewModel().src, audioCtx));
+      (await SampleStore.instance.getSampleWaveform(props.model.src)) ??
+      (await createWaveform(props.model.src, audioCtx));
     plotWaveform(waveform, canvas);
   });
-
+  const { mutateSelected } = useSelectedSampler();
   return (
     <div
       class="sampleView"
@@ -119,9 +107,11 @@ export const SampleView: Component<SampleViewProps> = (props) => {
       }}
       onDrop={(e) => {
         e.preventDefault();
-        if (e.dataTransfer) {
-          viewModel().src = e.dataTransfer.getData('text/plain');
-        }
+        mutateSelected((sampler) => {
+          if (e.dataTransfer) {
+            updateSampleSrc(sampler, e.dataTransfer.getData('text/plain'));
+          }
+        });
       }}
     >
       <canvas ref={canvas!} width="1600" height="300" />
