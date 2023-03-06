@@ -6,6 +6,7 @@ import { Component, createSignal, For } from 'solid-js';
 import { useDoubleTap, useSelectedSampler } from 'src/hooks';
 import { updateSampleSrc } from 'src/models';
 import { SampleStore } from 'src/samples';
+import { persistGlobalState } from 'src/store/AppState';
 
 /**
  * Renders list of available sample files
@@ -57,6 +58,7 @@ export const SampleExplorer: Component = () => {
               () =>
                 mutateSelected((sampler) => {
                   updateSampleSrc(sampler, samplePath);
+                  persistGlobalState();
                 }),
             );
             return (
@@ -89,6 +91,7 @@ export const SampleExplorer: Component = () => {
                           // TODO: use non-blocking modal
                           confirm(`Delete '${samplePath}' from sample bank?`) &&
                             SampleStore.instance.deleteSampleByName(samplePath);
+                          // fixme: this will break any sampleplayers with this sample loaded
                         }}
                       />
                     </button>

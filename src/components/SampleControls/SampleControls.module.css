@@ -22,10 +22,6 @@
     width: 6.5em;
   }
 
-  & input[type='range'] {
-    width: 100%;
-  }
-
   & label {
     font-size: small;
   }

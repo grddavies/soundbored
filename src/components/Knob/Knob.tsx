@@ -1,6 +1,7 @@
 import { createPointerListeners } from '@solid-primitives/pointer';
 import { Component, createSignal } from 'solid-js';
 import { useDoubleTap } from 'src/hooks';
+import { persistGlobalState } from 'src/store/AppState';
 
 import CSS from './Knob.module.css';
 import { SVGKnob } from './SVGKnob';
@@ -66,6 +67,7 @@ export const Knob: Component<KnobProps> = (props) => {
 
   const clearMoveHandler = (e: PointerEvent): void => {
     if (e.pointerId === currentPointer()) {
+      persistGlobalState();
       setCurrentPointer(null);
       setPrecisionMode(false);
       window.removeEventListener('pointermove', handleMove);
@@ -90,6 +92,7 @@ export const Knob: Component<KnobProps> = (props) => {
     () => svg,
     () => {
       props.updateFunc(props.defaultValue);
+      persistGlobalState();
     },
   );
 

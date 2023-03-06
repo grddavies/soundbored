@@ -50,5 +50,13 @@ const initState: AppState = restoreFromLocalStorage() ?? initialiseState();
 /**
  * Global application store object and setter function
  */
-export const AppStore = createStore<AppState>(initState);
+export const [GlobalState, setGlobalState] = createStore<AppState>(initState);
+
+/**
+ * Write the global application state to localStorage
+ */
+export function persistGlobalState(): void {
+  console.log('Global State Written');
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(GlobalState));
+}
 

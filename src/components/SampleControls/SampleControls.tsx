@@ -1,30 +1,32 @@
-import './SampleControls.css';
-
 import { Component, createSignal } from 'solid-js';
 import { Knob } from 'src/components';
 import { SampleView } from 'src/components';
 import { LABEL_CHAR_LIMIT } from 'src/defaults/constants';
 import { useSelectedSampler } from 'src/hooks';
 import { SamplePlayer } from 'src/models/SamplePlayer';
+import { persistGlobalState } from 'src/store/AppState';
+
+import CSS from './SampleControls.module.css';
 
 export const SampleControls: Component = () => {
   const [editingLabel, setEditingLabel] = createSignal(false);
   const { selected, mutateSelected } = useSelectedSampler();
   return (
-    <div class="sampleControls col px-2">
+    <div class={`${CSS.SampleControls} col px-2`}>
       <div class="flex">
-        <div class="sampleLabel">
+        <div class={CSS.sampleLabel}>
           {editingLabel() ? (
             <input
               type="text"
               value={selected().label}
               maxlength={LABEL_CHAR_LIMIT}
-              class="sampleLabel"
+              class={CSS.sampleLabel}
               onInput={(e) => {
                 mutateSelected((sampler: SamplePlayer) => {
                   sampler.label = e.currentTarget.value;
                 });
               }}
+              onChange={() => persistGlobalState()}
               onKeyUp={(e) => {
                 if (e.key === 'Enter') setEditingLabel(false);
               }}
