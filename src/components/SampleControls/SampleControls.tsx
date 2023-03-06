@@ -8,6 +8,10 @@ import { persistGlobalState } from 'src/store/AppState';
 
 import CSS from './SampleControls.module.css';
 
+/**
+ * Renders a set of controls to edit the selected SamplePlayer
+ * @returns 
+ */
 export const SampleControls: Component = () => {
   const [editingLabel, setEditingLabel] = createSignal(false);
   const { selected, mutateSelected } = useSelectedSampler();

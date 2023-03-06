@@ -6,8 +6,6 @@ import CSS from './SampleEditor.module.css';
 
 /**
  * Renders an editor for the selected SamplePlayer
- *
- * NOTE: Requires SelectedSamplerProvider
  */
 export const SampleEditor: Component = () => (
   <div class={`${CSS.sampleEditor} grid grid-nogutter`}>
