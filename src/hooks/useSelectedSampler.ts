@@ -5,9 +5,27 @@ import { GlobalState, setGlobalState } from 'src/store/AppState';
 
 type MutateSamplerAction = (sampler: SamplePlayer) => void;
 
+/**
+ * # SelectedSamplePlayerModel
+ * 
+ * Interface to the globally selected SamplePlayer
+ */
 interface SelectedSamplePlayerModel {
+  /**
+   * The current globally selected SamplePlayer
+   */
   selected: Accessor<SamplePlayer>;
+  /**
+   * Set the index of the selected SamplePlayer in the SamplePlayers array
+   */
   setSelectionIndex: Setter<number>;
+  /**
+   * Higher order function that takes a function to modify the state of the
+   * selected sampler as an argument
+   *
+   * @param fn - Function to mutate the selected sampler
+   * @returns
+   */
   mutateSelected: (fn: MutateSamplerAction) => void;
 }
 

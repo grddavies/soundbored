@@ -4,7 +4,7 @@ import { createDexieArrayQuery } from 'solid-dexie';
 import { BiRegularCloudUpload, BiSolidTrash } from 'solid-icons/bi';
 import { Component, createSignal, For } from 'solid-js';
 import { useDoubleTap, useSelectedSampler } from 'src/hooks';
-import { updateSampleSrc } from 'src/models';
+import { updateSampleSrc } from 'src/models/SamplePlayer';
 import { SampleStore } from 'src/samples';
 import { persistGlobalState } from 'src/store/AppState';
 

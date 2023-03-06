@@ -1,2 +1,2 @@
-export { type SamplePlayer, updateSampleSrc } from './SamplePlayer';
+export { type SamplePlayer } from './SamplePlayer';
 export { type Sample } from './Sample';
