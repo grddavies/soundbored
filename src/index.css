@@ -26,8 +26,6 @@
 }
 
 * {
-  /* Fix button colours on iOS Safari */
-  color: var(--text-white);
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -41,6 +39,7 @@ body {
 }
 
 button {
+  color: var(--text-white);
   border-radius: 8px;
   border: 2px solid transparent;
   padding: 0.6em 1.2em;

@@ -6,25 +6,25 @@ import { useSelectedSampler } from 'src/hooks';
 import { SamplePlayer } from 'src/models/SamplePlayer';
 import { persistGlobalState } from 'src/store/AppState';
 
-import CSS from './SampleControls.module.css';
+import style from './SampleControls.module.css';
 
 /**
  * Renders a set of controls to edit the selected SamplePlayer
- * @returns 
+ * @returns
  */
 export const SampleControls: Component = () => {
   const [editingLabel, setEditingLabel] = createSignal(false);
   const { selected, mutateSelected } = useSelectedSampler();
   return (
-    <div class={`${CSS.SampleControls} col px-2`}>
+    <div class={`${style.SampleControls} col px-2`}>
       <div class="flex">
-        <div class={CSS.sampleLabel}>
+        <div class={style.sampleLabel}>
           {editingLabel() ? (
             <input
               type="text"
               value={selected().label}
               maxlength={LABEL_CHAR_LIMIT}
-              class={CSS.sampleLabel}
+              class={style.sampleLabel}
               onInput={(e) => {
                 mutateSelected((sampler: SamplePlayer) => {
                   sampler.label = e.currentTarget.value;

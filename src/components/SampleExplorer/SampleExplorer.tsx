@@ -1,5 +1,3 @@
-import './SampleExplorer.css';
-
 import { createDexieArrayQuery } from 'solid-dexie';
 import { BiRegularCloudUpload, BiSolidTrash } from 'solid-icons/bi';
 import { Component, createSignal, For } from 'solid-js';
@@ -7,6 +5,8 @@ import { useDoubleTap, useSelectedSampler } from 'src/hooks';
 import { updateSampleSrc } from 'src/models/SamplePlayer';
 import { SampleStore } from 'src/samples';
 import { persistGlobalState } from 'src/store/AppState';
+
+import style from './SampleExplorer.module.css';
 
 /**
  * Renders list of available sample files
@@ -19,7 +19,7 @@ export const SampleExplorer: Component = () => {
   const { mutateSelected } = useSelectedSampler();
   return (
     <div
-      class={`sampleExplorer col-3`}
+      class={`${style.sampleExplorer} col-3`}
       onMouseLeave={() => {
         setSelectedIdx(null);
       }}
@@ -38,18 +38,18 @@ export const SampleExplorer: Component = () => {
           }
         }}
       />
-      <div class="sampleExplorer-header grid grid-nogutter">
+      <div class={`${style['sampleExplorer-header']} grid grid-nogutter`}>
         <div class="col-9">Samples</div>
         <div class="col-3">
           <button
-            class="upload"
+            class={style.upload}
             onClick={() => document.getElementById('fileExplorer')?.click()}
           >
             <BiRegularCloudUpload size={18} />
           </button>
         </div>
       </div>
-      <div class="sampleExplorer-list">
+      <div class={style['sampleExplorer-list']}>
         <For each={samples}>
           {(samplePath, i) => {
             let fileRef: HTMLDivElement;
@@ -65,8 +65,9 @@ export const SampleExplorer: Component = () => {
               <div
                 ref={fileRef!}
                 classList={{
-                  'sampleExplorer-item grid grid-nogutter': true,
-                  selected: i() === selectedIdx(),
+                  'grid grid-nogutter': true,
+                  [style['sampleExplorer-item']]: true,
+                  [style.selected]: i() === selectedIdx(),
                 }}
                 draggable={true}
                 onDragStart={(e) => {
@@ -86,7 +87,7 @@ export const SampleExplorer: Component = () => {
                   <div class="col-3">
                     <button>
                       <BiSolidTrash
-                        class="icon"
+                        class={style.icon}
                         onClick={async () => {
                           // TODO: use non-blocking modal
                           confirm(`Delete '${samplePath}' from sample bank?`) &&

@@ -25,15 +25,15 @@
     flex: 0 1 auto;
     padding-left: 0.5em;
     align-items: center;
+  }
 
-    & .upload {
+  & .upload {
       transition: color 0.25s;
-
+      color: var(--text-white);
       &:hover,
       &:focus {
         color: var(--orange);
       }
-    }
   }
 
   & .icon {

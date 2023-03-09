@@ -1,4 +1,5 @@
 .knob {
+  cursor: ns-resize;
   display: block;
   touch-action: none;
   stroke: var(--fg-dark);

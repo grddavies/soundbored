@@ -29,10 +29,6 @@
     margin: 0 10px;
 
     &.icon {
-      & i {
-        font-size: 36;
-      }
-
       & a {
         cursor: pointer;
         color: var(--text-white);

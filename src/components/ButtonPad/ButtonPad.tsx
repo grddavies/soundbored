@@ -6,7 +6,7 @@ import { AudioPlayerNode } from 'src/audio/AudioPlayerNode';
 import { SamplePlayer } from 'src/models';
 import { SampleStore } from 'src/samples';
 
-import CSS from './ButtonPad.module.css';
+import style from './ButtonPad.module.css';
 
 type ButtonPadProps = {
   model: SamplePlayer;
@@ -107,13 +107,13 @@ export const ButtonPad: Component<ButtonPadProps> = (props) => {
   return (
     <div
       ref={container!}
-      class={CSS.buttonPad}
+      class={style.buttonPad}
       onClick={props.onClick}
       classList={props.classList}
     >
       <canvas ref={canvas!} />
       <button ref={playButton!} disabled={audioBuffer.loading}>
-        <div class={CSS.label}>{props.model.label}</div>
+        <div class={style.label}>{props.model.label}</div>
         <BiRegularPlay size={24} />
       </button>
       <button ref={stopButton!} disabled={audioBuffer.loading}>

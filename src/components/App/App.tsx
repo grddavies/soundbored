@@ -6,24 +6,24 @@ import { HelpModal, Sampler } from 'src/components';
 import { GlobalState } from 'src/store/AppState';
 import { appInit } from 'src/utils';
 
-import CSS from './App.module.css';
+import style from './App.module.css';
 
 export function App(): JSX.Element {
   const appInitialized = appInit(); // Asyncronously load default samples
   // Display help modal
   const [showHelp, setShowHelp] = createSignal(true);
   return (
-    <div class={CSS.root}>
+    <div class={style.root}>
       <HelpModal show={showHelp()} setShow={setShowHelp} />
-      <header class={CSS.navbar}>
-        <h1 class={CSS['header-title']}>SoundBored</h1>
+      <header class={style.navbar}>
+        <h1 class={style['header-title']}>SoundBored</h1>
         <ul>
-          <li class={CSS.icon}>
+          <li class={style.icon}>
             <a href="https://github.com/grddavies/soundbored">
               <BiLogosGithub size={36} />
             </a>
           </li>
-          <li class={CSS.icon}>
+          <li class={style.icon}>
             <a
               onClick={() => {
                 setShowHelp(true);
@@ -34,13 +34,13 @@ export function App(): JSX.Element {
           </li>
         </ul>
       </header>
-      <main role="main" class={CSS.content}>
+      <main role="main" class={style.content}>
         <Sampler
           appInitialized={appInitialized}
           samplers={GlobalState.samplers}
         />
       </main>
-      <footer class={CSS.footer} />
+      <footer class={style.footer} />
     </div>
   );
 }

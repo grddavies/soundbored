@@ -1,4 +1,4 @@
-.Sampler {
+.sampler {
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -35,5 +35,11 @@
   /* 3 column grid on small screens */
   @media (max-width: 480px) {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.hide-md {
+  @media (max-width: 480px) {
+    display: none;
   }
 }

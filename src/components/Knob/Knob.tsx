@@ -3,7 +3,7 @@ import { Component, createSignal } from 'solid-js';
 import { useDoubleTap } from 'src/hooks';
 import { persistGlobalState } from 'src/store/AppState';
 
-import CSS from './Knob.module.css';
+import style from './Knob.module.css';
 import { SVGKnob } from './SVGKnob';
 
 /**
@@ -98,7 +98,7 @@ export const Knob: Component<KnobProps> = (props) => {
 
   return (
     <div class="col">
-      <div class={CSS['knob-label']}>{props.label}</div>
+      <div class={style['knob-label']}>{props.label}</div>
       <SVGKnob
         ref={svg!}
         value={props.value}

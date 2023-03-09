@@ -1,7 +1,7 @@
 import { Component, Ref } from 'solid-js';
 import { polarToCartesian, Vec2, Vec2Add } from 'src/math';
 
-import CSS from './Knob.module.css';
+import style from './Knob.module.css';
 
 /**
  * Parameters passed to the knob component
@@ -59,7 +59,7 @@ export const SVGKnob: Component<SVGKnobProps> = (props) => {
   return (
     <svg
       ref={props.ref}
-      class={CSS.knob}
+      class={style.knob}
       viewBox="0 0 120 120"
       xmlns="http://www.w3.org/2000/svg"
       width={props.size ?? 48}
@@ -67,23 +67,23 @@ export const SVGKnob: Component<SVGKnobProps> = (props) => {
     >
       {theta() + gap < 2 * Math.PI && (
         <path
-          class={CSS.track}
+          class={style.track}
           d={`M ${c.x + r},${c.y} A ${r} ${r} 0 ${
             trackAngle() > Math.PI ? 0 : 1
           } 0 ${pos(trackAngle()).x} ${pos(trackAngle()).y}`}
         />
       )}
       <path
-        class={CSS.arc}
+        class={style.arc}
         d={`M ${c.x},${c.y + r} A ${r} ${r} 0 ${largeArc()} 1 ${
           pos(theta()).x
         } ${pos(theta()).y}`}
       />
       <path
-        class={CSS.dial}
+        class={style.dial}
         d={`M ${c.x},${c.y} L ${pos(theta()).x} ${pos(theta()).y}`}
       />
-      <text class={CSS.value} x="70" y="100">
+      <text class={style.value} x="70" y="100">
         {props.value.toFixed(2)}
       </text>
     </svg>

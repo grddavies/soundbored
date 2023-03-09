@@ -1,11 +1,11 @@
-import './SampleView.css';
-
 import { Component, createEffect } from 'solid-js';
 import { AudioCtx } from 'src/audio';
 import { WAVEFORM_SIZE } from 'src/defaults/constants';
 import { useSelectedSampler } from 'src/hooks/useSelectedSampler';
 import { SamplePlayer, updateSampleSrc } from 'src/models/SamplePlayer';
 import { SampleStore } from 'src/samples';
+
+import style from './SampleView.module.css';
 
 /**
  * Create Waveform Data
@@ -98,7 +98,7 @@ export const SampleView: Component<SampleViewProps> = (props) => {
   const { mutateSelected } = useSelectedSampler();
   return (
     <div
-      class="sampleView"
+      class={style.sampleView}
       onDragOver={(e) => {
         e.preventDefault();
         if (e.dataTransfer) {
