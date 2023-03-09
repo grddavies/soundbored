@@ -12,5 +12,4 @@ export async function appInit(): Promise<void> {
       }
     }),
   );
-  console.log('App Data Loaded');
 }

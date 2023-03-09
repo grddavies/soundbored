@@ -28,7 +28,6 @@ function restoreFromLocalStorage(): AppState | null {
       return null;
     }
   }
-  console.info('No app state in local storage');
   return null;
 }
 
@@ -59,7 +58,6 @@ export const [GlobalState, setGlobalState] = createStore<AppState>(initState);
  * Write the global application state to localStorage
  */
 export function persistGlobalState(): void {
-  console.log('Global State Written');
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(GlobalState));
 }
 
