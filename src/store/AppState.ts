@@ -3,6 +3,8 @@ import { NUM_PADS } from 'src/defaults/constants';
 import { Defaults } from 'src/defaults/Defaults';
 import { SamplePlayer } from 'src/models/SamplePlayer';
 
+import { Convert } from './Convert';
+
 const LOCAL_STORAGE_KEY = 'soundbored-app';
 
 /**
@@ -19,11 +21,12 @@ export type AppState = {
 function restoreFromLocalStorage(): AppState | null {
   const jsonString = localStorage.getItem(LOCAL_STORAGE_KEY);
   if (jsonString) {
-    const state: unknown = JSON.parse(jsonString);
-    if (!!state && typeof state === 'object' && 'samplers' in state) {
-      return state as AppState;
+    try {
+      return Convert.toAppState(jsonString);
+    } catch (e) {
+      console.error(e);
+      return null;
     }
-    console.error(`InvalidAppState '${jsonString}'`);
   }
   console.info('No app state in local storage');
   return null;
