@@ -1,48 +1,31 @@
-import { Component, createEffect, createSignal } from 'solid-js';
-import { NUM_PADS } from 'src/defaults/constants';
+import { Component } from 'solid-js';
+import { ButtonPad, SampleEditor } from 'src/components';
+import { SamplePlayer } from 'src/models/SamplePlayer';
 
-import { Defaults } from 'src/defaults/Defaults';
-import { SampleEditor, ButtonPad } from 'src/components';
-import { useAudioContext } from 'src/hooks';
-import { SamplerModel } from 'src/models';
-
-import './Sampler.css';
+import { useSelectedSampler } from '../../hooks/useSelectedSampler';
+import style from './Sampler.module.css';
 
 type SamplerProps = {
   appInitialized: Promise<void>;
+  samplers: SamplePlayer[];
 };
 
+/**
+ * Renders a Sampler containing multiple SamplerPlayers
+ */
 export const Sampler: Component<SamplerProps> = (props) => {
-  const audioContext = useAudioContext();
-
-  // Load files on context load
-  createEffect(() => {
-    const ctx = audioContext(); // Reactive audio context
-    if (!ctx) return;
-    samplers.forEach(async (model) => {
-      model.audioContext.value = ctx;
-      await props.appInitialized;
-      model.loadBuffer();
-    });
-  });
-
-  // Initialise samplers
-  const samplers = Defaults.samples
-    .slice(0, NUM_PADS)
-    .map(({ filename, label }) => new SamplerModel(filename, label));
-
   // Index of the selected sampler
-  const [selectedIdx, setSelectedIndex] = createSignal(0);
+  const { setSelectionIndex } = useSelectedSampler();
   return (
-    <div class="Sampler">
-      <SampleEditor samplers={samplers} selectedSamplerIdx={selectedIdx()} />
-      <div class="buttonGrid">
-        {samplers.map((x, i) => (
+    <div class={style.sampler}>
+      <SampleEditor />
+      <div class={style.buttonGrid}>
+        {props.samplers.map((x, i) => (
           <ButtonPad
+            // Hide pads on smaller screens
+            classList={{ [style['hide-md']]: i > 8 }}
             model={x}
-            onClick={() => {
-              setSelectedIndex(i);
-            }}
+            onClick={() => setSelectionIndex(i)}
           />
         ))}
       </div>

@@ -2,9 +2,10 @@
 // https://github.com/WebAudio/web-audio-api/issues/2397#issuecomment-459514360
 
 /**
- * AudioPlayerNode
- * Composite Web Audio API Node that tracks the playback position
- * and playing state of the underlying AudioBufferSourceNode
+ * # AudioPlayerNode
+ * ## Description
+ * A composite Web Audio API Node that tracks the state and playback position
+ * of the underlying AudioBufferSourceNode
  */
 export class AudioPlayerNode {
   public readonly audio: AudioBufferSourceNode;
@@ -14,6 +15,11 @@ export class AudioPlayerNode {
   private _analyser: AnalyserNode;
   private _playing = false;
 
+  /**
+   * Instantiate a new AudioPlayerNode
+   * @param context - AudioContext to run the AudioPlayerNode in
+   * @param options - Options to pass to the underlying AudioBufferSourceNode
+   */
   constructor(context: AudioContext, options?: AudioBufferSourceOptions) {
     // Initialize component audio nodes
     this.audio = new AudioBufferSourceNode(context, options);
@@ -30,22 +36,22 @@ export class AudioPlayerNode {
   /**
    * Gets the current playback position [0, 1]
    */
-  get playbackPosition() {
+  get playbackPosition(): number {
     this._analyser.getFloatTimeDomainData(this._sampleHolder);
     return this._sampleHolder[0];
   }
 
   /**
-   * true if buffer is currently playing
+   * True if buffer is currently playing
    */
-  get playing() {
+  get playing(): boolean {
     return this._playing;
   }
 
   /** Creates an AudioBuffer with an extra `position` track
-   * @param buffer AudioBuffer to load into node
+   * @param buffer - AudioBuffer to load into node
    * */
-  public loadBuffer(audioBuffer: AudioBuffer) {
+  public loadBuffer(audioBuffer: AudioBuffer): void {
     // Create a new AudioBuffer of the same length as param with one extra channel
     // load it into the AudioBufferSourceNode
     const n_channels = Math.max(audioBuffer.numberOfChannels, 3);
@@ -85,19 +91,31 @@ export class AudioPlayerNode {
     this._splitter.connect(this._analyser, p_channel);
   }
 
-  get playbackRate() {
+  get playbackRate(): AudioParam {
     return this.audio.playbackRate;
   }
 
-  start(...args: Parameters<AudioBufferSourceNode['start']>) {
+  /**
+   * Begins playback of the audio data contained in the buffer.
+   */
+  start(): void {
     this._playing = true;
-    this.audio.start(...args);
+    this.audio.start();
   }
 
-  stop(when?: number | undefined): void {
-    this.audio.stop(when);
+  /**
+   * Stops playback of the audio data contained in the buffer.
+   */
+  stop(): void {
+    this.audio.stop();
   }
 
+  /**
+   * Connect the audio output of this node to a destination node
+   * @param destinationNode
+   * @param output
+   * @returns
+   */
   connect(destinationNode: AudioNode, output?: number | undefined): AudioNode {
     return this._audioOut.connect(destinationNode, output);
   }

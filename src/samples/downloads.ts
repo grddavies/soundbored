@@ -1,8 +1,9 @@
 /**
  * Gets a base64 encoded file from a GitHub Repo
- * @param owner Repo owner name
- * @param repo Repo name
- * @param path path to file
+ * @param owner - Repo owner name
+ * @param repo - Repo name
+ * @param path - Path to file
+ *
  * @returns b64 encoded string
  */
 export async function getGitHubFile(

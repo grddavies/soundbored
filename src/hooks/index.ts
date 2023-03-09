@@ -1,2 +1,2 @@
-export { useObservable } from './useObservable';
-export { useAudioContext } from './useAudioContext';
+export { useDoubleTap } from './useDoubleTap';
+export * from './useSelectedSampler';

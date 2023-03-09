@@ -1,47 +1,64 @@
 import { Component, createSignal } from 'solid-js';
-
+import { Knob } from 'src/components';
+import { SampleView } from 'src/components';
 import { LABEL_CHAR_LIMIT } from 'src/defaults/constants';
-import { useObservable } from 'src/hooks/useObservable';
-import { SamplerModel } from 'src/models';
-import { KnobWrapper } from '../Knob/KnobWrapper';
-import { SampleView } from '../SampleView/SampleView';
+import { useSelectedSampler } from 'src/hooks';
+import { SamplePlayer } from 'src/models/SamplePlayer';
+import { persistGlobalState } from 'src/store/AppState';
 
-import './SampleControls.css';
+import style from './SampleControls.module.css';
 
-type SampleControlsProps = {
-  model: SamplerModel;
-};
-
-export const SampleControls: Component<SampleControlsProps> = (props) => {
-  const [label, setLabel] = useObservable(props.model.label);
-  const [src] = useObservable(props.model.src);
+/**
+ * Renders a set of controls to edit the selected SamplePlayer
+ * @returns
+ */
+export const SampleControls: Component = () => {
   const [editingLabel, setEditingLabel] = createSignal(false);
+  const { selected, mutateSelected } = useSelectedSampler();
   return (
-    <div class="sampleControls col px-2">
+    <div class={`${style.SampleControls} col px-2`}>
       <div class="flex">
-        <div class="sampleLabel">
+        <div class={style.sampleLabel}>
           {editingLabel() ? (
             <input
               type="text"
-              value={label()}
+              value={selected().label}
               maxlength={LABEL_CHAR_LIMIT}
-              class="sampleLabel"
-              onInput={(e) => setLabel(e.currentTarget.value)}
+              class={style.sampleLabel}
+              onInput={(e) => {
+                mutateSelected((sampler: SamplePlayer) => {
+                  sampler.label = e.currentTarget.value;
+                });
+              }}
+              onChange={() => persistGlobalState()}
               onKeyUp={(e) => {
                 if (e.key === 'Enter') setEditingLabel(false);
               }}
-              onMouseLeave={() => setEditingLabel(false)}
+              onMouseLeave={() => {
+                setEditingLabel(false);
+              }}
             />
           ) : (
-            <div onClick={() => setEditingLabel(true)}>{label()}</div>
+            <div
+              onClick={() => {
+                setEditingLabel(true);
+              }}
+            >
+              {selected().label}
+            </div>
           )}
         </div>
-        <div>/{src()}</div>
+        <div>/{selected().src}</div>
       </div>
-      <SampleView model={props.model} />
+      <SampleView model={selected()} />
       <div class="grid grid-nogutter pt-2">
-        <KnobWrapper
-          value={props.model.playbackRate}
+        <Knob
+          value={selected().playbackRate}
+          updateFunc={(value: number) =>
+            mutateSelected((sampler) => {
+              sampler.playbackRate = value;
+            })
+          }
           defaultValue={1}
           min={0.01}
           max={2.0}

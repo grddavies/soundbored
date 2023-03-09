@@ -1,27 +1,28 @@
 import { createDexieArrayQuery } from 'solid-dexie';
 import { BiRegularCloudUpload, BiSolidTrash } from 'solid-icons/bi';
 import { Component, createSignal, For } from 'solid-js';
+import { useDoubleTap, useSelectedSampler } from 'src/hooks';
+import { updateSampleSrc } from 'src/models/SamplePlayer';
+import { SampleStore } from 'src/samples';
+import { persistGlobalState } from 'src/store/AppState';
 
-import { useDoubleTap } from 'src/hooks/useDoubleTap';
-import { SamplerModel } from 'src/models';
-import { AppStore } from 'src/store';
+import style from './SampleExplorer.module.css';
 
-import './SampleExplorer.css';
-
-type SampleExplorerProps = {
-  selectedSampler: SamplerModel;
-};
-
-export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
-  // Get all files in sample db
+/**
+ * Renders list of available sample files
+ */
+export const SampleExplorer: Component = () => {
   const samples = createDexieArrayQuery(() =>
-    AppStore.instance.getAllSampleFileNames(),
+    SampleStore.instance.getAllSampleFileNames(),
   );
   const [selectedIdx, setSelectedIdx] = createSignal<number | null>(null);
+  const { mutateSelected } = useSelectedSampler();
   return (
     <div
-      class={`sampleExplorer col-3`}
-      onMouseLeave={() => setSelectedIdx(null)}
+      class={`${style.sampleExplorer} col-3`}
+      onMouseLeave={() => {
+        setSelectedIdx(null);
+      }}
     >
       <input
         id="fileExplorer"
@@ -32,61 +33,67 @@ export const SampleExplorer: Component<SampleExplorerProps> = (props) => {
         onChange={(e) => {
           if (e.currentTarget.files) {
             for (const f of e.currentTarget.files) {
-              AppStore.instance.addSampleFromFile(f);
+              SampleStore.instance.addSampleFromFile(f);
             }
           }
         }}
       />
-      <div class="sampleExplorer-header grid grid-nogutter">
+      <div class={`${style['sampleExplorer-header']} grid grid-nogutter`}>
         <div class="col-9">Samples</div>
         <div class="col-3">
           <button
-            class="upload"
+            class={style.upload}
             onClick={() => document.getElementById('fileExplorer')?.click()}
           >
             <BiRegularCloudUpload size={18} />
           </button>
         </div>
       </div>
-      <div class="sampleExplorer-list">
+      <div class={style['sampleExplorer-list']}>
         <For each={samples}>
-          {(sample, i) => {
+          {(samplePath, i) => {
             let fileRef: HTMLDivElement;
             useDoubleTap(
               () => fileRef!,
-              () => {
-                props.selectedSampler.src.value = sample;
-              },
+              () =>
+                mutateSelected((sampler) => {
+                  updateSampleSrc(sampler, samplePath);
+                  persistGlobalState();
+                }),
             );
             return (
               <div
                 ref={fileRef!}
                 classList={{
-                  'sampleExplorer-item grid grid-nogutter': true,
-                  selected: i() === selectedIdx(),
+                  'grid grid-nogutter': true,
+                  [style['sampleExplorer-item']]: true,
+                  [style.selected]: i() === selectedIdx(),
                 }}
                 draggable={true}
-                onDragStart={(e) =>
+                onDragStart={(e) => {
                   e.dataTransfer?.setData(
                     'text/plain',
                     e.target.textContent ?? '',
-                  )
-                }
-                onMouseOver={() => setSelectedIdx(i)}
+                  );
+                }}
+                onMouseOver={() => {
+                  setSelectedIdx(i);
+                }}
               >
                 <div class={i() === selectedIdx() ? 'col-9' : 'col'}>
-                  {sample as string}
+                  {samplePath as string}
                 </div>
                 {i() === selectedIdx() && (
                   <div class="col-3">
                     <button>
                       <BiSolidTrash
-                        class="icon"
-                        onClick={async () =>
+                        class={style.icon}
+                        onClick={async () => {
                           // TODO: use non-blocking modal
-                          confirm(`Delete '${sample}' from sample bank?`) &&
-                          AppStore.instance.deleteSampleByName(sample)
-                        }
+                          confirm(`Delete '${samplePath}' from sample bank?`) &&
+                            SampleStore.instance.deleteSampleByName(samplePath);
+                          // fixme: this will break any sampleplayers with this sample loaded
+                        }}
                       />
                     </button>
                   </div>

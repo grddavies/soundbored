@@ -1,8 +1,8 @@
-import { AppStore } from 'src/store';
-import { Defaults } from '../defaults/Defaults';
+import { Defaults } from 'src/defaults/Defaults';
+import { SampleStore } from 'src/samples';
 
-export async function appInit() {
-  AppStore.init();
+export async function appInit(): Promise<void> {
+  SampleStore.init();
   await Promise.all(
     Defaults.samples.map(async (x) => {
       try {
@@ -12,5 +12,4 @@ export async function appInit() {
       }
     }),
   );
-  console.log('App Data Loaded');
 }

@@ -7,3 +7,4 @@ export { SampleControls } from './SampleControls/SampleControls';
 export { SampleEditor } from './SampleEditor/SampleEditor';
 export { SampleExplorer } from './SampleExplorer/SampleExplorer';
 export { Sampler } from './Sampler/Sampler';
+export { SampleView } from './SampleView/SampleView';

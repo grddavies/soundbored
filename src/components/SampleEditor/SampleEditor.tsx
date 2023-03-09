@@ -1,28 +1,15 @@
 import { Component } from 'solid-js';
-import { Dynamic } from 'solid-js/web';
+import { SampleControls } from 'src/components/SampleControls/SampleControls';
+import { SampleExplorer } from 'src/components/SampleExplorer/SampleExplorer';
 
-import { SamplerModel } from 'src/models';
-import { SampleControls } from '../SampleControls/SampleControls';
-import { SampleExplorer } from '../SampleExplorer/SampleExplorer';
+import style from './SampleEditor.module.css';
 
-import './SampleEditor.css';
-
-type SampleEditorProps = {
-  selectedSamplerIdx: number;
-  samplers: SamplerModel[];
-};
-
-export const SampleEditor: Component<SampleEditorProps> = (props) => {
-  const sampleEditors = props.samplers.map((model) => () => (
-    <SampleControls model={model} />
-  ));
-
-  return (
-    <div class="sampleEditor grid grid-nogutter">
-      <SampleExplorer
-        selectedSampler={props.samplers[props.selectedSamplerIdx]}
-      />
-      <Dynamic component={sampleEditors[props.selectedSamplerIdx]} />
-    </div>
-  );
-};
+/**
+ * Renders an editor for the selected SamplePlayer
+ */
+export const SampleEditor: Component = () => (
+  <div class={`${style.sampleEditor} grid grid-nogutter`}>
+    <SampleExplorer />
+    <SampleControls />
+  </div>
+);

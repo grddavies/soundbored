@@ -1,73 +1,111 @@
-import { Component, Ref } from 'solid-js';
-import { Vec2Add } from 'src/math';
+import { createPointerListeners } from '@solid-primitives/pointer';
+import { Component, createSignal } from 'solid-js';
+import { useDoubleTap } from 'src/hooks';
+import { persistGlobalState } from 'src/store/AppState';
 
-import './Knob.css';
+import style from './Knob.module.css';
+import { SVGKnob } from './SVGKnob';
 
-function polarToCartesian(r: number, theta: number) {
-  return { x: r * Math.cos(theta), y: r * Math.sin(theta) };
-}
-
+/**
+ * Knob properties
+ */
 type KnobProps = {
+  /**
+   * The current value to display
+   */
   value: number;
+  /**
+   * A function that updates the value
+   * @param value
+   * @returns
+   */
+  updateFunc: (value: number) => void;
   max: number;
   min?: number;
   size?: number;
-  ref?: Ref<SVGSVGElement>;
+  defaultValue: number;
+  label?: string;
 };
 
+/**
+ * Renders an interactive knob component
+ * @param props properties of this knob component
+ * @returns
+ */
 export const Knob: Component<KnobProps> = (props) => {
-  // Fraction the knob is turned
-  const frac = () =>
-    (props.value - (props.min ?? 0)) / (props.max - (props.min ?? 0));
-  // Range of knob rotation as fraction of 2Pi
-  const range = 3 / 4;
-  // Graphic parameters
-  const pad = 10;
-  const r = 50;
-  const c = { x: r + pad, y: r + pad }; // Circle Centre
-  const circleOffset = 3 / 4;
-  const theta = () => 2 * Math.PI * (frac() * range + (1 - circleOffset));
+  let svg: SVGSVGElement;
 
-  // Offset for track beginning
-  const gap = Math.PI / 15;
-  const trackAngle = () => theta() + gap;
+  const [initialVal, setInitialVal] = createSignal(props.value);
+  const [currentPointer, setCurrentPointer] = createSignal<number | null>(null);
+  const [dragStartY, setDragStartY] = createSignal(0);
+  const [precisionMode, setPrecisionMode] = createSignal(false);
 
-  // Get the absolute coordinates given an angle
-  const pos = (angle: number) => {
-    const rel = polarToCartesian(r, angle);
-    return Vec2Add(rel, c);
+  const handleMove = (e: PointerEvent): void => {
+    if (e.pointerId === currentPointer()) {
+      // Prevent scroll
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      // Precision adjustments
+      if (e.pointerType === 'Mouse' && e.shiftKey) {
+        setPrecisionMode(true);
+      }
+
+      props.updateFunc(
+        Math.min(
+          props.max,
+          Math.max(
+            props.min ?? 0,
+            initialVal() +
+              ((dragStartY() - e.clientY) / screen.availHeight) *
+                (precisionMode() ? 1 : 4),
+          ),
+        ),
+      );
+    }
   };
-  const largeArc = () => (theta() > (3 * Math.PI) / 2 === true ? 1 : 0);
+
+  const clearMoveHandler = (e: PointerEvent): void => {
+    if (e.pointerId === currentPointer()) {
+      persistGlobalState();
+      setCurrentPointer(null);
+      setPrecisionMode(false);
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerup', clearMoveHandler);
+    }
+  };
+
+  createPointerListeners({
+    target: () => svg,
+    onDown: (e) => {
+      setDragStartY(e.clientY);
+      setInitialVal(props.value);
+      setCurrentPointer(e.pointerId);
+      window.addEventListener('pointerup', clearMoveHandler, {
+        passive: false,
+      });
+      window.addEventListener('pointermove', handleMove, { passive: false });
+    },
+  });
+
+  useDoubleTap(
+    () => svg,
+    () => {
+      props.updateFunc(props.defaultValue);
+      persistGlobalState();
+    },
+  );
+
   return (
-    <svg
-      ref={props.ref}
-      class="knob"
-      viewBox="0 0 120 120"
-      xmlns="http://www.w3.org/2000/svg"
-      width={props.size ?? 48}
-      height={props.size ?? 48}
-    >
-      {theta() + gap < 2 * Math.PI && (
-        <path
-          class="track"
-          d={`M ${c.x + r},${c.y} A ${r} ${r} 0 ${
-            trackAngle() > Math.PI ? 0 : 1
-          } 0 ${pos(trackAngle()).x} ${pos(trackAngle()).y}`}
-        />
-      )}
-      <path
-        class="arc"
-        d={`M ${c.x},${c.y + r} A ${r} ${r} 0 ${largeArc()} 1 ${
-          pos(theta()).x
-        } ${pos(theta()).y}`}
+    <div class="col">
+      <div class={style['knob-label']}>{props.label}</div>
+      <SVGKnob
+        ref={svg!}
+        value={props.value}
+        min={props.min}
+        max={props.max}
+        size={props.size}
       />
-      <path
-        class="dial"
-        d={`M ${c.x},${c.y} L ${pos(theta()).x} ${pos(theta()).y}`}
-      />
-      <text class="value" x="70" y="100">
-        {props.value.toFixed(1)}
-      </text>
-    </svg>
+    </div>
   );
 };
