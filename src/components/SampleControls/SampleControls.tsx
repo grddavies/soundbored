@@ -16,15 +16,15 @@ export const SampleControls: Component = () => {
   const [editingLabel, setEditingLabel] = createSignal(false);
   const { selected, mutateSelected } = useSelectedSampler();
   return (
-    <div class={`${style.SampleControls} col px-2`}>
-      <div class="flex">
-        <div class={style.sampleLabel}>
+    <div class={`${style.sampleControls} col px-2 text-xs`}>
+      <div class="h-1rem inline-flex flex-gap-1">
+        <div class="w-4">
           {editingLabel() ? (
             <input
               type="text"
               value={selected().label}
               maxlength={LABEL_CHAR_LIMIT}
-              class={style.sampleLabel}
+              class={`${style.labelInput} h-1rem w-full text-xs`}
               onInput={(e) => {
                 mutateSelected((sampler: SamplePlayer) => {
                   sampler.label = e.currentTarget.value;
@@ -39,16 +39,17 @@ export const SampleControls: Component = () => {
               }}
             />
           ) : (
-            <div
+            <span
+              class="inline-block w-full"
               onClick={() => {
                 setEditingLabel(true);
               }}
             >
               {selected().label}
-            </div>
+            </span>
           )}
         </div>
-        <div>/{selected().src}</div>
+        <div class="w-full">/{selected().src}</div>
       </div>
       <SampleView model={selected()} />
       <div class="grid grid-nogutter pt-2">
