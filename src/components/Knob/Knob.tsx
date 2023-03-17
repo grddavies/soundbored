@@ -97,7 +97,7 @@ export const Knob: Component<KnobProps> = (props) => {
   );
 
   return (
-    <div class="col">
+    <div class="flex flex-column">
       <div class={style['knob-label']}>{props.label}</div>
       <SVGKnob
         ref={svg!}

@@ -11,6 +11,7 @@ import style from './ButtonPad.module.css';
 type ButtonPadProps = {
   model: SamplePlayer;
   onClick?: () => void;
+  selected?: boolean;
 } & JSX.CustomAttributes<HTMLDivElement>;
 
 /**
@@ -109,7 +110,7 @@ export const ButtonPad: Component<ButtonPadProps> = (props) => {
       ref={container!}
       class={style.buttonPad}
       onClick={props.onClick}
-      classList={props.classList}
+      classList={{ ...props.classList, [style.selected]: props.selected }}
     >
       <canvas ref={canvas!} />
       <button ref={playButton!} disabled={audioBuffer.loading}>

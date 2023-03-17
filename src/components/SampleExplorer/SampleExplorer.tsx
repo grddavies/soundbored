@@ -1,5 +1,5 @@
 import { createDexieArrayQuery } from 'solid-dexie';
-import { BiRegularCloudUpload, BiSolidTrash } from 'solid-icons/bi';
+import { BiSolidFolderOpen, BiSolidTrash } from 'solid-icons/bi';
 import { Component, createSignal, For } from 'solid-js';
 import { useDoubleTap, useSelectedSampler } from 'src/hooks';
 import { updateSampleSrc } from 'src/models/SamplePlayer';
@@ -18,38 +18,17 @@ export const SampleExplorer: Component = () => {
   const [selectedIdx, setSelectedIdx] = createSignal<number | null>(null);
   const { mutateSelected } = useSelectedSampler();
   return (
-    <div
-      class={`${style.sampleExplorer} col-3`}
-      onMouseLeave={() => {
-        setSelectedIdx(null);
-      }}
-    >
-      <input
-        id="fileExplorer"
-        type="file"
-        accept="audio/*"
-        hidden
-        multiple
-        onChange={(e) => {
-          if (e.currentTarget.files) {
-            for (const f of e.currentTarget.files) {
-              SampleStore.instance.addSampleFromFile(f);
-            }
-          }
-        }}
-      />
-      <div class={`${style['sampleExplorer-header']} grid grid-nogutter`}>
-        <div class="col-9">Samples</div>
-        <div class="col-3">
-          <button
-            class={style.upload}
-            onClick={() => document.getElementById('fileExplorer')?.click()}
-          >
-            <BiRegularCloudUpload size={18} />
-          </button>
-        </div>
+    <div class={`${style.sampleExplorer} w-16rem`}>
+      <div class={`${style['sampleExplorer-header']} flex gap-1`}>
+        <BiSolidFolderOpen />
+        <div>Samples</div>
       </div>
-      <div class={style['sampleExplorer-list']}>
+      <div
+        class={style['sampleExplorer-list']}
+        onMouseLeave={() => {
+          setSelectedIdx(null);
+        }}
+      >
         <For each={samples}>
           {(samplePath, i) => {
             let fileRef: HTMLDivElement;

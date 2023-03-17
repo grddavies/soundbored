@@ -18,6 +18,10 @@
   border: 1px solid var(--orange);
   border-radius: 15px;
 
+  & button {
+    padding: 0.6em 1.2em;
+  }
+
   & .topbar {
     position: absolute;
     top: 1em;

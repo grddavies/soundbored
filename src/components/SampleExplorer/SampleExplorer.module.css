@@ -27,15 +27,6 @@
     align-items: center;
   }
 
-  & .upload {
-      transition: color 0.25s;
-      color: var(--text-white);
-      &:hover,
-      &:focus {
-        color: var(--orange);
-      }
-  }
-
   & .icon {
     cursor: pointer;
     background-color: var(--bg-colour);

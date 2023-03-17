@@ -16,15 +16,15 @@ export const SampleControls: Component = () => {
   const [editingLabel, setEditingLabel] = createSignal(false);
   const { selected, mutateSelected } = useSelectedSampler();
   return (
-    <div class={`${style.sampleControls} col px-2 text-xs`}>
-      <div class="h-1rem inline-flex flex-gap-1">
-        <div class="w-4">
+    <div class="flex-grow-1 flex flex-column px-2 text-xs text-left">
+      <div class="h-1rem flex">
+        <div class="w-6rem">
           {editingLabel() ? (
             <input
               type="text"
               value={selected().label}
               maxlength={LABEL_CHAR_LIMIT}
-              class={`${style.labelInput} h-1rem w-full text-xs`}
+              class={`${style.labelInput} h-full w-full text-xs`}
               onInput={(e) => {
                 mutateSelected((sampler: SamplePlayer) => {
                   sampler.label = e.currentTarget.value;
@@ -39,20 +39,21 @@ export const SampleControls: Component = () => {
               }}
             />
           ) : (
-            <span
-              class="inline-block w-full"
+            <div
               onClick={() => {
                 setEditingLabel(true);
               }}
             >
               {selected().label}
-            </span>
+            </div>
           )}
         </div>
-        <div class="w-full">/{selected().src}</div>
+        <div class="flex-grow-1 w-1rem h-full overflow-hidden text-overflow-ellipsis white-space-nowrap">
+          /{selected().src}
+        </div>
       </div>
       <SampleView model={selected()} />
-      <div class="grid grid-nogutter pt-2">
+      <div class="flex pt-2">
         <Knob
           value={selected().playbackRate}
           updateFunc={(value: number) =>

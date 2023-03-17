@@ -15,7 +15,7 @@ type SamplerProps = {
  */
 export const Sampler: Component<SamplerProps> = (props) => {
   // Index of the selected sampler
-  const { setSelectionIndex } = useSelectedSampler();
+  const { selected, setSelectionIndex } = useSelectedSampler();
   return (
     <div class={style.sampler}>
       <SampleEditor />
@@ -23,6 +23,7 @@ export const Sampler: Component<SamplerProps> = (props) => {
         {props.samplers.map((x, i) => (
           <ButtonPad
             // Hide pads on smaller screens
+            selected={x === selected()}
             classList={{ [style['hide-md']]: i > 8 }}
             model={x}
             onClick={() => setSelectionIndex(i)}
