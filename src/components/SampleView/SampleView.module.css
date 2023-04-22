@@ -3,20 +3,39 @@
     display: none;
   }
 
+  touch-action: none;
   border-radius: 8px;
   box-sizing: border-box;
   border: 1px solid var(--orange);
   position: relative;
   width: 100%;
   height: 50%;
-  /* background-color: var(--fg-dark); */
   background-color: var(--bg-color-2);
   font-size: small;
   text-align: left;
   word-break: break-all;
+}
 
-  & canvas {
-    width: 100%;
-    height: 100%;
-  }
+.fgLight {
+  fill: var(--fg-light);
+}
+
+.waveform {
+  stroke: var(--orange);
+  stroke-width: 1px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.midline {
+  stroke: var(--fg-light);
+  stroke-width: 1px;
+  fill: none;
+}
+
+.dragline {
+  stroke: var(--orange);
+  stroke-width: 1px;
+  fill: none;
 }

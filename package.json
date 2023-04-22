@@ -11,31 +11,33 @@
     "lint": "eslint src"
   },
   "dependencies": {
-    "@solid-primitives/pointer": "^0.2.5",
+    "@solid-primitives/pointer": "^0.2.11",
+    "@solid-primitives/reducer": "^0.0.101",
+    "@solid-primitives/resize-observer": "^2.0.15",
     "assert": "^2.0.0",
-    "dexie": "^3.2.2",
+    "dexie": "^3.2.3",
     "primeflex": "^3.3.0",
     "solid-dexie": "^0.0.5",
     "solid-icons": "^1.0.4",
-    "solid-js": "^1.6.9"
+    "solid-js": "^1.7.3"
   },
   "devDependencies": {
     "@types/assert": "^1.5.6",
-    "@typescript-eslint/eslint-plugin": "^5.51.0",
-    "@typescript-eslint/parser": "^5.51.0",
-    "eslint": "^8.33.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
+    "eslint": "^8.39.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-solid": "^0.9.4",
     "eslint-plugin-tsdoc": "^0.2.17",
-    "postcss": "^8.4.21",
+    "postcss": "^8.4.23",
     "postcss-nesting": "^10.2.0",
-    "prettier": "^2.8.2",
-    "typescript": "^4.9.4",
-    "vite": "^4.0.0",
-    "vite-plugin-checker": "^0.5.5",
+    "prettier": "^2.8.8",
+    "typescript": "^5.0.4",
+    "vite": "^4.3.1",
+    "vite-plugin-checker": "^0.5.6",
     "vite-plugin-eslint": "^1.8.1",
-    "vite-plugin-solid": "^2.5.0",
-    "vite-tsconfig-paths": "^4.0.5"
+    "vite-plugin-solid": "^2.7.0",
+    "vite-tsconfig-paths": "^4.2.0"
   },
   "postcss": {
     "plugins": {
