@@ -16,7 +16,7 @@ export const SampleExplorer: Component = () => {
   const samples = createDexieArrayQuery(() =>
     SampleStore.instance.getAllSampleFileNames(),
   );
-  const [collapsed, toggleCollapsed] = createReducer((x) => !x, false);
+  const [collapsed, toggleCollapsed] = createReducer((x) => !x, true);
   const [selectedIdx, setSelectedIdx] = createSignal<number | null>(null);
   const { mutateSelected } = useSelectedSampler();
   return (
