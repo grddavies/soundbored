@@ -2,39 +2,6 @@
   font-size: small;
   border-radius: 8px 0 0 8px;
   border-right: 1px solid var(--fg-dark);
-  text-align: left;
-  height: 100%;
-  display: flex;
-  flex-flow: column;
-  overflow: hidden;
-
-  & button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    background-color: inherit;
-  }
-
-  & .sampleExplorer-header {
-    font-size: larger;
-    border-bottom: 1px solid var(--fg-dark);
-    flex: 0 1 auto;
-    padding-left: 0.5em;
-    align-items: center;
-  }
-
-  & .upload {
-      transition: color 0.25s;
-      color: var(--text-white);
-      &:hover,
-      &:focus {
-        color: var(--orange);
-      }
-  }
 
   & .icon {
     cursor: pointer;
@@ -46,30 +13,51 @@
     overflow-y: scroll;
     flex: 1 1 auto;
   }
+}
 
-  & .sampleExplorer-item {
-    padding-left: 0.5em;
-    border-top: 1px solid var(--fg-dark);
-    display: flex;
-    align-items: stretch;
-    transition: background-color 0.15s;
-    touch-action: manipulation;
+.scrollbarThin {
+  scrollbar-width: thin;
+}
 
-    & div {
-      overflow-x: scroll;
-      white-space: nowrap;
-    }
+.listItem {
+  border-top: 1px solid var(--fg-dark);
+  display: flex;
+  align-items: stretch;
+  transition: background-color 0.15s;
+  touch-action: manipulation;
 
-    &:last-child {
-      border-bottom: 1px solid var(--fg-dark);
-    }
-
-    &.selected {
-      background-color: var(--orange);
-    }
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
+  & div {
+    overflow-x: scroll;
+    white-space: nowrap;
   }
+
+  &:last-child {
+    border-bottom: 1px solid var(--fg-dark);
+  }
+
+  &.selected {
+    background-color: var(--orange);
+  }
+}
+
+.headerBox {
+  border-bottom: 1px solid var(--fg-dark);
+  flex: 0 1 auto;
+}
+
+.interaction {
+  cursor: pointer;
+  transition: color 0.25s;
+  color: var(--text-white);
+  &:hover {
+    color: var(--orange);
+  }
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  background-color: transparent;
 }

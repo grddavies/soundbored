@@ -6,5 +6,4 @@
 export type Sample = {
   filename: string;
   data: Blob;
-  waveform?: Float32Array;
 };

@@ -3,6 +3,7 @@ import { BiRegularPlay, BiRegularStop } from 'solid-icons/bi';
 import { Component, createEffect, createResource, JSX } from 'solid-js';
 import { AudioCtx } from 'src/audio';
 import { AudioPlayerNode } from 'src/audio/AudioPlayerNode';
+import { SampleDropzone } from 'src/components';
 import { SamplePlayer } from 'src/models';
 import { SampleStore } from 'src/samples';
 
@@ -11,6 +12,7 @@ import style from './ButtonPad.module.css';
 type ButtonPadProps = {
   model: SamplePlayer;
   onClick?: () => void;
+  selected?: boolean;
 } & JSX.CustomAttributes<HTMLDivElement>;
 
 /**
@@ -105,11 +107,12 @@ export const ButtonPad: Component<ButtonPadProps> = (props) => {
   });
 
   return (
-    <div
+    <SampleDropzone
+      sampler={props.model}
       ref={container!}
       class={style.buttonPad}
       onClick={props.onClick}
-      classList={props.classList}
+      classList={{ ...props.classList, [style.selected]: props.selected }}
     >
       <canvas ref={canvas!} />
       <button ref={playButton!} disabled={audioBuffer.loading}>
@@ -119,6 +122,6 @@ export const ButtonPad: Component<ButtonPadProps> = (props) => {
       <button ref={stopButton!} disabled={audioBuffer.loading}>
         <BiRegularStop size={24} />
       </button>
-    </div>
+    </SampleDropzone>
   );
 };

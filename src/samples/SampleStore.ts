@@ -12,6 +12,8 @@ export class SampleStore {
 
   private static _instance: SampleStore;
 
+  private _channelDataStore: Map<string, Float32Array[]> = new Map();
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private constructor() {
     // Noop
@@ -48,18 +50,22 @@ export class SampleStore {
   }
 
   /**
-   * Get the preprocessed waveform data for sample
-   * @param filename - Name of the file
-   * @returns array of the sample data if present
+   * Set audio channel data in the cache
+   * @param filename
+   * @param data
    */
-  public async getSampleWaveform(
-    filename: string,
-  ): Promise<Float32Array | undefined> {
-    return await this._db.sample
-      .get({ filename })
-      .then((sample) => sample?.waveform);
+  public cacheChannelData(filename: string, data: Float32Array[]): void {
+    this._channelDataStore.set(filename, data);
   }
 
+  /**
+   * Get audio channel data from the cache if it exists
+   * @param filename
+   * @returns
+   */
+  public getChannelData(filename: string): Float32Array[] | undefined {
+    return this._channelDataStore.get(filename);
+  }
   /**
    * Query all available sample filenames
    *
@@ -99,6 +105,7 @@ export class SampleStore {
    * @returns The number of deleted files
    */
   public async deleteSampleByName(filename: string): Promise<number> {
+    this._channelDataStore.delete(filename);
     return await this._db.sample.where({ filename }).delete();
   }
 }

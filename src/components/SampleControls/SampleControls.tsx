@@ -16,15 +16,15 @@ export const SampleControls: Component = () => {
   const [editingLabel, setEditingLabel] = createSignal(false);
   const { selected, mutateSelected } = useSelectedSampler();
   return (
-    <div class={`${style.SampleControls} col px-2`}>
-      <div class="flex">
-        <div class={style.sampleLabel}>
+    <div class="flex-grow-1 flex flex-column px-2 text-xs text-left">
+      <div class="h-1rem flex">
+        <div class="w-6rem">
           {editingLabel() ? (
             <input
               type="text"
               value={selected().label}
               maxlength={LABEL_CHAR_LIMIT}
-              class={style.sampleLabel}
+              class={`${style.labelInput} h-full w-full text-xs`}
               onInput={(e) => {
                 mutateSelected((sampler: SamplePlayer) => {
                   sampler.label = e.currentTarget.value;
@@ -48,10 +48,12 @@ export const SampleControls: Component = () => {
             </div>
           )}
         </div>
-        <div>/{selected().src}</div>
+        <div class="flex-grow-1 w-1rem h-full overflow-hidden text-overflow-ellipsis white-space-nowrap">
+          /{selected().src}
+        </div>
       </div>
       <SampleView model={selected()} />
-      <div class="grid grid-nogutter pt-2">
+      <div class="flex pt-2">
         <Knob
           value={selected().playbackRate}
           updateFunc={(value: number) =>

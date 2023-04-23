@@ -7,7 +7,7 @@ type MutateSamplerAction = (sampler: SamplePlayer) => void;
 
 /**
  * # SelectedSamplePlayerModel
- * 
+ *
  * Interface to the globally selected SamplePlayer
  */
 interface SelectedSamplePlayerModel {
@@ -15,6 +15,10 @@ interface SelectedSamplePlayerModel {
    * The current globally selected SamplePlayer
    */
   selected: Accessor<SamplePlayer>;
+  /**
+   * The index of the globally selected SamplePlayer
+   */
+  selectedIdx: Accessor<number>;
   /**
    * Set the index of the selected SamplePlayer in the SamplePlayers array
    */
@@ -29,14 +33,15 @@ interface SelectedSamplePlayerModel {
   mutateSelected: (fn: MutateSamplerAction) => void;
 }
 
-const [idx, setSelectionIndex] = createSignal(0);
-const selected = (): SamplePlayer => GlobalState.samplers[idx()];
+const [selectedIdx, setSelectionIndex] = createSignal(0);
+const selected = (): SamplePlayer => GlobalState.samplers[selectedIdx()];
 const mutateSelected = (fn: MutateSamplerAction): void => {
-  setGlobalState('samplers', idx(), produce(fn));
+  setGlobalState('samplers', selectedIdx(), produce(fn));
 };
 
 const model: SelectedSamplePlayerModel = {
   selected,
+  selectedIdx,
   setSelectionIndex,
   mutateSelected,
 };

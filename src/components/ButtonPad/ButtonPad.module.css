@@ -7,6 +7,11 @@
   overflow: hidden;
   touch-action: manipulation;
 
+  &.selected {
+    background-color: var(--purple);
+    border: 1px solid var(--purple);
+  }
+
   & canvas {
     position: absolute;
     top: 0;

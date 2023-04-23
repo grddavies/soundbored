@@ -8,7 +8,7 @@ import style from './SampleEditor.module.css';
  * Renders an editor for the selected SamplePlayer
  */
 export const SampleEditor: Component = () => (
-  <div class={`${style.sampleEditor} grid grid-nogutter`}>
+  <div class={`${style.sampleEditor} w-full flex`}>
     <SampleExplorer />
     <SampleControls />
   </div>
