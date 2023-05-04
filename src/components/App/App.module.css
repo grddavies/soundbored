@@ -27,7 +27,7 @@
     &.icon {
       & a {
         cursor: pointer;
-        color: var(--text-white);
+        color: var(--text-color);
         display: flex;
         align-items: center;
 
@@ -63,7 +63,7 @@
 
 .interaction {
   transition: color 0.25s;
-  color: var(--text-white);
+  color: var(--text-color);
   &:hover {
     color: var(--orange);
   }

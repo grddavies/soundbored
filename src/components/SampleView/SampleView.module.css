@@ -4,7 +4,7 @@
   }
 
   touch-action: none;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   box-sizing: border-box;
   border: 1px solid var(--orange);
   position: relative;

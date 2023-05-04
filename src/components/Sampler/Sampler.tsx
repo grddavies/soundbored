@@ -1,8 +1,9 @@
 import { Component } from 'solid-js';
-import { ButtonPad, SampleEditor } from 'src/components';
+import { ButtonPad } from 'src/components';
 import { SamplePlayer } from 'src/models/SamplePlayer';
 
 import { useSelectedSampler } from '../../hooks/useSelectedSampler';
+import { ControlPanel } from '../ControlPanel/ControlPanel';
 import style from './Sampler.module.css';
 
 type SamplerProps = {
@@ -17,8 +18,8 @@ export const Sampler: Component<SamplerProps> = (props) => {
   // Index of the selected sampler
   const { selected, setSelectionIndex } = useSelectedSampler();
   return (
-    <div class={style.sampler}>
-      <SampleEditor />
+    <div class={`${style.sampler}`}>
+      <ControlPanel />
       <div class={style.buttonGrid}>
         {props.samplers.map((x, i) => (
           <ButtonPad

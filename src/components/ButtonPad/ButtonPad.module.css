@@ -2,10 +2,11 @@
   background-color: var(--orange);
   border: 1px solid var(--orange);
   padding: 0px;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   position: relative;
   overflow: hidden;
   touch-action: manipulation;
+  user-select: none;
 
   &.selected {
     background-color: var(--purple);
