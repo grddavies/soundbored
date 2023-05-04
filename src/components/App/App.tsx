@@ -62,7 +62,10 @@ export function App(): JSX.Element {
           </li>
         </ul>
       </header>
-      <main role="main" class={style.content}>
+      <main
+        role="main"
+        class="flex flex-1 justify-content-center align-items-center"
+      >
         <Sampler
           appInitialized={appInitialized}
           samplers={GlobalState.samplers}

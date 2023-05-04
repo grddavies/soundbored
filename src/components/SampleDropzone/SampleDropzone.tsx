@@ -16,7 +16,7 @@ type SampleDropzoneProps = Omit<
  * @returns
  */
 export const SampleDropzone: Component<SampleDropzoneProps> = (props) => {
-  const [, rest] = splitProps(props, ['children']);
+  const [, rest] = splitProps(props, ['children', 'sampler']);
   const { selectedIdx } = useSelectedSampler();
   return (
     <div
