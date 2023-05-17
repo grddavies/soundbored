@@ -4,7 +4,7 @@ import { SampleView } from 'src/components';
 import { LABEL_CHAR_LIMIT } from 'src/defaults/constants';
 import { useSelectedSampler } from 'src/hooks';
 import { SamplePlayer } from 'src/models/SamplePlayer';
-import { persistGlobalState } from 'src/store/AppState';
+import { GlobalState } from 'src/store/AppState';
 
 /**
  * Renders a set of controls to edit the selected SamplePlayer
@@ -28,7 +28,7 @@ export const SampleControls: Component = () => {
                   sampler.label = e.currentTarget.value;
                 });
               }}
-              onChange={() => persistGlobalState()}
+              onChange={() => GlobalState.persist()}
               onKeyUp={(e) => {
                 if (e.key === 'Enter') setEditingLabel(false);
               }}

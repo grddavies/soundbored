@@ -68,7 +68,7 @@ export function App(): JSX.Element {
       >
         <Sampler
           appInitialized={appInitialized}
-          samplers={GlobalState.samplers}
+          samplers={GlobalState.state.samplers}
         />
       </main>
       <footer class={style.footer} />

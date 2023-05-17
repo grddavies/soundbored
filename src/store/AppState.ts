@@ -65,19 +65,42 @@ const initState: AppState = restoreFromLocalStorage() ?? initialiseState();
 /**
  * Global application store object and setter function
  */
-export const [GlobalState, setGlobalState] = createStore<AppState>(initState);
+const [globalState, setGlobalState] = createStore<AppState>(initState);
 
 const writeAppState: (value: SerializedAppState) => string = JSON.stringify;
 
 /**
  * Write the global application state to localStorage
  */
-export function persistGlobalState(): void {
-  const { samplers } = GlobalState;
+async function persistGlobalState(): Promise<void> {
+  const { samplers } = globalState;
   localStorage.setItem(
     LOCAL_STORAGE_KEY,
     writeAppState({
       samplers: samplers.map((x) => ({ ...x, camera: undefined })),
     }),
   );
+}
+
+/**
+ * # GlobalState
+ * Manage global application state
+ */
+export class GlobalState {
+  /**
+   * Persist app state to localStorage
+   */
+  public static persist = persistGlobalState;
+
+  /**
+   * The reactive global application state object
+   *
+   * NOTE: Mutations of the state object are not reactive
+   */
+  public static state = globalState;
+
+  /**
+   * Set the global application state
+   */
+  public static setState = setGlobalState;
 }

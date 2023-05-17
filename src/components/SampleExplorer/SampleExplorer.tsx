@@ -5,7 +5,7 @@ import { Component, createResource, createSignal, For, Show } from 'solid-js';
 import { useDoubleTap, useSelectedSampler } from 'src/hooks';
 import { updateSampleSrc } from 'src/models/SamplePlayer';
 import { SampleStore } from 'src/samples';
-import { persistGlobalState } from 'src/store/AppState';
+import { GlobalState } from 'src/store/AppState';
 import { formatBytes } from 'src/utils';
 
 /**
@@ -39,7 +39,7 @@ export const SampleExplorer: Component = () => {
                   () =>
                     mutateSelected((sampler) => {
                       updateSampleSrc(sampler, samplePath);
-                      persistGlobalState();
+                      GlobalState.persist();
                     }),
                 );
                 return (
@@ -104,7 +104,7 @@ const FileInfoPanel: Component<{ path: string }> = (props) => {
             onClick={() => {
               mutateSelected((sampler) => {
                 updateSampleSrc(sampler, props.path);
-                persistGlobalState();
+                GlobalState.persist();
               });
             }}
           >

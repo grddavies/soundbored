@@ -2,7 +2,7 @@ import { Component, JSX, splitProps } from 'solid-js';
 import { produce } from 'solid-js/store';
 import { useSelectedSampler } from 'src/hooks';
 import { SamplePlayer, updateSampleSrc } from 'src/models/SamplePlayer';
-import { GlobalState, setGlobalState } from 'src/store/AppState';
+import { GlobalState } from 'src/store/AppState';
 
 type SampleDropzoneProps = Omit<
   JSX.HTMLAttributes<HTMLDivElement>,
@@ -29,10 +29,10 @@ export const SampleDropzone: Component<SampleDropzoneProps> = (props) => {
       }}
       onDrop={(e) => {
         e.preventDefault();
-        setGlobalState(
+        GlobalState.setState(
           'samplers',
           props.sampler
-            ? GlobalState.samplers.indexOf(props.sampler)
+            ? GlobalState.state.samplers.indexOf(props.sampler)
             : selectedIdx(),
           produce((sampler) => {
             if (e.dataTransfer) {
