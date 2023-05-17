@@ -11,25 +11,11 @@ import {
 } from 'solid-js';
 import { AudioCtx } from 'src/audio';
 import { SampleDropzone } from 'src/components';
-import { Vec2 } from 'src/math';
+import { Camera2D } from 'src/models';
 import { SamplePlayer } from 'src/models/SamplePlayer';
 import { SampleStore } from 'src/samples';
 
 import style from './SampleView.module.css';
-
-type Camera2D = {
-  /**
-   * Camera pan
-   * x: from 0, upper bound limited by number of samples
-   * y: unused
-   */
-  pan: Vec2;
-  /**
-   * Camera zoom
-   * x, y: from 1
-   */
-  zoom: Vec2;
-};
 
 /**
  * Vertical padding in px
@@ -69,6 +55,7 @@ function audioSampleToSVG(
   const nSamples = Math.min(size.width * 4, window.length);
   const chunkSize = Math.floor(window.length / nSamples);
   // TODO: improve downsample algorithm
+  // Should switch between amp env for 'long' samples and downsampling for 'short' sections
   const zeroLine = size.height / 2;
   const tX = (x: number): number => (x * size.width) / nSamples;
   const tY = (y: number): number =>
@@ -126,12 +113,6 @@ export const SampleView: Component<SampleViewProps> = (props) => {
   // Container element size to set SVG size
   const size = createElementSize(() => divRef);
 
-  // TODO: Waveform Pan/Zoom
-  const camera = (): Camera2D => ({
-    pan: { x: 0, y: 0 },
-    zoom: { x: 1, y: 1 },
-  });
-
   const [originalSample] = createResource(
     () => ({ src: props.model.src, ctx: AudioCtx() }),
     fetchAudioBuffer,
@@ -143,7 +124,7 @@ export const SampleView: Component<SampleViewProps> = (props) => {
   const waveformPaths = createMemo(() => {
     const ctx = AudioCtx();
     const sample = originalSample();
-    const cameraPos = camera();
+    const cameraPos = props.model.camera;
     const clientSize = { width: size.width ?? 0, height: size.height ?? 0 };
     if (!sample || !ctx) return [];
     return sample.map((original) => (
@@ -221,7 +202,7 @@ export const SampleView: Component<SampleViewProps> = (props) => {
               {dragStartX() != null && (
                 <path
                   class={style.dragline}
-                  d={`M ${dragStartX()! - camera().pan.x} 0 V ${
+                  d={`M ${dragStartX()! - props.model.camera.pan.x} 0 V ${
                     size.height ?? 0
                   }`}
                 />

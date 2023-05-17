@@ -1,6 +1,7 @@
 import { createPointerListeners } from '@solid-primitives/pointer';
 import { Component, createSignal } from 'solid-js';
 import { useDoubleTap } from 'src/hooks';
+import { Vec2 } from 'src/math';
 import { persistGlobalState } from 'src/store/AppState';
 
 import style from './Knob.module.css';
@@ -24,8 +25,44 @@ type KnobProps = {
   min?: number;
   size?: number;
   defaultValue: number;
+  scaleFunc: (x: number) => number;
   label?: string;
 };
+
+/**
+ * Handles Drag Events
+ */
+class DragHandler {
+  private _dragStart: Vec2 = { x: -Infinity, y: -Infinity };
+  private _activeDrag: number | undefined = undefined;
+
+  private handleDrag(e: PointerEvent): void {
+    // Apply some onDrag cb
+    console.log({
+      x: this._dragStart.x - e.clientX,
+      y: this._dragStart.y - e.clientY,
+    });
+  }
+
+  private clearDragHandler(e: PointerEvent): void {
+    if (e.pointerId === this._activeDrag) {
+      // apply some onDragEnd
+      this._activeDrag = undefined;
+      window.removeEventListener('pointermove', this.handleDrag);
+      window.removeEventListener('pointerup', this.clearDragHandler);
+    }
+  }
+
+  private onPointerDown(e: PointerEvent): void {
+    this._dragStart = { x: e.clientX, y: e.clientY };
+    this._activeDrag = e.pointerId;
+    // onDragStart
+    window.addEventListener('pointermove', this.handleDrag, { passive: false });
+    window.addEventListener('pointerup', this.clearDragHandler, {
+      passive: false,
+    });
+  }
+}
 
 /**
  * Renders an interactive knob component
@@ -57,8 +94,9 @@ export const Knob: Component<KnobProps> = (props) => {
           Math.max(
             props.min ?? 0,
             initialVal() +
-              ((dragStartY() - e.clientY) / screen.availHeight) *
-                (precisionMode() ? 1 : 4),
+              // TODO: work out how to do an exponential scale increasing and decreasing
+              // Look up precision inputs
+              props.scaleFunc((dragStartY() - e.clientY) / screen.availHeight),
           ),
         ),
       );
@@ -67,6 +105,8 @@ export const Knob: Component<KnobProps> = (props) => {
 
   const clearMoveHandler = (e: PointerEvent): void => {
     if (e.pointerId === currentPointer()) {
+      // NOTE: We may not always want to persist
+      // Could be abstracted into some kinda 'afterDrag or DragEnd'
       persistGlobalState();
       setCurrentPointer(null);
       setPrecisionMode(false);
@@ -106,6 +146,7 @@ export const Knob: Component<KnobProps> = (props) => {
         max={props.max}
         size={props.size}
       />
+      <input hidden />
     </div>
   );
 };

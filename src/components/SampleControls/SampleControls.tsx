@@ -55,6 +55,7 @@ export const SampleControls: Component = () => {
       <div class="flex flex-auto align-items-end py-2">
         <Knob
           value={selected().playbackRate}
+          scaleFunc={(x) => x * 4}
           updateFunc={(value: number) =>
             mutateSelected((sampler) => {
               sampler.playbackRate = value;
@@ -65,6 +66,33 @@ export const SampleControls: Component = () => {
           max={2.0}
           size={50}
           label="Playback Speed"
+        />
+        <Knob
+          value={selected().camera.pan.x}
+          scaleFunc={(x) => x * 2000}
+          updateFunc={(value: number) =>
+            mutateSelected((sampler) => {
+              sampler.camera.pan.x = value;
+            })
+          }
+          defaultValue={0}
+          max={100000}
+          size={50}
+          label="Pan X"
+        />
+        <Knob
+          value={selected().camera.zoom.x}
+          scaleFunc={(x) => Math.pow(Math.E, 4 * x)}
+          updateFunc={(value: number) =>
+            mutateSelected((sampler) => {
+              sampler.camera.zoom.x = value;
+            })
+          }
+          defaultValue={1}
+          min={1}
+          max={16}
+          size={50}
+          label="Zoom X"
         />
       </div>
     </div>
