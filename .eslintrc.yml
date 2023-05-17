@@ -10,6 +10,7 @@ plugins:
   - 'simple-import-sort'
 root: true
 rules:
+  no-console: error
   # Non-null assertions used for refs in solidJS
   '@typescript-eslint/no-non-null-assertion': 0
   '@typescript-eslint/no-unused-vars':

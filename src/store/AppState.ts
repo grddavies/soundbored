@@ -2,6 +2,7 @@ import { createStore } from 'solid-js/store';
 import { NUM_PADS } from 'src/defaults/constants';
 import { Defaults } from 'src/defaults/Defaults';
 import { SamplePlayer } from 'src/models/SamplePlayer';
+import { Logger } from 'src/utils/Logger';
 
 import { Convert } from './Convert';
 
@@ -24,7 +25,7 @@ function restoreFromLocalStorage(): AppState | null {
     try {
       return Convert.toAppState(jsonString);
     } catch (e) {
-      console.error(e);
+      Logger.error('Failed to parse App state from JSON', e);
       return null;
     }
   }
@@ -60,4 +61,3 @@ export const [GlobalState, setGlobalState] = createStore<AppState>(initState);
 export function persistGlobalState(): void {
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(GlobalState));
 }
-
