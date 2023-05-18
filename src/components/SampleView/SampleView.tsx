@@ -120,7 +120,13 @@ type SampleViewProps = {
  * @returns
  */
 export const SampleView: Component<SampleViewProps> = (props) => {
+  let divRef: HTMLDivElement | undefined;
   let svgRef: SVGSVGElement | undefined;
+
+  // Container element size to set SVG size
+  const size = createElementSize(() => divRef);
+
+  // TODO: Waveform Pan/Zoom
   const camera = (): Camera2D => ({
     pan: { x: 0, y: 0 },
     zoom: { x: 1, y: 1 },
@@ -130,9 +136,6 @@ export const SampleView: Component<SampleViewProps> = (props) => {
     () => ({ src: props.model.src, ctx: AudioCtx() }),
     fetchAudioBuffer,
   );
-
-  // SVG element size
-  const size = createElementSize(() => svgRef);
 
   // Waveform zero crossing point
   const y0 = (): number => (size.height || 0) / 2;
@@ -189,7 +192,7 @@ export const SampleView: Component<SampleViewProps> = (props) => {
   });
 
   return (
-    <SampleDropzone class={`${style.sampleView} overflow-hidden`}>
+    <SampleDropzone ref={divRef!} class={`${style.sampleView} overflow-hidden`}>
       <svg
         ref={svgRef!}
         class="w-full h-full"

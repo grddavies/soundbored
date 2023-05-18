@@ -51,23 +51,21 @@ export const SampleControls: Component = () => {
         </div>
       </div>
 
-      <div class="px-1 pb-2">
-        <SampleView model={selected()} />
-        <div class="flex pt-2">
-          <Knob
-            value={selected().playbackRate}
-            updateFunc={(value: number) =>
-              mutateSelected((sampler) => {
-                sampler.playbackRate = value;
-              })
-            }
-            defaultValue={1}
-            min={0.01}
-            max={2.0}
-            size={50}
-            label="Playback Speed"
-          />
-        </div>
+      <SampleView model={selected()} />
+      <div class="flex flex-auto align-items-end py-2">
+        <Knob
+          value={selected().playbackRate}
+          updateFunc={(value: number) =>
+            mutateSelected((sampler) => {
+              sampler.playbackRate = value;
+            })
+          }
+          defaultValue={1}
+          min={0.01}
+          max={2.0}
+          size={50}
+          label="Playback Speed"
+        />
       </div>
     </div>
   );
