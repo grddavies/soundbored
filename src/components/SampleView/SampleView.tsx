@@ -14,6 +14,7 @@ import { Vec2Sub } from 'src/math';
 import { Camera2D } from 'src/models';
 import { SamplePlayer } from 'src/models/SamplePlayer';
 import { SampleStore } from 'src/samples';
+import { GlobalState } from 'src/store';
 
 import style from './SampleView.module.css';
 
@@ -63,7 +64,7 @@ function audioSampleToSVG(
   // Transform from sample amplitute to pixel y
   // No y zoom implemented
   const tY = (y: number): number => zeroLine + y * (size.height - PAD_Y) * 0.5;
-  let dString = `M 0 ${channelData.at(0) ?? 0}`;
+  let dString = `M 0 ${tY(channelData.at(0) ?? 0)}`;
   for (let i = 1; i < nChunks; i++) {
     const chunk = channelData.subarray(i * chunkSize, (i + 1) * chunkSize);
     dString += ` L${tX(i)} ${tY(chunk.at(0) ?? 0)}`;
@@ -153,10 +154,18 @@ export const SampleView: Component<SampleViewProps> = (props) => {
     onDragMove: (delta) => {
       mutateSelected((sampler) => {
         sampler.camera.zoom.x = startZoom + delta.y * ZOOMSPEED;
+        sampler.camera.zoom.x = Math.max(1, sampler.camera.zoom.x);
+
+        sampler.camera.pan.x = startPan - delta.x / size.width!;
+        // Restrict pan offset within the bounds of the waveform
+        sampler.camera.pan.x = Math.max(
+          0,
+          Math.min(1 - 1 / sampler.camera.zoom.x, sampler.camera.pan.x),
+        );
       });
     },
     onDragEnd: () => {
-      console.log(props.model.camera.zoom.x);
+      GlobalState.persist();
     },
   });
 
