@@ -1,6 +1,4 @@
-import { createPointerListeners } from '@solid-primitives/pointer';
 import { createElementSize, Size } from '@solid-primitives/resize-observer';
-import assert from 'assert';
 import {
   Component,
   createMemo,
@@ -11,6 +9,8 @@ import {
 } from 'solid-js';
 import { AudioCtx } from 'src/audio';
 import { SampleDropzone } from 'src/components';
+import { makeDragHandler, useSelectedSampler } from 'src/hooks';
+import { Vec2Sub } from 'src/math';
 import { Camera2D } from 'src/models';
 import { SamplePlayer } from 'src/models/SamplePlayer';
 import { SampleStore } from 'src/samples';
@@ -23,56 +23,58 @@ import style from './SampleView.module.css';
 const PAD_Y = 10;
 
 /**
+ * Zoom scale factor
+ */
+const ZOOMSPEED = 0.1;
+
+/**
  * Return a view of an an audio buffer based on a camera position
  * @param audio
  * @param camera2D
  * @returns
  */
-function windowSamples(
-  audio: Float32Array,
+function getVisibleWaveData(
+  audio: Readonly<Float32Array>,
   camera2D: Readonly<Camera2D>,
 ): Float32Array {
   return audio.subarray(
-    Math.max(0, 0 + camera2D.pan.x),
-    Math.min(Math.floor(audio.length / camera2D.zoom.x), audio.length),
+    Math.floor(audio.length * camera2D.pan.x),
+    Math.floor(audio.length * (camera2D.pan.x + 1 / camera2D.zoom.x)),
   );
 }
 
 /**
  * Convert audio channel data to an SVG path `d` parameter string
  * @param audio single channel of audio data
- * @param size size of the viewport
- * @param camera camera pan and zoom
+ * @param size size of the waveform viewport
  */
 function audioSampleToSVG(
-  audio: Float32Array,
+  channelData: Readonly<Float32Array>,
   size: Readonly<Size>,
-  camera: Readonly<Camera2D>,
 ): string {
-  // Get a view of the samples within the window
-  const window = windowSamples(audio, camera);
-  // Number of samples in output array
-  const nSamples = Math.min(size.width * 4, window.length);
-  const chunkSize = Math.floor(window.length / nSamples);
+  // Chunks = samples in output array - max of 3 samples per pixel
+  const nChunks = Math.min(size.width * 3, channelData.length);
+  const chunkSize = Math.floor(channelData.length / nChunks);
   // TODO: improve downsample algorithm
   // Should switch between amp env for 'long' samples and downsampling for 'short' sections
   const zeroLine = size.height / 2;
-  const tX = (x: number): number => (x * size.width) / nSamples;
-  const tY = (y: number): number =>
-    zeroLine + y * (size.height - PAD_Y) * 0.5 * camera.zoom.y;
-  let dString = `M 0 ${window[0]}`;
-  for (let i = 1; i < nSamples; i++) {
-    const chunk = window.subarray(i * chunkSize, (i + 1) * chunkSize);
-    dString += ` L ${tX(i)} ${tY(chunk[0])}`;
-    // We transform the amplitude to a position in screen space
-    // Note: Pan y not implemented
-    // Note: Does not handle 32bit float overflow with +ve zoom y
+  // Transform from sample number to pixel x
+  const tX = (x: number): number => (x * size.width) / nChunks;
+  // Transform from sample amplitute to pixel y
+  // No y zoom implemented
+  const tY = (y: number): number => zeroLine + y * (size.height - PAD_Y) * 0.5;
+  let dString = `M 0 ${channelData.at(0) ?? 0}`;
+  for (let i = 1; i < nChunks; i++) {
+    const chunk = channelData.subarray(i * chunkSize, (i + 1) * chunkSize);
+    dString += ` L${tX(i)} ${tY(chunk.at(0) ?? 0)}`;
   }
   return dString;
 }
 
 /**
  * Fetch audio channel data from a sample src
+ * @param src audio file source name in database
+ * @param ctx active AudioContext
  */
 async function fetchAudioBuffer({
   src,
@@ -113,62 +115,48 @@ export const SampleView: Component<SampleViewProps> = (props) => {
   // Container element size to set SVG size
   const size = createElementSize(() => divRef);
 
-  const [originalSample] = createResource(
+  // Waveform zero crossing point
+  const y0 = (): number => (size.height || 0) / 2;
+
+  const [audioData] = createResource(
     () => ({ src: props.model.src, ctx: AudioCtx() }),
     fetchAudioBuffer,
   );
 
-  // Waveform zero crossing point
-  const y0 = (): number => (size.height || 0) / 2;
+  // View of audio data based on camera position
+  const visibleData = createMemo(() => {
+    const sample = audioData();
+    const camera = props.model.camera;
+    if (!sample) return [];
+    return sample.map((channel) => getVisibleWaveData(channel, camera));
+  });
 
+  // SVG path elements rendering the audio channel data
   const waveformPaths = createMemo(() => {
-    const ctx = AudioCtx();
-    const sample = originalSample();
-    const cameraPos = props.model.camera;
     const clientSize = { width: size.width ?? 0, height: size.height ?? 0 };
-    if (!sample || !ctx) return [];
-    return sample.map((original) => (
-      <path
-        class={style.waveform}
-        d={audioSampleToSVG(original, clientSize, cameraPos)}
-      />
+    return visibleData().map((channel) => (
+      <path class={style.waveform} d={audioSampleToSVG(channel, clientSize)} />
     ));
   });
 
-  const [currentPointer, setCurrentPointer] = createSignal<number | null>(null);
-  const [_dragStartY, setDragStartY] = createSignal(0);
-  const [dragStartX, setDragStartX] = createSignal<null | number>(0);
+  const { mutateSelected } = useSelectedSampler();
 
-  const clearMoveHandler = (e: PointerEvent): void => {
-    if (e.pointerId === currentPointer()) {
-      setCurrentPointer(null);
-      setDragStartX(null);
-      window.removeEventListener('pointermove', handleMove);
-      window.removeEventListener('pointerup', clearMoveHandler);
-    }
-  };
+  let startPan = props.model.camera.pan.x;
+  let startZoom = props.model.camera.zoom.x;
 
-  const handleMove = (e: PointerEvent): void => {
-    if (e.pointerId === currentPointer()) {
-      // Prevent scroll
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      // TODO: touchpad pan/zoom
-    }
-  };
-
-  createPointerListeners({
+  makeDragHandler({
     target: () => svgRef,
-    onDown: (e) => {
-      assert(svgRef);
-      const rect = svgRef.getBoundingClientRect();
-      setDragStartY(e.clientY - rect.top);
-      setDragStartX(e.clientX - rect.left);
-      setCurrentPointer(e.pointerId);
-      window.addEventListener('pointerup', clearMoveHandler, {
-        passive: false,
+    onDragStart: () => {
+      startPan = props.model.camera.pan.x;
+      startZoom = props.model.camera.zoom.x;
+    },
+    onDragMove: (delta) => {
+      mutateSelected((sampler) => {
+        sampler.camera.zoom.x = startZoom + delta.y * ZOOMSPEED;
       });
-      window.addEventListener('pointermove', handleMove, { passive: false });
+    },
+    onDragEnd: () => {
+      console.log(props.model.camera.zoom.x);
     },
   });
 
@@ -193,22 +181,14 @@ export const SampleView: Component<SampleViewProps> = (props) => {
                 Audio Engine Off
               </text>
             </Match>
-            <Match when={originalSample.state === 'ready'}>
+            <Match when={audioData.state === 'ready'}>
               <path
                 class={style.midline}
                 d={`M 0 ${y0()} L ${size.width ?? 0} ${y0()}`}
               />
               {...waveformPaths()}
-              {dragStartX() != null && (
-                <path
-                  class={style.dragline}
-                  d={`M ${dragStartX()! - props.model.camera.pan.x} 0 V ${
-                    size.height ?? 0
-                  }`}
-                />
-              )}
             </Match>
-            <Match when={originalSample.state === 'errored'}>
+            <Match when={audioData.state === 'errored'}>
               <text
                 class={`${style.fgLight} font-bold text-sm`}
                 x="50%"
@@ -219,7 +199,7 @@ export const SampleView: Component<SampleViewProps> = (props) => {
                 No Sample Loaded
               </text>
             </Match>
-            <Match when={originalSample.loading}>
+            <Match when={audioData.loading}>
               <text
                 class={`${style.fgLight} font-bold text-sm`}
                 x="50%"

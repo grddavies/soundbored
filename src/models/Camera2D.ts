@@ -5,11 +5,13 @@ import { Vec2 } from 'src/math';
  */
 export type Camera2D = {
   /**
-   * Camera pan position
+   * Camera pan offset
+   *
+   * Valid in range [0, 1 - 1/zoom]
    */
   pan: Vec2;
   /**
-   * Camera zoom level
+   * Camera zoom factor
    */
   zoom: Vec2;
 };

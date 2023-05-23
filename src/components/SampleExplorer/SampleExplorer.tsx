@@ -2,7 +2,7 @@ import { createDexieArrayQuery } from 'solid-dexie';
 import { BiSolidTrash } from 'solid-icons/bi';
 import { ImDownload2 } from 'solid-icons/im';
 import { Component, createResource, createSignal, For, Show } from 'solid-js';
-import { useDoubleTap, useSelectedSampler } from 'src/hooks';
+import { makeDoubleTapListener, useSelectedSampler } from 'src/hooks';
 import { updateSampleSrc } from 'src/models/SamplePlayer';
 import { SampleStore } from 'src/samples';
 import { GlobalState } from 'src/store/AppState';
@@ -34,7 +34,7 @@ export const SampleExplorer: Component = () => {
             <For each={samples}>
               {(samplePath, i) => {
                 let fileRef: HTMLLIElement;
-                useDoubleTap(
+                makeDoubleTapListener(
                   () => fileRef,
                   () =>
                     mutateSelected((sampler) => {

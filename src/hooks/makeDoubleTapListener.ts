@@ -6,7 +6,7 @@ import { DB_CLICK_THRESHOLD } from 'src/defaults/constants';
  * @param target - DOM node to attach listeners to
  * @param onDoubleClick - PointerEvent handler to run on double click event
  */
-export function useDoubleTap(
+export function makeDoubleTapListener(
   target: Parameters<typeof createPointerListeners>[0]['target'],
   onDoubleClick: (e: PointerEvent) => void,
 ): void {
