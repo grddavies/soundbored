@@ -1,16 +1,8 @@
 import { createElementSize, Size } from '@solid-primitives/resize-observer';
-import {
-  Component,
-  createMemo,
-  createResource,
-  createSignal,
-  Match,
-  Switch,
-} from 'solid-js';
+import { Component, createMemo, createResource, Match, Switch } from 'solid-js';
 import { AudioCtx } from 'src/audio';
 import { SampleDropzone } from 'src/components';
 import { makeDragHandler, useSelectedSampler } from 'src/hooks';
-import { Vec2Sub } from 'src/math';
 import { Camera2D } from 'src/models';
 import { SamplePlayer } from 'src/models/SamplePlayer';
 import { SampleStore } from 'src/samples';
@@ -27,6 +19,11 @@ const PAD_Y = 10;
  * Zoom scale factor
  */
 const ZOOMSPEED = 0.1;
+
+/**
+ * Maximum number of samples to render per pixel
+ */
+const MAX_SAMPLES_PER_PX = 32;
 
 /**
  * Return a view of an an audio buffer based on a camera position
@@ -53,15 +50,16 @@ function audioSampleToSVG(
   channelData: Readonly<Float32Array>,
   size: Readonly<Size>,
 ): string {
-  // Chunks = samples in output array - max of 3 samples per pixel
-  const nChunks = Math.min(size.width * 3, channelData.length);
-  const chunkSize = Math.floor(channelData.length / nChunks);
-  // TODO: improve downsample algorithm
-  // Should switch between amp env for 'long' samples and downsampling for 'short' sections
   const zeroLine = size.height / 2;
+  let nChunks = channelData.length;
+  if (channelData.length > size.width * MAX_SAMPLES_PER_PX) {
+    // TODO: Display the amplitude envelope
+    nChunks = size.width * MAX_SAMPLES_PER_PX;
+  }
+  const chunkSize = Math.floor(channelData.length / nChunks);
   // Transform from sample number to pixel x
   const tX = (x: number): number => (x * size.width) / nChunks;
-  // Transform from sample amplitute to pixel y
+  // Transform from sample amplitude to pixel y
   // No y zoom implemented
   const tY = (y: number): number => zeroLine + y * (size.height - PAD_Y) * 0.5;
   let dString = `M 0 ${tY(channelData.at(0) ?? 0)}`;
@@ -156,6 +154,7 @@ export const SampleView: Component<SampleViewProps> = (props) => {
         sampler.camera.zoom.x = startZoom + delta.y * ZOOMSPEED;
         sampler.camera.zoom.x = Math.max(1, sampler.camera.zoom.x);
 
+        // TODO: Scale pan so that wavefom movement equals mouse pixel movement at any zoom
         sampler.camera.pan.x = startPan - delta.x / size.width!;
         // Restrict pan offset within the bounds of the waveform
         sampler.camera.pan.x = Math.max(
