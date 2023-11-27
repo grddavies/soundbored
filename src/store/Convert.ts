@@ -3,16 +3,16 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AppState } from './AppState';
+import { SerializedAppState } from './AppState';
 
 // Converts JSON strings to/from your types
 // and asserts the results of JSON.parse at runtime
 export class Convert {
-  public static toAppState(json: string): AppState {
+  public static toAppState(json: string): SerializedAppState {
     return cast(JSON.parse(json), r('AppState'));
   }
 
-  public static appStateToJson(value: AppState): string {
+  public static appStateToJson(value: SerializedAppState): string {
     return JSON.stringify(uncast(value, r('AppState')), null, 2);
   }
 }

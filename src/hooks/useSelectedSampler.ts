@@ -1,7 +1,7 @@
 import { Accessor, createSignal, Setter } from 'solid-js';
 import { produce } from 'solid-js/store';
 import { SamplePlayer } from 'src/models/SamplePlayer';
-import { GlobalState, setGlobalState } from 'src/store/AppState';
+import { GlobalState } from 'src/store/AppState';
 
 type MutateSamplerAction = (sampler: SamplePlayer) => void;
 
@@ -34,9 +34,9 @@ interface SelectedSamplePlayerModel {
 }
 
 const [selectedIdx, setSelectionIndex] = createSignal(0);
-const selected = (): SamplePlayer => GlobalState.samplers[selectedIdx()];
+const selected = (): SamplePlayer => GlobalState.state.samplers[selectedIdx()];
 const mutateSelected = (fn: MutateSamplerAction): void => {
-  setGlobalState('samplers', selectedIdx(), produce(fn));
+  GlobalState.setState('samplers', selectedIdx(), produce(fn));
 };
 
 const model: SelectedSamplePlayerModel = {

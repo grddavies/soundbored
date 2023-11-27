@@ -28,6 +28,10 @@
   fill: none;
 }
 
+.waveform-right {
+  opacity: 0.75;
+}
+
 .midline {
   stroke: var(--fg-light);
   stroke-width: 1px;

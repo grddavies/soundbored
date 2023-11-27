@@ -1,12 +1,20 @@
 import { createStore } from 'solid-js/store';
 import { NUM_PADS } from 'src/defaults/constants';
 import { Defaults } from 'src/defaults/Defaults';
-import { SamplePlayer } from 'src/models/SamplePlayer';
+import { defaultCamera2D } from 'src/models';
+import { SamplePlayer, SerializedSamplePlayer } from 'src/models/SamplePlayer';
 import { Logger } from 'src/utils/Logger';
 
 import { Convert } from './Convert';
 
 const LOCAL_STORAGE_KEY = 'soundbored-app';
+
+/**
+ * Serialized Global Application state
+ */
+export type SerializedAppState = {
+  samplers: SerializedSamplePlayer[];
+};
 
 /**
  * Global Application state
@@ -23,7 +31,10 @@ function restoreFromLocalStorage(): AppState | null {
   const jsonString = localStorage.getItem(LOCAL_STORAGE_KEY);
   if (jsonString) {
     try {
-      return Convert.toAppState(jsonString);
+      const { samplers } = Convert.toAppState(jsonString);
+      return {
+        samplers: samplers.map((x) => ({ ...x, camera: defaultCamera2D() })),
+      };
     } catch (e) {
       Logger.error('Failed to parse App state from JSON', e);
       return null;
@@ -43,6 +54,7 @@ function initialiseState(): AppState {
       src: filename,
       label,
       playbackRate: 1,
+      camera: defaultCamera2D(),
     }),
   );
   return { samplers };
@@ -53,11 +65,42 @@ const initState: AppState = restoreFromLocalStorage() ?? initialiseState();
 /**
  * Global application store object and setter function
  */
-export const [GlobalState, setGlobalState] = createStore<AppState>(initState);
+const [globalState, setGlobalState] = createStore<AppState>(initState);
+
+const writeAppState: (value: SerializedAppState) => string = JSON.stringify;
 
 /**
  * Write the global application state to localStorage
  */
-export function persistGlobalState(): void {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(GlobalState));
+async function persistGlobalState(): Promise<void> {
+  const { samplers } = globalState;
+  localStorage.setItem(
+    LOCAL_STORAGE_KEY,
+    writeAppState({
+      samplers: samplers.map((x) => ({ ...x, camera: undefined })),
+    }),
+  );
+}
+
+/**
+ * # GlobalState
+ * Manage global application state
+ */
+export class GlobalState {
+  /**
+   * Persist app state to localStorage
+   */
+  public static persist = persistGlobalState;
+
+  /**
+   * The reactive global application state object
+   *
+   * NOTE: Mutations of the state object are not reactive
+   */
+  public static state = globalState;
+
+  /**
+   * Set the global application state
+   */
+  public static setState = setGlobalState;
 }

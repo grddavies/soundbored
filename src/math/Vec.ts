@@ -1,3 +1,6 @@
+/**
+ * 2D Vector
+ */
 export type Vec2 = {
   x: number;
   y: number;
@@ -10,4 +13,13 @@ export type Vec2 = {
  */
 export function Vec2Add(...xs: Vec2[]): Vec2 {
   return xs.reduce((a, b) => ({ x: a.x + b.x, y: a.y + b.y }));
+}
+
+/**
+ * Subtract multiple vectors
+ * @param xs - Vectors to subtract
+ * @returns
+ */
+export function Vec2Sub(...xs: Vec2[]): Vec2 {
+  return xs.reduce((a, b) => ({ x: a.x - b.x, y: a.y - b.y }));
 }

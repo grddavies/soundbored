@@ -1,7 +1,7 @@
-import { createPointerListeners } from '@solid-primitives/pointer';
 import { Component, createSignal } from 'solid-js';
-import { useDoubleTap } from 'src/hooks';
-import { persistGlobalState } from 'src/store/AppState';
+import { makeDoubleTapListener, makeDragHandler } from 'src/hooks';
+import { Vec2 } from 'src/math';
+import { GlobalState } from 'src/store/AppState';
 
 import style from './Knob.module.css';
 import { SVGKnob } from './SVGKnob';
@@ -20,10 +20,26 @@ type KnobProps = {
    * @returns
    */
   updateFunc: (value: number) => void;
+  /**
+   * Max parameter value
+   */
   max: number;
+  /**
+   * Min parameter value (defaults to zero)
+   */
   min?: number;
+  /**
+   * SVG size
+   */
   size?: number;
+  /**
+   * Parameter value to return to by default
+   */
   defaultValue: number;
+  /**
+   * Transform from a 2d pixel diff into the new parameter value
+   */
+  transform?: (dragDiff: Vec2) => number;
   label?: string;
 };
 
@@ -35,64 +51,38 @@ type KnobProps = {
 export const Knob: Component<KnobProps> = (props) => {
   let svg: SVGSVGElement;
 
-  const [initialVal, setInitialVal] = createSignal(props.value);
-  const [currentPointer, setCurrentPointer] = createSignal<number | null>(null);
-  const [dragStartY, setDragStartY] = createSignal(0);
-  const [precisionMode, setPrecisionMode] = createSignal(false);
-
-  const handleMove = (e: PointerEvent): void => {
-    if (e.pointerId === currentPointer()) {
-      // Prevent scroll
-      e.preventDefault();
-      e.stopImmediatePropagation();
-
-      // Precision adjustments
-      if (e.pointerType === 'Mouse' && e.shiftKey) {
-        setPrecisionMode(true);
-      }
-
+  const [dragStartVal, setDragStartVal] = createSignal(props.value);
+  makeDragHandler({
+    target: () => svg,
+    onDragStart: () => {
+      setDragStartVal(props.value);
+    },
+    onDragMove: (diff) => {
       props.updateFunc(
         Math.min(
           props.max,
           Math.max(
             props.min ?? 0,
-            initialVal() +
-              ((dragStartY() - e.clientY) / screen.availHeight) *
-                (precisionMode() ? 1 : 4),
+            dragStartVal() + (props.transform ? props.transform(diff) : diff.y),
           ),
         ),
       );
-    }
-  };
-
-  const clearMoveHandler = (e: PointerEvent): void => {
-    if (e.pointerId === currentPointer()) {
-      persistGlobalState();
-      setCurrentPointer(null);
-      setPrecisionMode(false);
-      window.removeEventListener('pointermove', handleMove);
-      window.removeEventListener('pointerup', clearMoveHandler);
-    }
-  };
-
-  createPointerListeners({
-    target: () => svg,
-    onDown: (e) => {
-      setDragStartY(e.clientY);
-      setInitialVal(props.value);
-      setCurrentPointer(e.pointerId);
-      window.addEventListener('pointerup', clearMoveHandler, {
-        passive: false,
-      });
-      window.addEventListener('pointermove', handleMove, { passive: false });
+    },
+    onDragEnd: () => {
+      if (dragStartVal() !== props.value) {
+        GlobalState.persist();
+      }
     },
   });
 
-  useDoubleTap(
+  // Reset the parameter and persist on double tap
+  makeDoubleTapListener(
     () => svg,
     () => {
-      props.updateFunc(props.defaultValue);
-      persistGlobalState();
+      if (props.value !== props.defaultValue) {
+        props.updateFunc(props.defaultValue);
+        GlobalState.persist();
+      }
     },
   );
 

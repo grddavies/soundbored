@@ -1,2 +1,3 @@
-export { useDoubleTap } from './useDoubleTap';
+export * from './makeDoubleTapListener';
 export * from './useSelectedSampler';
+export * from './makeDragHandler';
