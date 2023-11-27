@@ -36,6 +36,7 @@ export const SampleDropzone: Component<SampleDropzoneProps> = (props) => {
             : selectedIdx(),
           produce((sampler) => {
             if (e.dataTransfer) {
+              // TODO: (perf) Clear cached sample data if no other pads have that sample loaded
               updateSampleSrc(sampler, e.dataTransfer.getData('text/plain'));
             }
           }),

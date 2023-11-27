@@ -21,16 +21,21 @@ export class AudioPlayerNode {
    * @param options - Options to pass to the underlying AudioBufferSourceNode
    */
   constructor(context: AudioContext, options?: AudioBufferSourceOptions) {
-    // Initialize component audio nodes
     this.audio = new AudioBufferSourceNode(context, options);
     this._splitter = new ChannelSplitterNode(context);
     this._analyser = new AnalyserNode(context);
     this._audioOut = new ChannelMergerNode(context);
     this._sampleHolder = new Float32Array(1);
 
-    this.audio.addEventListener('ended', () => {
-      this._playing = false;
-    });
+    this.audio.addEventListener('ended', this._onAudioEnded);
+  }
+
+  private readonly _onAudioEnded = (): void => {
+    this._playing = false;
+  };
+
+  dispose(): void {
+    this.audio.removeEventListener('ended', this._onAudioEnded);
   }
 
   /**

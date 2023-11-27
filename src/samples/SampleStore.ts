@@ -5,14 +5,14 @@ import { Sample } from '../models/Sample';
 /**
  * # SampleStore
  * ## Description
- * Singleton helper to manage storage of samples
+ * Singleton helper to manage storage of audio sample data
  */
 export class SampleStore {
   private _db = new Database();
 
   private static _instance: SampleStore;
 
-  private _channelDataStore: Map<string, Float32Array[]> = new Map();
+  private _channelDataStore: Map<string, AudioBuffer> = new Map();
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private constructor() {
@@ -52,10 +52,19 @@ export class SampleStore {
   /**
    * Set audio channel data in the cache
    * @param filename
+   * @param audioBuf
+   */
+  public cacheAudioBuffer(filename: string, audioBuf: AudioBuffer): void {
+    this._channelDataStore.set(filename, audioBuf);
+  }
+
+  /**
+   * Clear/delete audio channel data from the cache
+   * @param filename
    * @param data
    */
-  public cacheChannelData(filename: string, data: Float32Array[]): void {
-    this._channelDataStore.set(filename, data);
+  public clearAudioBufferCache(filename: string): boolean {
+    return this._channelDataStore.delete(filename);
   }
 
   /**
@@ -63,7 +72,7 @@ export class SampleStore {
    * @param filename
    * @returns
    */
-  public getChannelData(filename: string): Float32Array[] | undefined {
+  public getAudioBuffer(filename: string): AudioBuffer | undefined {
     return this._channelDataStore.get(filename);
   }
   /**
@@ -105,7 +114,7 @@ export class SampleStore {
    * @returns The number of deleted files
    */
   public async deleteSampleByName(filename: string): Promise<number> {
-    this._channelDataStore.delete(filename);
+    this.clearAudioBufferCache(filename);
     return await this._db.sample.where({ filename }).delete();
   }
 }

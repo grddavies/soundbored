@@ -9,7 +9,7 @@ type DragEventHandler = (value: Vec2) => void;
  */
 interface MakeDragHandlerOptions {
   /**
-   * Reference to element to
+   * Reference to element to bind event listeners to
    */
   target?: Accessor<EventTarget | undefined>;
   /**

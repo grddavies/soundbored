@@ -40,6 +40,7 @@ export type SerializedSamplePlayer = Omit<SamplePlayer, 'camera'> & {
  * @param src
  */
 export function updateSampleSrc(model: SamplePlayer, src: string): void {
+  // TODO: (perf) Clear cache when no more pads load this sample
   model.src = src;
   model.label = getFilename(src).substring(0, LABEL_CHAR_LIMIT);
   model.camera = defaultCamera2D();
