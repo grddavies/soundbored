@@ -1,0 +1,55 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="220" fill="#121212"/>
+
+  <!-- Outer rounded square -->
+  <rect
+    x="172"
+    y="172"
+    width="680"
+    height="680"
+    rx="96"
+    stroke="#FF6A00"
+    stroke-width="28"
+  />
+
+  <!-- Left waveform -->
+  <path
+    d="
+      M250 512
+      L286 512
+      L304 462
+      L322 560
+      L340 430
+      L358 590
+      L376 480
+      L394 540
+      L412 452
+      L430 572
+      L448 512
+    "
+    stroke="#FF6A00"
+    stroke-width="18"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+
+  <!-- Right waveform -->
+  <path
+    d="m 612,512 18,-42 18,78 18,-96 18,130 18,-92 18,50 18,-72 18,92 18,-48"
+    stroke="#FF6A00"
+    stroke-width="18"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+
+  <!-- Centered play icon -->
+  <path
+    d="M470 442L590 512L470 582V442Z"
+    fill="#FF6A00"
+  />
+
+</svg>
