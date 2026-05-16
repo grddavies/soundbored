@@ -18,7 +18,7 @@ export default defineConfig({
         short_name: 'SoundBored',
         description: 'A web-based soundboard app',
         theme_color: '#da571a',
-        background_color: '#1d1e27',
+        background_color: '#121212',
         display: 'standalone',
         orientation: 'any',
         scope: '/soundbored/',
